@@ -83,6 +83,7 @@ And some helper modules that provide data structures:
               6.4.3.2 Send the clients the summary of the game
 
   7. Close Server
+  
 
 ### Dataflow through modules
 
