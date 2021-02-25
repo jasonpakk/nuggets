@@ -63,24 +63,22 @@ And some helper modules that provide data structures:
   4. Initialize the map by dropping the gold piles at random spots using the seed
   5. Initialize the server and announce the port, storing the port in a server file
   6. Refresh the server state, waiting for new players or messages,
-
-
-      6.1 if the maxPlayers or maxSpectators is full, do nothing or tell current spectator to leave respectively. Otherwise, accept the players into the server.
-      6.2 If a new player has successfully joined, truncate their name and assign them a letter
-          6.2.1 Send OK message to client with their assigned letter
-      6.3 Send GRID, GOLD, and DISPLAY messages to client
-      6.4 listen to the player and spectator messages and respond
-          6.4.1 When the client sends a quit message, let the client out and remove their symbol.
-          6.4.2 When the player sends a move message
-              6.4.2.1 Check if the move is possible and
-                  6.4.2.1.1 If the character isn’t capitalized, move the player by 1 in the direction of the character.
-                  6.4.2.1.2 If the character is capitalized, move the player as far as possible in the direction of the character.
-              6.4.2.2 Check for gold that was picked up as a result of the move
-              6.4.2.3 Update grid to new positions of players and new amount of gold
-                  6.4.2.3.1 Send GOLD and DISPLAY messages to all clients
-          6.4.3 When there are no more gold piles
-              6.4.3.1 Quit the game for each client.
-              6.4.3.2 Send the clients the summary of the game
+  	6.1. if the maxPlayers or maxSpectators is full, do nothing or tell current spectator to leave respectively. Otherwise, accept the players into the server.
+  	6.2. If a new player has successfully joined, truncate their name and assign them a letter
+        	6.2.1. Send OK message to client with their assigned letter
+      	6.3. Send GRID, GOLD, and DISPLAY messages to client
+      	8.4. listen to the player and spectator messages and respond
+          	6.4.1. When the client sends a quit message, let the client out and remove their symbol.
+        	6.4.2. When the player sends a move message
+              		6.4.2.1. Check if the move is possible and
+                  		6.4.2.1.1. If the character isn’t capitalized, move the player by 1 in the direction of the character.
+                  		6.4.2.1.2. If the character is capitalized, move the player as far as possible in the direction of the character.
+              		6.4.2.2 Check for gold that was picked up as a result of the move
+              		6.4.2.3 Update grid to new positions of players and new amount of gold
+                  		6.4.2.3.1 Send GOLD and DISPLAY messages to all clients
+          	6.4.3 When there are no more gold piles
+              		6.4.3.1 Quit the game for each client.
+              		6.4.3.2 Send the clients the summary of the game
 
   7. Close Server
   
