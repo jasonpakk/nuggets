@@ -47,11 +47,17 @@ We anticipate the following modules or functions:
 
 And some helper modules that provide data structures:
 
-  1. ***counter*** of players and their scores
-  2. ***hashtable*** of players' names with their counter id
-  3. ***goldpile*** to store data about each gold pile
-  4. ***message*** to handle client-server communication
-  5. ***grid*** to represent the map
+  1. ***player*** to store data about each player
+
+  	1.1. Name (string)
+  	1.2. Gold (int)
+  	1.3. Position (Position)
+  	1.4. Active (bool)
+  2. ***position*** to store X and Y coordinates.
+  3. ***hashtable*** of names to player module
+  4. ***goldpile*** to store data about each gold pile
+  5. ***message*** to handle client-server communication
+  6. ***grid*** to represent the map
 
 ### Pseudo Code for logic/algorithmic flow
 
@@ -98,16 +104,15 @@ The server will run as follows:
 5b. Keystroke input from player (movement or quit)
 
 ### Major Data Structures
-
-***counter*** of players and their scores  
-***hashtable*** of players' names with their counter id  
+ 
+***player*** to store data about player clients.
+***hashtable*** of players' names with their player object
 ***message*** to handle client-server communication  
-***grid*** to represent the map  
-NR X NC matrix array representing each coordinate  
+***grid*** to represent the map
+NR X NC matrix array representing each coordinate
 ***goldpile[]*** array of gold piles  
-***goldpile***   
-X coordinate  
-Y coordinate  
+***goldpile*** 
+***position*** to represent X and Y coordinates
 Amount of gold
 
 ### Testing Plan
