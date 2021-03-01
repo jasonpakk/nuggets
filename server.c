@@ -13,9 +13,6 @@
 #include "support/log.h"
 
 
-int game(int seed);
-static bool handleMessage(void *arg, const addr_t from, const char *message);
-
 typedef struct position {
   int x;
   int y;
@@ -35,38 +32,53 @@ typedef struct grid_struct {
   char** grid;
 } grid_struct_t;
 
+
+int game(int seed);
+static bool handleMessage(void *arg, const addr_t from, const char *message);
+
+/* The random() and srandom() functions are provided by stdlib,
+ * but for some reason not declared by stdlib.h, so we declare here.
+ */
+long int random(void);
+void srandom(unsigned int seed);
+
+
 int
 main(const int argc, const char *argv[])
 {
   if (argc == 2 || argc == 3) {
-    // no seed, generate one
     char* map_file = (char*)malloc(1+ strlen(argv[1])*sizeof(char));
     strcpy(map_file, argv[1]);
+
+    // no seed, generate one
     if (argc == 2) {
       // generate a seed
         game(0);
     } else {
       //seed provided, scan it in and check it is positive
-      int seed = atoi(argv[3]);
+      int seed = atoi(argv[2]);
       if (seed <= 0) {
         fprintf(stderr, "the seed must be a positive integer.\n");
-        return 2;
+        return 1;
       }
       game(seed);
     }
   } else {
     // wrong number of arguments
     fprintf(stderr, "usage: ./server map.txt [seed]\n");
-    return 1;
+    return 2;
   }
 }
-
 
 int
 game(int seed)
 {
   if (seed == 0) {
-    // generate a seed
+    // seed the RNG (random-number generator) with the time of day
+    srandom((unsigned)time(NULL));
+  } else {
+    // seed the RNG with provided seed
+    srandom(seed);
   }
   addr_t other; // address of the other side of this communication (init below)
 
@@ -102,15 +114,6 @@ handleMessage(void *arg, const addr_t from, const char *message)
   printf("this is message %s\n", message);
   fflush(stdout);
   return false;
-
-
-
-
-
-
-
-
-
 
 
 }
