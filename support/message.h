@@ -1,10 +1,10 @@
-/* 
+/*
  * message - a UDP-based messaging module
  *
  * Provides a message-passing abstraction among Internet hosts.  Messages
  * are sent via UDP and are thus limited to UDP packet size, may be lost,
  * and may be reordered, but require no connection setup or teardown.
- * 
+ *
  * Typical server sequence looks like this:
  *   message_init(stderr);
  *   message_loop(arg, timeout, handleTimeout, handleStdin, handleMessage);
@@ -28,7 +28,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include <arpa/inet.h>  // These two includes are not needed for this file, 
+#include <arpa/inet.h>  // These two includes are not needed for this file,
 #include <sys/select.h> // but is needed for users of this file.
 
 /****************** types *********************/
@@ -92,11 +92,11 @@ bool message_eqAddr(const addr_t a, const addr_t b);
 
 /******************************************/
 /* message_setAddr: initialize an address to a given hostname and port.
- * Caller provides: 
+ * Caller provides:
  *   a string representing the hostname, or numeric IP address.
  *   a string representing the port number.
  *   a pointer to an address, which will be initialized.
- * Function returns: 
+ * Function returns:
  *   true if successful in initalizing the address;
  *   false if an error, which may indicate a bad hostname or port number.
  * Logs:
@@ -147,15 +147,15 @@ void message_send(const addr_t to, const char *message);
 bool message_loop(void *arg, const float timeout,
                   bool (*handleTimeout)(void *arg),
                   bool (*handleInput)  (void *arg),
-                  bool (*handleMessage)(void *arg, 
-                                        const addr_t from, 
+                  bool (*handleMessage)(void *arg,
+                                        const addr_t from,
                                         const char *message));
 
 /******************************************/
 /* message_done: shut down the module.
  * Caller provides: nothing.
  * Function returns: nothing.
- * Assumptions: 
+ * Assumptions:
  *   message_init() had been called earlier.
  *   no message() functions will be called later.
  * Logs: a note indicating close down of message module.
