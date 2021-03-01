@@ -1,13 +1,13 @@
-/* 
+/*
  * message - a UDP-based messaging module
  *
  * Provides a message-passing abstraction among Internet hosts.  Messages
  * are sent via UDP and are thus limited to UDP packet size, may be lost,
  * and may be reordered, but require no connection setup or teardown.
- * 
+ *
  * See message.h for detailed interface description for each function.
  * Depends on the 'log' module and thus must be linked with log.o.
- * 
+ *
  * Compile with -DUNIT_TEST for a standalone unit test; see below.
  *
  * David Kotz - May 2019
@@ -57,7 +57,7 @@ static const char *stringAddr(const addr_t addr);
 
 /***********************************************************************/
 /**************** message_init ****************/
-/* 
+/*
  * Set up a socket on which to receive messages; return the port number.
  * Invariant: ourSocket = 0 if we return with error, else ourSocket > 0.
  * Log error and return zero if any error.
@@ -110,7 +110,7 @@ message_init(FILE *logFP)
 }
 
 /**************** message_noAddr ****************/
-/* 
+/*
  * Return an empty/nonexistent address.
  * See message.h for detailed description.
  */
@@ -127,7 +127,7 @@ message_noAddr(void)
 }
 
 /**************** message_isAddr ****************/
-/* 
+/*
  * Return true if this address is valid (in the context of this program).
  * See message.h for detailed description.
  */
@@ -139,21 +139,21 @@ message_isAddr(const addr_t addr)
 }
 
 /**************** message_eqAddr ****************/
-/* 
+/*
  * Return true if the two addresses are equal.
  * See message.h for detailed description.
  */
 bool
 message_eqAddr(const addr_t a, const addr_t b)
 {
-  return 
+  return
     a.sin_family == b.sin_family
     && a.sin_port == b.sin_port
     && a.sin_addr.s_addr == b.sin_addr.s_addr;
 }
 
 /**************** message_setAddr ****************/
-/* 
+/*
  * Convert a textual address into a correspondent address.
  * Return true if success, false if any error.
  * If success, the *addr is filled in.
@@ -166,7 +166,7 @@ message_setAddr(const char *hostname, const char *portString, addr_t *addr)
     log_v("message_setAddr: called with NULL argument");
     return false;
   }
-  
+
   // Look up the hostname
   struct hostent *hostp = gethostbyname(hostname);
   if (hostp == NULL) {
@@ -191,7 +191,7 @@ message_setAddr(const char *hostname, const char *portString, addr_t *addr)
   addr->sin_family = AF_INET;
   bcopy(hostp->h_addr_list[0], &addr->sin_addr, hostp->h_length);
   addr->sin_port = htons(port);
-  
+
   return true;
 }
 
@@ -244,7 +244,7 @@ numLines(const char *string)
 }
 
 /**************** message_send ****************/
-/* 
+/*
  * Send a string message to the correspondent address.
  * See message.h for detailed description.
  */
@@ -270,7 +270,7 @@ message_send(const addr_t to, const char *message)
 }
 
 /**************** message_loop ****************/
-/* 
+/*
  * Loop forever, calling handler functions for stdin or socket,
  * as input is available from either.
  * Returns false on error or true if any of the handlers return true.
@@ -280,7 +280,7 @@ bool
 message_loop(void *arg, const float timeout,
              bool (*handleTimeout)(void *arg),
              bool (*handleInput)  (void *arg),
-             bool (*handleMessage)(void *arg, 
+             bool (*handleMessage)(void *arg,
                                    const addr_t from, const char *buf))
 {
   // check if we're ready for messaging
@@ -316,7 +316,7 @@ message_loop(void *arg, const float timeout,
   while (true) {
     // for use with select()
     fd_set rfds;        // set of file descriptors we want to read
-    
+
     // Watch stdin (fd 0) and the socket to see when either has input.
     int nfds = 0;             // number of file descriptors to monitor
     FD_ZERO(&rfds);           // default to none
@@ -338,7 +338,7 @@ message_loop(void *arg, const float timeout,
     // Wait for input on either source
     int select_response = select(nfds, &rfds, NULL, NULL, timerp);
     // note: 'rfds' updated
-    
+
     if (select_response < 0) {
       if (errno == EINTR) {
 	// select() was interrupted by a signal - most likely SIGWINCH;
@@ -353,7 +353,7 @@ message_loop(void *arg, const float timeout,
       // timeout occurred
       log_v("message_loop: select() timed out");
       if (handleTimeout != NULL && (*handleTimeout)(arg)) {
-        break; // handler says to exit loop 
+        break; // handler says to exit loop
       }
     } else if (select_response > 0) {
       // some data is ready on either source, or both
@@ -362,7 +362,7 @@ message_loop(void *arg, const float timeout,
         // stdin has input ready
         log_v("message_loop: input ready on stdin");
         if (handleInput != NULL && (*handleInput)(arg)) {
-          break; // handler says to exit loop 
+          break; // handler says to exit loop
         }
       }
       if (FD_ISSET(ourSocket, &rfds)) {
@@ -372,7 +372,7 @@ message_loop(void *arg, const float timeout,
         struct sockaddr *senderp = (struct sockaddr *) &sender;
         socklen_t senderlen = sizeof(sender);  // must pass address to length
         char buf[message_MaxBytes]; // buffer for reading data from socket
-        int nbytes = recvfrom(ourSocket, buf, message_MaxBytes-1, 
+        int nbytes = recvfrom(ourSocket, buf, message_MaxBytes-1,
                               0, senderp, &senderlen);
         if (nbytes < 0) {
           // error, ignore it
@@ -391,7 +391,7 @@ message_loop(void *arg, const float timeout,
 
             // handle it
             if (handleMessage != NULL && (*handleMessage)(arg, sender, buf)) {
-              break; // handler says to exit loop 
+              break; // handler says to exit loop
             }
           }
         }
@@ -402,7 +402,7 @@ message_loop(void *arg, const float timeout,
 }
 
 /**************** message_done ****************/
-/* 
+/*
  * Clean up the message module, prior to exit.
  * See message.h for detailed description.
  */
@@ -419,7 +419,7 @@ message_done(void)
 
 /* ****************************************************************** */
 /* ************************* UNIT_TEST ****************************** */
-/* 
+/*
  * This unit test implements a simple 'chat' program.  It is unusual
  * in that both sides of the chat are running the **same program**,
  * using the same main(), handleInput(), and handleMessage() code.
@@ -437,11 +437,11 @@ message_done(void)
  * At that point, the first knows the address of the second.
  * Subsequently, the user on either side can type a line of input and
  * see it sent to the other side.
- * 
+ *
  * For a cleaner view, redirect the stderr and logging output to a file:
  *   ./messagetest 2>first.log
  *   ./messagetest 2>second.log hostName portNumber
- * 
+ *
  * ^D (EOF) to exit either side.
  */
 
@@ -497,7 +497,7 @@ main(const int argc, char *argv[])
   // shut down the modules
   message_done();
   log_done();
-  
+
   return ok? 0 : 1; // status code depends on result of message_loop
 }
 
@@ -569,8 +569,8 @@ handleMessage(void *arg, const addr_t from, const char *message)
 
   // this sender becomes our correspondent, henceforth
   *otherp = from;
-  
-  printf("[%s@%05d]: %s\n", 
+
+  printf("[%s@%05d]: %s\n",
          inet_ntoa(from.sin_addr), // IP address of the sender
          ntohs(from.sin_port),     // port number of the sender
          message);                 // message from the sender
