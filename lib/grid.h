@@ -10,7 +10,9 @@
 #define __GRID_H
 
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+
 
 /**************** global types ****************/
 typedef struct grid_struct grid_struct_t;  // opaque to users of the module
@@ -23,6 +25,8 @@ int grid_load(grid_struct_t *grid, char* filename);
 
 int grid_print(grid_struct_t *grid_struct);
 
+int grid_get_nR(grid_struct_t *grid_struct);
 
+int grid_get_nC(grid_struct_t *grid_struct);
 
 #endif // __GRID_H

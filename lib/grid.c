@@ -13,7 +13,6 @@
  #include "file.h"
  #include "memory.h"
 
-
 /**************** file-local global variables ****************/
 /* none */
 
@@ -51,6 +50,7 @@ grid_struct_new(char *filename)
   // number of rows is lines in the file
   grid->nR = lines_in_file(grid_file);
 
+  // find the maximum number of columns in the file
   char *line;
   int max = 0;
   while ( (line = freadlinep(grid_file)) != NULL) {
@@ -77,24 +77,25 @@ grid_struct_new(char *filename)
 int
 grid_load(grid_struct_t *grid, char* filename)
 {
-  FILE *grid_file;
-  if ((grid_file = fopen(filename, "r")) == NULL) {
+  FILE *map;
+  if ((map = fopen(filename, "r")) == NULL) {
     fprintf(stderr, "Unable to load map file.\n");
     return 1;
   }
 
   char *line;
   int i = 0;
-  while ( (line = freadlinep(grid_file)) != NULL) {
+  while ((line = freadlinep(map)) != NULL) {
     grid->grid[i] = line;
     i++;
     // should we copy the string ?
     // (we cant free "line" right here bc the array stores a pointer to it)
   }
 
-  fclose(grid_file);
+  fclose(map);
   return 0;
  }
+
 
 int
 grid_print(grid_struct_t *grid_struct)
@@ -104,4 +105,12 @@ grid_print(grid_struct_t *grid_struct)
    printf("%s\n", grid_struct->grid[i]);
  }
  return 0;
+}
+
+int grid_get_nR(grid_struct_t *grid_struct) {
+  return grid_struct->nR;
+}
+
+int grid_get_nC(grid_struct_t *grid_struct) {
+  return grid_struct->nC;
 }
