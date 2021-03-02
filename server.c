@@ -13,6 +13,25 @@
 #include "support/log.h"
 
 
+typedef struct position {
+  int x;
+  int y;
+} position_t;
+
+typedef struct player {
+  char *name;
+  char *symbol;
+  int gold_number;
+  bool active;
+  struct position pos;
+} player_t;
+
+typedef struct grid_struct {
+  int nR;
+  int nC;
+  char** grid;
+} grid_struct_t;
+
 
 int game(int seed);
 static bool handleMessage(void *arg, const addr_t from, const char *message);
@@ -22,7 +41,6 @@ static bool handleMessage(void *arg, const addr_t from, const char *message);
  */
 long int random(void);
 void srandom(unsigned int seed);
-
 
 
 int
@@ -93,6 +111,9 @@ handleMessage(void *arg, const addr_t from, const char *message)
          inet_ntoa(from.sin_addr), // IP address of the sender
          ntohs(from.sin_port),     // port number of the sender
          message);                 // message from the sender
+  printf("this is message %s\n", message);
   fflush(stdout);
   return false;
+
+
 }
