@@ -5,7 +5,7 @@
 
 # object files, and the target library
 
-OBJS = hashtable.o memory.o set.o jhash.o
+OBJS = hashtable.o memory.o set.o jhash.o file.o grid.o
 LIB = lib.a
 
 # add -DNOSLEEP to disable the automatic sleep after web-page fetches
@@ -27,6 +27,8 @@ hashtable.o: hashtable.h set.h jhash.h
 jhash.o: jhash.h
 memory.o: memory.h
 set.o: set.h
+file.o: file.h
+grid.o: grid.h
 
 .PHONY: clean sourcelist
 

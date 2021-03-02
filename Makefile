@@ -19,7 +19,7 @@ MAKE = make
 $(PROG): $(OBJS) $(LLIBS)
 	$(CC) $(CFLAGS) $^ $(LLIBS) -o $@
 
-server.o: $S/message.h $S/log.h $L/hashtable.h
+server.o: $S/message.h $S/log.h $L/hashtable.h $L/grid.h
 
 $S/support.a:
 	make -C $S support.a
