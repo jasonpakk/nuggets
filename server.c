@@ -65,11 +65,9 @@ main(const int argc, const char *argv[])
     // initialize game
     game = game_new(map_file);
     // initialize first grid
-    grid_struct_t *main_grid = grid_struct_new();
-    // grid_load(main_grid, map_file); // grid_load gives seg fault
-    // grid_print(main_grid);
-
-
+    grid_struct_t *main_grid = grid_struct_new(map_file);
+    grid_load(main_grid, map_file); // grid_load gives seg fault
+    grid_print(main_grid);
 
     // no seed, generate one
     if (argc == 2) {
@@ -113,7 +111,7 @@ play_game(int seed)
   other = message_noAddr(); // no correspondent yet
   bool ok = message_loop(&other, 0, NULL, NULL, handleMessage);
   message_done();
-  return 0;
+  return ok;
 }
 
 

@@ -11,6 +11,7 @@
  #include <string.h>
  #include "grid.h"
  #include "file.h"
+ #include "memory.h"
 
 
 /**************** file-local global variables ****************/
@@ -35,12 +36,36 @@
  /* none */
 
 grid_struct_t *
-grid_struct_new()
+grid_struct_new(char *filename)
 {
   grid_struct_t *grid = malloc(sizeof(grid_struct_t));
   if (grid == NULL) {
     return NULL;
   }
+
+  FILE *grid_file;
+  if ((grid_file = fopen(filename, "r")) == NULL) {
+    fprintf(stderr, "Unable to load map file.\n");
+    return NULL;
+  }
+  // number of rows is lines in the file
+  grid->nR = lines_in_file(grid_file);
+
+  char *line;
+  int max = 0;
+  while ( (line = freadlinep(grid_file)) != NULL) {
+    int currlen = strlen(line);
+    if(currlen > max) {
+      max = currlen;
+    }
+    free(line);
+  }
+
+  grid->nC = max;
+  printf("%d x %d\n", grid->nR, grid->nC);
+  grid->grid = count_malloc(grid->nR * grid->nC * sizeof(char *));
+  fclose(grid_file);
+
   return grid;
 }
 
@@ -57,30 +82,26 @@ grid_load(grid_struct_t *grid, char* filename)
     fprintf(stderr, "Unable to load map file.\n");
     return 1;
   }
-  // number of rows is lines in the file
-  grid->nR = lines_in_file(grid_file);
 
   char *line;
   int i = 0;
   while ( (line = freadlinep(grid_file)) != NULL) {
     grid->grid[i] = line;
     i++;
-    free(line);
+    // should we copy the string ?
+    // (we cant free "line" right here bc the array stores a pointer to it)
   }
-  // number of columns
-  grid->nC = strlen(grid->grid[0]); // do we need to +1 for \n ??
 
   fclose(grid_file);
   return 0;
  }
 
- int
- grid_print(grid_struct_t *grid_struct)
- {
-   int i;
-   for (i = 0; i < grid_struct->nR; i++) { // < or <=
-     printf("%s\n", grid_struct->grid[i]);
-
-   }
-   return 0;
+int
+grid_print(grid_struct_t *grid_struct)
+{
+ int i;
+ for (i = 0; i < grid_struct->nR; i++) { // < or <=
+   printf("%s\n", grid_struct->grid[i]);
  }
+ return 0;
+}
