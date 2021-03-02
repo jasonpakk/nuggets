@@ -24,14 +24,11 @@ server.o: $S/message.h $S/log.h $L/hashtable.h $L/grid.h
 $S/support.a:
 	make -C $S support.a
 
-
 .PHONY: test valgrind clean
-
-
-
 
 clean:
 	make -C $S clean
+	make -C $L clean
 	rm -rf *.dSYM  # MacOS debugger info
 	rm -f *~ *.o
 	rm -f $(PROG)
