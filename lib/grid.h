@@ -23,6 +23,8 @@ grid_struct_t* grid_struct_new(char* filename);
 
 int grid_load(grid_struct_t *grid, char* filename);
 
+char* grid_string(grid_struct_t *grid_struct);
+
 int grid_print(grid_struct_t *grid_struct);
 
 int grid_get_nR(grid_struct_t *grid_struct);
