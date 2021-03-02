@@ -16,15 +16,6 @@
 #include "hashtable.h"
 #include "grid.h"
 
-typedef struct game {
-  int gold_remaining;
-  int player_number;
-  char curr_symbol;
-  grid_struct_t *grid;
-  hashtable_t *players;
-  struct player_t *spectator; // do we want to store in hashmap or seperately like this?
-} game_t;
-
 typedef struct position {
   int x;
   int y;
@@ -36,10 +27,20 @@ typedef struct player {
   addr_t *address;
   int gold_number;
   bool active;
-  struct position *pos;
+  position_t *pos;
 } player_t;
 
+typedef struct game {
+  int gold_remaining;
+  int player_number;
+  char curr_symbol;
+  grid_struct_t *grid;
+  hashtable_t *players;
+  player_t *spectator; // do we want to store in hashmap or seperately like this?
+} game_t;
+
 int play_game(int seed);
+
 static bool handleMessage(void *arg, const addr_t from, const char *message);
 int parse_message(const char *message, addr_t *address);
 game_t* game_new(char *map_filename);
@@ -55,6 +56,9 @@ void srandom(unsigned int seed);
 // global variable
 game_t* game;
 
+int nC;
+int nR;
+
 int
 main(const int argc, const char *argv[])
 {
@@ -64,12 +68,15 @@ main(const int argc, const char *argv[])
 
     // initialize game
     game = game_new(map_file);
+
     // initialize first grid
     grid_struct_t *main_grid = grid_struct_new(map_file);
     grid_load(main_grid, map_file); // grid_load gives seg fault
     grid_print(main_grid);
+    nC = grid_get_nC(main_grid);
+    nR = grid_get_nR(main_grid);
 
-    // no seed, generate one
+    // no seed
     if (argc == 2) {
       // generate a seed
         play_game(0);
@@ -114,7 +121,6 @@ play_game(int seed)
   return ok;
 }
 
-
 static bool
 handleMessage(void *arg, const addr_t from, const char *message)
 {
@@ -129,7 +135,6 @@ handleMessage(void *arg, const addr_t from, const char *message)
          inet_ntoa(from.sin_addr), // IP address of the sender
          ntohs(from.sin_port),     // port number of the sender
          message);                 // message from the sender
-
   parse_message(message, otherp);
 
   fflush(stdout);
@@ -139,6 +144,7 @@ handleMessage(void *arg, const addr_t from, const char *message)
 int
 parse_message(const char *message, addr_t *address)
 {
+  // Player to Server Commands
   char *play = "PLAY";
   char *quit = "QUIT";
   char *key = "KEY";
@@ -155,10 +161,13 @@ parse_message(const char *message, addr_t *address)
   //increment remainter to find start of the rest of message
   remainder++;
 
+  // Server to Player commands;
+
   if (strcmp(command, play) == 0) {
     // add player
-    printf("player being added with name %s and symbol %c\n", remainder, game->curr_symbol);
     if (game->player_number < 26) {
+      printf("player being added with name %s and symbol %c\n", remainder, game->curr_symbol);
+
       // add the player
       position_t *pos = position_new(0,0);
       player_t *new_player = player_new(address, remainder, game->curr_symbol, true, pos);
@@ -167,7 +176,18 @@ parse_message(const char *message, addr_t *address)
       game->player_number = game->player_number + 1;
       hashtable_insert(game->players, new_player->name, new_player);
 
+
+
       // send them a map to draw
+      char map_info[256];
+      snprintf(map_info, sizeof map_info, "GRID %d %d", nC, nR);
+      message_send(*address, map_info);
+
+      // send them information about gold_number
+      char gold_info[256];
+      snprintf(gold_info, sizeof gold_info, "GOLD %d %d %d", 0, new_player->gold_number, game->gold_remaining);
+      message_send(*address, gold_info);
+
 
 
     } else {
@@ -179,6 +199,8 @@ parse_message(const char *message, addr_t *address)
       player_t *new_spectator = player_new(address, spectate, '!', false, NULL);
       game->spectator = new_spectator;
       printf("spectator joined\n");
+
+
     } else {
       // replace the current spectator
 
@@ -187,7 +209,6 @@ parse_message(const char *message, addr_t *address)
   } else if (strcmp(command, quit) == 0) {
 
   } else if (strcmp(command, key) == 0) {
-
 
   } else {
     printf("unknown message\n");
@@ -211,6 +232,8 @@ game_new(char *map_filename)
   game->grid = NULL;
   return game;
 }
+
+
 
 player_t*
 player_new(addr_t *address, char *name, char symbol, bool active, position_t *pos)

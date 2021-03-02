@@ -24,6 +24,9 @@ server.o: $S/message.h $S/log.h $L/hashtable.h $L/grid.h
 $S/support.a:
 	make -C $S support.a
 
+$L/lib.a:
+	make -C $L lib.a
+
 .PHONY: test valgrind clean
 
 clean:
