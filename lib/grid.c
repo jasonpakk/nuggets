@@ -94,16 +94,34 @@ grid_load(grid_struct_t *grid, char* filename)
 
   fclose(map);
   return 0;
- }
+}
+
+char *grid_string(grid_struct_t *grid_struct) {
+  char grid_text[10000];
+  char *grid_ptr = grid_text;
+  char line_text[200];
+
+  for (int i = 0; i < grid_struct->nR; i++) { // < or <=
+    sprintf(line_text, "%s\n", grid_struct->grid[i]);
+    if (i == 0) {
+      strcpy(grid_text, line_text);
+    } else {
+      strcat(grid_text, line_text);
+    }
+  }
+
+  return grid_ptr;
+}
 
 
 int
 grid_print(grid_struct_t *grid_struct)
 {
- int i;
- for (i = 0; i < grid_struct->nR; i++) { // < or <=
-   printf("%s\n", grid_struct->grid[i]);
- }
+ // int i;
+ // for (i = 0; i < grid_struct->nR; i++) { // < or <=
+ //   printf("%s\n", grid_struct->grid[i]);
+ // }
+ printf("%s\n", grid_string(grid_struct));
  return 0;
 }
 

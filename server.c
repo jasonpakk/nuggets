@@ -56,9 +56,6 @@ void srandom(unsigned int seed);
 // global variable
 game_t* game;
 
-int nC;
-int nR;
-
 int
 main(const int argc, const char *argv[])
 {
@@ -72,9 +69,9 @@ main(const int argc, const char *argv[])
     // initialize first grid
     grid_struct_t *main_grid = grid_struct_new(map_file);
     grid_load(main_grid, map_file); // grid_load gives seg fault
-    grid_print(main_grid);
-    nC = grid_get_nC(main_grid);
-    nR = grid_get_nR(main_grid);
+    game->grid = main_grid;
+    grid_print(game->grid);
+
 
     // no seed
     if (argc == 2) {
@@ -141,6 +138,30 @@ handleMessage(void *arg, const addr_t from, const char *message)
   return false;
 }
 
+void send_grid(addr_t *address) {
+  char map_info[256];
+  int nC = grid_get_nC(game->grid);
+  int nR = grid_get_nR(game->grid);
+  sprintf(map_info, "GRID %d %d", nC, nR);
+  message_send(*address, map_info);
+}
+
+void send_gold(addr_t *address, int n, int p, int r) {
+  char gold_info[256];
+  sprintf(gold_info, "GOLD %d %d %d", n, p, r);
+  message_send(*address, gold_info);
+}
+
+void send_display(addr_t *address) {
+  char *string = grid_string(game->grid);
+  printf("string info is: \n%s\n", string);
+
+  char *display_info = malloc(sizeof(char *));
+  sprintf(display_info, "DISPLAY\n%s", string);
+  message_send(*address, display_info);
+}
+
+
 int
 parse_message(const char *message, addr_t *address)
 {
@@ -169,25 +190,21 @@ parse_message(const char *message, addr_t *address)
       printf("player being added with name %s and symbol %c\n", remainder, game->curr_symbol);
 
       // add the player
-      position_t *pos = position_new(0,0);
+      position_t *pos = position_new(1,1);
       player_t *new_player = player_new(address, remainder, game->curr_symbol, true, pos);
       // update current letter
       game->curr_symbol = game->curr_symbol + 1;
       game->player_number = game->player_number + 1;
       hashtable_insert(game->players, new_player->name, new_player);
 
+      // send the player the grid's information
+      send_grid(address);
 
+      // send the player gold information
+      send_gold(address, 0, new_player->gold_number, game->gold_remaining);
 
-      // send them a map to draw
-      char map_info[256];
-      snprintf(map_info, sizeof map_info, "GRID %d %d", nC, nR);
-      message_send(*address, map_info);
-
-      // send them information about gold_number
-      char gold_info[256];
-      snprintf(gold_info, sizeof gold_info, "GOLD %d %d %d", 0, new_player->gold_number, game->gold_remaining);
-      message_send(*address, gold_info);
-
+      // send the player a display of the grid
+      send_display(address);
 
 
     } else {
@@ -200,6 +217,8 @@ parse_message(const char *message, addr_t *address)
       game->spectator = new_spectator;
       printf("spectator joined\n");
 
+      // send them a map to draw
+      send_grid(address);
 
     } else {
       // replace the current spectator
