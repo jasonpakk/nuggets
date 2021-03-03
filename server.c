@@ -154,7 +154,6 @@ void send_gold(addr_t *address, int n, int p, int r) {
 
 void send_display(addr_t *address) {
   char *string = grid_string(game->grid);
-  printf("string info is: \n%s\n", string);
 
   char *display_info = malloc(sizeof(char *));
   sprintf(display_info, "DISPLAY\n%s", string);
@@ -226,6 +225,7 @@ parse_message(const char *message, addr_t *address)
     }
 
   } else if (strcmp(command, quit) == 0) {
+    message_send(address, "QUIT Thanks for playing!");
 
   } else if (strcmp(command, key) == 0) {
 
