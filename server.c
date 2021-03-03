@@ -34,7 +34,7 @@ typedef struct game {
   int gold_remaining;
   int player_number;
   char curr_symbol;
-  grid_struct_t *grid;
+  grid_struct_t *main_grid;
   hashtable_t *players;
   player_t *spectator; // do we want to store in hashmap or seperately like this?
 } game_t;
@@ -56,8 +56,8 @@ void srandom(unsigned int seed);
 // global variable
 game_t* game;
 
-int nC;
-int nR;
+// int nC;
+// int nR;
 
 int
 main(const int argc, const char *argv[])
@@ -72,9 +72,10 @@ main(const int argc, const char *argv[])
     // initialize first grid
     grid_struct_t *main_grid = grid_struct_new(map_file);
     grid_load(main_grid, map_file); // grid_load gives seg fault
-    grid_print(main_grid);
-    nC = grid_get_nC(main_grid);
-    nR = grid_get_nR(main_grid);
+    game->main_grid = main_grid;
+    grid_print(game->main_grid);
+
+
 
     // no seed
     if (argc == 2) {
@@ -180,6 +181,8 @@ parse_message(const char *message, addr_t *address)
 
       // send them a map to draw
       char map_info[256];
+      int nC = grid_get_nC(game->main_grid);
+      int nR = grid_get_nR(game->main_grid);
       snprintf(map_info, sizeof map_info, "GRID %d %d", nC, nR);
       message_send(*address, map_info);
 
@@ -229,7 +232,7 @@ game_new(char *map_filename)
   hashtable_t *ht = hashtable_new(5); // best number of slots?
   game->players = ht;
   game->spectator = NULL;
-  game->grid = NULL;
+  game->main_grid = NULL;
   return game;
 }
 
