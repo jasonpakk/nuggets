@@ -11,6 +11,7 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <time.h>
+#include <unistd.h>
 #include "message.h"
 #include "log.h"
 #include "hashtable.h"
@@ -47,12 +48,6 @@ game_t* game_new(char *map_filename);
 position_t* position_new(int x, int y);
 player_t* player_new(addr_t *address, char *name, char symbol, bool active, position_t *pos);
 
-/* The random() and srandom() functions are provided by stdlib,
- * but for some reason not declared by stdlib.h, so we declare here.
- */
-long int random(void);
-void srandom(unsigned int seed);
-
 // global variable
 game_t* game;
 
@@ -68,9 +63,9 @@ main(const int argc, const char *argv[])
 
     // initialize first grid
     grid_struct_t *main_grid = grid_struct_new(map_file);
-    grid_load(main_grid, map_file); // grid_load gives seg fault
-    // game->main_grid = main_grid;
-    // grid_print(game->main_grid);
+    grid_load(main_grid, map_file);
+    game->main_grid = main_grid;
+    grid_print(game->main_grid);
 
 
     // no seed
@@ -98,10 +93,10 @@ play_game(int seed)
 {
   if (seed == 0) {
     // seed the RNG (random-number generator) with the time of day
-    srandom((unsigned)time(NULL));
+    srand(getpid());
   } else {
     // seed the RNG with provided seed
-    srandom(seed);
+    srand(seed);
   }
   addr_t other; // address of the other side of this communication (init below)
 

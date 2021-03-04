@@ -87,7 +87,12 @@ grid_struct_new(char *filename)
 
   grid->nC = max;
   printf("%d x %d\n", grid->nR, grid->nC);
-  grid->grid = count_malloc(grid->nR * grid->nC * sizeof(point_t*));
+  grid->grid = count_malloc(grid->nR * sizeof(point_t**));
+
+  for(int i = 0; i < grid->nR; i++) {
+    grid->grid[i] = count_malloc(grid->nC * sizeof(point_t*));
+  }
+
   fclose(grid_file);
 
   return grid;
@@ -110,28 +115,14 @@ grid_load(grid_struct_t *grid_struct, char* filename)
   char *line;
   int i = 0;
 
-  // line = freadlinep(map);
-  // point_t *p = point_new(line[5], false, 0);
-  // printf("this is a char being stored %c\n", p->c);
-  //
-
-  // grid_struct->grid[0][0] = p;
-
-
-
-
-
   while ((line = freadlinep(map)) != NULL) {
     for (int j = 0; j < strlen(line); j ++) {
       point_t *p = point_new(line[j], false, 0);
       grid_struct->grid[i][j] = p;
     }
     i++;
-    free(line); // allocated memory for char * when creating new point struct
-    // should we copy the string ?
-    // (we cant free "line" right here bc the array stores a pointer to it)
+    free(line);
   }
-
   fclose(map);
   return 0;
 }
@@ -147,6 +138,7 @@ grid_string(grid_struct_t *grid_struct) {
       char c = grid_struct->grid[i][j]->c;
       if (first_char) {
         strcpy(grid_text, &c);
+        first_char = false;
       } else {
         strcat(grid_text, &c);
       }
