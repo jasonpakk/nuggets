@@ -17,11 +17,6 @@
 #include "hashtable.h"
 #include "grid.h"
 
-typedef struct position {
-  int x;
-  int y;
-} position_t;
-
 typedef struct player {
   char *name;
   char symbol;
@@ -45,7 +40,6 @@ int play_game(int seed);
 static bool handleMessage(void *arg, const addr_t from, const char *message);
 int parse_message(const char *message, addr_t *address);
 game_t* game_new(char *map_filename);
-position_t* position_new(int x, int y);
 player_t* player_new(addr_t *address, char *name, char symbol, bool active, position_t *pos);
 
 // global variable
@@ -155,6 +149,32 @@ void send_display(addr_t *address) {
   message_send(*address, display_info);
 }
 
+position_t *generate_position(grid_struct_t *grid_struct, char valid_symbol) {
+  bool found = false;
+  int rand_x;
+  int rand_y;
+  char possible_point;
+
+
+  while (found == false) {
+    // Create x and y inside the grid row and columns
+    rand_x = rand() % grid_get_nR(grid_struct);
+    rand_y = rand() % grid_get_nC(grid_struct);
+
+    // Get the point from grid
+    possible_point = grid_get_point_c(grid_struct, rand_x, rand_y);
+
+    // Compare the characters
+    if (possible_point == valid_symbol) {
+      found = true;
+      return position_new(rand_x, rand_y);
+    }
+  }
+  return NULL;
+}
+
+
+
 
 int
 parse_message(const char *message, addr_t *address)
@@ -182,13 +202,20 @@ parse_message(const char *message, addr_t *address)
     if (game->player_number < 26) {
       printf("player being added with name %s and symbol %c\n", remainder, game->curr_symbol);
 
+      // Find a position to put the player in
+      position_t *pos = generate_position(game->main_grid, '.');
+
       // add the player
-      position_t *pos = position_new(1,1);
       player_t *new_player = player_new(address, remainder, game->curr_symbol, true, pos);
+
+      // put the player in
+      grid_swap(game->main_grid, new_player->symbol, pos);
+
       // update current letter
       game->curr_symbol = game->curr_symbol + 1;
       game->player_number = game->player_number + 1;
       hashtable_insert(game->players, new_player->name, new_player);
+
 
       // send the player the grid's information
       send_grid(address);
@@ -258,13 +285,4 @@ player_new(addr_t *address, char *name, char symbol, bool active, position_t *po
   player->active = active;
   player->pos = pos;
   return player;
-}
-
-position_t*
-position_new(int x, int y)
-{
-  position_t* pos = malloc(sizeof(position_t));
-  pos->x = x;
-  pos->y = y;
-  return pos;
 }
