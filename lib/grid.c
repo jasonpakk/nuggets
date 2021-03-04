@@ -20,11 +20,18 @@
 /* none */
 
 /**************** global types ****************/
+typedef struct point {
+  char c;
+  bool seen;
+  int gold_number;
+} point_t;
+
  typedef struct grid_struct {
    int nR; // number of rows
    int nC; // number of columns
-   char** grid; // array of pointers to char pointers
+   point_t*** grid; // array of pointers to pointers to points
  } grid_struct_t;
+
 
  /**************** global functions ****************/
  /* that is, visible outside this file */
@@ -33,6 +40,23 @@
  /**************** local functions ****************/
  /* not visible outside this file */
  /* none */
+
+ point_t*
+ point_new(char c, bool seen, int gold_number)
+ {
+   point_t *point = malloc(sizeof(point_t));
+   if (point == NULL) {
+     return NULL;
+   }
+
+   // point->c = malloc(sizeof(char*)); // yes?
+   // strcpy(point->c, c);
+   point->c = c;
+   point->seen = seen;
+   point->gold_number = gold_number;
+   return point;
+ }
+
 
 grid_struct_t *
 grid_struct_new(char *filename)
@@ -63,7 +87,7 @@ grid_struct_new(char *filename)
 
   grid->nC = max;
   printf("%d x %d\n", grid->nR, grid->nC);
-  grid->grid = count_malloc(grid->nR * grid->nC * sizeof(char *));
+  grid->grid = count_malloc(grid->nR * grid->nC * sizeof(point_t*));
   fclose(grid_file);
 
   return grid;
@@ -75,7 +99,7 @@ grid_struct_new(char *filename)
 
 
 int
-grid_load(grid_struct_t *grid, char* filename)
+grid_load(grid_struct_t *grid_struct, char* filename)
 {
   FILE *map;
   if ((map = fopen(filename, "r")) == NULL) {
@@ -85,9 +109,25 @@ grid_load(grid_struct_t *grid, char* filename)
 
   char *line;
   int i = 0;
+
+  // line = freadlinep(map);
+  // point_t *p = point_new(line[5], false, 0);
+  // printf("this is a char being stored %c\n", p->c);
+  //
+
+  // grid_struct->grid[0][0] = p;
+
+
+
+
+
   while ((line = freadlinep(map)) != NULL) {
-    grid->grid[i] = line;
+    for (int j = 0; j < strlen(line); j ++) {
+      point_t *p = point_new(line[j], false, 0);
+      grid_struct->grid[i][j] = p;
+    }
     i++;
+    free(line); // allocated memory for char * when creating new point struct
     // should we copy the string ?
     // (we cant free "line" right here bc the array stores a pointer to it)
   }
@@ -96,18 +136,22 @@ grid_load(grid_struct_t *grid, char* filename)
   return 0;
 }
 
-char *grid_string(grid_struct_t *grid_struct) {
-  char grid_text[10000];
+char*
+grid_string(grid_struct_t *grid_struct) {
+  char grid_text[10000]; // dynamically allocate this
   char *grid_ptr = grid_text;
-  char line_text[200];
+  bool first_char = true;
 
   for (int i = 0; i < grid_struct->nR; i++) { // < or <=
-    sprintf(line_text, "%s\n", grid_struct->grid[i]);
-    if (i == 0) {
-      strcpy(grid_text, line_text);
-    } else {
-      strcat(grid_text, line_text);
+    for (int j = 0; j < grid_struct->nC; j++) {
+      char c = grid_struct->grid[i][j]->c;
+      if (first_char) {
+        strcpy(grid_text, &c);
+      } else {
+        strcat(grid_text, &c);
+      }
     }
+    strcat(grid_text, "\n");
   }
 
   return grid_ptr;
@@ -117,10 +161,6 @@ char *grid_string(grid_struct_t *grid_struct) {
 int
 grid_print(grid_struct_t *grid_struct)
 {
- // int i;
- // for (i = 0; i < grid_struct->nR; i++) { // < or <=
- //   printf("%s\n", grid_struct->grid[i]);
- // }
  printf("%s\n", grid_string(grid_struct));
  return 0;
 }

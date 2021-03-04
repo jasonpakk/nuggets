@@ -40,3 +40,6 @@ sourcelist: Makefile *.md *.c *.h
 # clean up after our compilation
 clean:
 	rm -f $(LIB) *~ *.o
+	rm -f core
+	rm -rf *~ *.o *.gch *.dSYM
+	rm -f *.log
