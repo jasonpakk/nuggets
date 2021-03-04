@@ -161,7 +161,6 @@ parse_message(const char *message, addr_t *address)
 {
   // Player to Server Commands
   char *play = "PLAY";
-  char *quit = "QUIT";
   char *key = "KEY";
   char *spectate = "SPECTATE";
   // add defensive programming
@@ -197,18 +196,6 @@ parse_message(const char *message, addr_t *address)
       // send the player gold information
       send_gold(address, 0, new_player->gold_number, game->gold_remaining);
 
-      // send them a map to draw
-      char map_info[256];
-      int nC = grid_get_nC(game->main_grid);
-      int nR = grid_get_nR(game->main_grid);
-      snprintf(map_info, sizeof map_info, "GRID %d %d", nC, nR);
-      message_send(*address, map_info);
-
-      // send them information about gold_number
-      char gold_info[256];
-      snprintf(gold_info, sizeof gold_info, "GOLD %d %d %d", 0, new_player->gold_number, game->gold_remaining);
-      message_send(*address, gold_info);
-
       // send the player a display of the grid
       send_display(address);
 
@@ -230,10 +217,10 @@ parse_message(const char *message, addr_t *address)
 
     }
 
-  } else if (strcmp(command, quit) == 0) {
-    message_send(*address, "QUIT Thanks for playing!");
-
   } else if (strcmp(command, key) == 0) {
+    if (strcmp(remainder, "Q")) {
+      message_send(*address, "QUIT Thanks for playing!");
+    }
 
   } else {
     printf("unknown message\n");
