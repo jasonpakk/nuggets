@@ -32,6 +32,10 @@ typedef struct point {
    point_t*** grid; // array of pointers to pointers to points
  } grid_struct_t;
 
+ typedef struct position {
+   int x;
+   int y;
+ } position_t;
 
  /**************** global functions ****************/
  /* that is, visible outside this file */
@@ -127,19 +131,28 @@ grid_load(grid_struct_t *grid_struct, char* filename)
   return 0;
 }
 
+char
+grid_swap(grid_struct_t *grid_struct, char newChar, position_t *pos) {
+  char oldChar = grid_struct->grid[pos->x][pos->y]->c;
+
+  grid_struct->grid[pos->x][pos->y]->c = newChar;
+
+  return oldChar;
+}
+
+
+
+
+
 char*
 grid_string(grid_struct_t *grid_struct) {
-  // char grid_text[sizeof(point_t)*grid_struct->nR*grid_struct->nC]; // dynamically allocate this
-  // char *grid_ptr = grid_text;
   char *grid_text = malloc((grid_struct->nR)*(grid_struct->nC+1)*sizeof(char*));
   bool first_char = true;
-  // char c[100];
 
   for (int i = 0; i < grid_struct->nR; i++) { // < or <=
     for (int j = 0; j < grid_struct->nC; j++) {
       // Get the character at (i,j)
       char a = grid_struct->grid[i][j]->c;
-      // sprintf(c, "%s", &a);
 
       if (first_char) {
         strcpy(grid_text, &a);
@@ -153,7 +166,6 @@ grid_string(grid_struct_t *grid_struct) {
     strcat(grid_text, "\n");
   }
 
-  // return grid_ptr;
   return grid_text;
 }
 
@@ -175,7 +187,16 @@ grid_get_nC(grid_struct_t *grid_struct) {
   return grid_struct->nC;
 }
 
-point_t*
-grid_get_point(grid_struct_t *grid_struct, int r, int c) {
-  return grid_struct->grid[r][c];
+char
+grid_get_point_c(grid_struct_t *grid_struct, int x, int y) {
+  return grid_struct->grid[x][y]->c;
+}
+
+position_t*
+position_new(int x, int y)
+{
+  position_t* pos = malloc(sizeof(position_t));
+  pos->x = x;
+  pos->y = y;
+  return pos;
 }
