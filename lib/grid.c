@@ -129,20 +129,27 @@ grid_load(grid_struct_t *grid_struct, char* filename)
 
 char*
 grid_string(grid_struct_t *grid_struct) {
-  char grid_text[10000]; // dynamically allocate this
+  char grid_text[sizeof(point_t)*grid_struct->nR*grid_struct->nC]; // dynamically allocate this
   char *grid_ptr = grid_text;
   bool first_char = true;
+  char c[100];
+
 
   for (int i = 0; i < grid_struct->nR; i++) { // < or <=
     for (int j = 0; j < grid_struct->nC; j++) {
-      char c = grid_struct->grid[i][j]->c;
+      // Get the character at (i,j)
+      char a = grid_struct->grid[i][j]->c;
+      sprintf(c, "%s", &a);
+
       if (first_char) {
-        strcpy(grid_text, &c);
+        strcat(grid_text, " ");
         first_char = false;
-      } else {
-        strcat(grid_text, &c);
+      }
+      else {
+        strcat(grid_text, c);
       }
     }
+    // Start on a new line for the next iteration of the for loop
     strcat(grid_text, "\n");
   }
 
