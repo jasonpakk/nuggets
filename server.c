@@ -69,8 +69,8 @@ main(const int argc, const char *argv[])
     // initialize first grid
     grid_struct_t *main_grid = grid_struct_new(map_file);
     grid_load(main_grid, map_file); // grid_load gives seg fault
-    game->main_grid = main_grid;
-    grid_print(game->main_grid);
+    // game->main_grid = main_grid;
+    // grid_print(game->main_grid);
 
 
     // no seed
@@ -140,8 +140,8 @@ handleMessage(void *arg, const addr_t from, const char *message)
 
 void send_grid(addr_t *address) {
   char map_info[256];
-  int nC = grid_get_nC(game->grid);
-  int nR = grid_get_nR(game->grid);
+  int nC = grid_get_nC(game->main_grid);
+  int nR = grid_get_nR(game->main_grid);
   sprintf(map_info, "GRID %d %d", nC, nR);
   message_send(*address, map_info);
 }
@@ -153,7 +153,7 @@ void send_gold(addr_t *address, int n, int p, int r) {
 }
 
 void send_display(addr_t *address) {
-  char *string = grid_string(game->grid);
+  char *string = grid_string(game->main_grid);
 
   char *display_info = malloc(sizeof(char *));
   sprintf(display_info, "DISPLAY\n%s", string);
@@ -236,7 +236,7 @@ parse_message(const char *message, addr_t *address)
     }
 
   } else if (strcmp(command, quit) == 0) {
-    message_send(address, "QUIT Thanks for playing!");
+    message_send(*address, "QUIT Thanks for playing!");
 
   } else if (strcmp(command, key) == 0) {
 
