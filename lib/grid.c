@@ -129,31 +129,32 @@ grid_load(grid_struct_t *grid_struct, char* filename)
 
 char*
 grid_string(grid_struct_t *grid_struct) {
-  char grid_text[sizeof(point_t)*grid_struct->nR*grid_struct->nC]; // dynamically allocate this
-  char *grid_ptr = grid_text;
+  // char grid_text[sizeof(point_t)*grid_struct->nR*grid_struct->nC]; // dynamically allocate this
+  // char *grid_ptr = grid_text;
+  char *grid_text = malloc((grid_struct->nR)*(grid_struct->nC+1)*sizeof(char*));
   bool first_char = true;
-  char c[100];
-
+  // char c[100];
 
   for (int i = 0; i < grid_struct->nR; i++) { // < or <=
     for (int j = 0; j < grid_struct->nC; j++) {
       // Get the character at (i,j)
       char a = grid_struct->grid[i][j]->c;
-      sprintf(c, "%s", &a);
+      // sprintf(c, "%s", &a);
 
       if (first_char) {
-        strcat(grid_text, " ");
+        strcpy(grid_text, &a);
         first_char = false;
       }
       else {
-        strcat(grid_text, c);
+        strcat(grid_text, &a);
       }
     }
     // Start on a new line for the next iteration of the for loop
     strcat(grid_text, "\n");
   }
 
-  return grid_ptr;
+  // return grid_ptr;
+  return grid_text;
 }
 
 
@@ -164,10 +165,17 @@ grid_print(grid_struct_t *grid_struct)
  return 0;
 }
 
-int grid_get_nR(grid_struct_t *grid_struct) {
+int
+grid_get_nR(grid_struct_t *grid_struct) {
   return grid_struct->nR;
 }
 
-int grid_get_nC(grid_struct_t *grid_struct) {
+int
+grid_get_nC(grid_struct_t *grid_struct) {
   return grid_struct->nC;
+}
+
+point_t*
+grid_get_point(grid_struct_t *grid_struct, int r, int c) {
+  return grid_struct->grid[r][c];
 }
