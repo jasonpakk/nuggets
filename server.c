@@ -216,8 +216,9 @@ parse_message(const char *message, addr_t *address)
       // update current letter
       game->curr_symbol = game->curr_symbol + 1;
       game->player_number = game->player_number + 1;
-      hashtable_insert(game->players, new_player->name, new_player);
-
+      char portnum[100];
+      sprintf(portnum, "%d",ntohs(new.sin_port));
+      hashtable_insert(game->players, portnum, new_player);
 
       // send the player the grid's information
       send_grid(*address);
@@ -246,6 +247,7 @@ parse_message(const char *message, addr_t *address)
     } else {
       // replace the current spectator
 
+
     }
 
   } else if (strcmp(command, key) == 0) {
@@ -265,6 +267,9 @@ void
 refresh()
 {
   hashtable_iterate(game->players, NULL, refresh_helper);
+  if(game->spectator != NULL) {
+    send_display(game->spectator->address);
+  }
 }
 
 static void refresh_helper(void *arg, const char *key, void *item)
@@ -303,7 +308,6 @@ player_new(addr_t address, char *name, char symbol, bool active, position_t *pos
   player->name = malloc(strlen(name)+1);
   strcpy(player->name, name);
   player->symbol = symbol;
-  //player->address = malloc(sizeof(addr_t*));
   player->address = address;
   player->gold_number = 0;
   player->active = active;
