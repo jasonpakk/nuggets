@@ -17,6 +17,8 @@
 /**************** global types ****************/
 typedef struct grid_struct grid_struct_t;  // opaque to users of the module
 
+typedef struct point point_t;
+
 /**************** functions ****************/
 
 grid_struct_t* grid_struct_new(char* filename);
@@ -30,5 +32,7 @@ int grid_print(grid_struct_t *grid_struct);
 int grid_get_nR(grid_struct_t *grid_struct);
 
 int grid_get_nC(grid_struct_t *grid_struct);
+
+point_t* grid_get_point(grid_struct_t *grid_struct, int r, int c);
 
 #endif // __GRID_H
