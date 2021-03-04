@@ -20,7 +20,7 @@
 typedef struct player {
   char *name;
   char symbol;
-  addr_t *address;
+  addr_t address;
   int gold_number;
   bool active;
   position_t *pos;
@@ -40,7 +40,9 @@ int play_game(int seed);
 static bool handleMessage(void *arg, const addr_t from, const char *message);
 int parse_message(const char *message, addr_t *address);
 game_t* game_new(char *map_filename);
-player_t* player_new(addr_t *address, char *name, char symbol, bool active, position_t *pos);
+player_t* player_new(addr_t address, char *name, char symbol, bool active, position_t *pos);
+void refresh();
+static void refresh_helper(void *arg, const char *key, void *item);
 
 // global variable
 game_t* game;
@@ -127,25 +129,25 @@ handleMessage(void *arg, const addr_t from, const char *message)
   return false;
 }
 
-void send_grid(addr_t *address) {
+void send_grid(addr_t address) {
   char map_info[256];
   int nC = grid_get_nC(game->main_grid);
   int nR = grid_get_nR(game->main_grid);
   sprintf(map_info, "GRID %d %d", nC, nR);
-  message_send(*address, map_info);
+  message_send(address, map_info);
 }
 
-void send_gold(addr_t *address, int n, int p, int r) {
+void send_gold(addr_t address, int n, int p, int r) {
   char gold_info[256];
   sprintf(gold_info, "GOLD %d %d %d", n, p, r);
-  message_send(*address, gold_info);
+  message_send(address, gold_info);
 }
 
-void send_display(addr_t *address) {
+void send_display(addr_t address) {
   char *string = grid_string(game->main_grid);
   char *display_info = malloc(strlen(string) * sizeof(char*));
   sprintf(display_info, "DISPLAY\n%s", string);
-  message_send(*address, display_info);
+  message_send(address, display_info);
 }
 
 position_t *generate_position(grid_struct_t *grid_struct, char valid_symbol) {
@@ -205,7 +207,8 @@ parse_message(const char *message, addr_t *address)
       position_t *pos = generate_position(game->main_grid, '.');
 
       // add the player
-      player_t *new_player = player_new(address, remainder, game->curr_symbol, true, pos);
+      addr_t new = *address;
+      player_t *new_player = player_new(new, remainder, game->curr_symbol, true, pos);
 
       // put the player in
       grid_swap(game->main_grid, new_player->symbol, pos);
@@ -217,13 +220,14 @@ parse_message(const char *message, addr_t *address)
 
 
       // send the player the grid's information
-      send_grid(address);
+      send_grid(*address);
+      refresh();
 
       // send the player gold information
-      send_gold(address, 0, new_player->gold_number, game->gold_remaining);
+      //send_gold(address, 0, new_player->gold_number, game->gold_remaining);
 
       // send the player a display of the grid
-      send_display(address);
+      //send_display(address);
 
     } else {
       // write error message, too many players
@@ -231,12 +235,13 @@ parse_message(const char *message, addr_t *address)
   } else if (strcmp(command, spectate) == 0) {
     if (game->spectator == NULL) {
       // no current spectator
-      player_t *new_spectator = player_new(address, spectate, '!', false, NULL);
+      player_t *new_spectator = player_new(*address, spectate, '!', false, NULL);
       game->spectator = new_spectator;
       printf("spectator joined\n");
 
       // send them a map to draw
-      send_grid(address);
+      send_grid(*address);
+      send_display(*address);
 
     } else {
       // replace the current spectator
@@ -256,6 +261,24 @@ parse_message(const char *message, addr_t *address)
 return 0;
 }
 
+void
+refresh()
+{
+  hashtable_iterate(game->players, NULL, refresh_helper);
+}
+
+static void refresh_helper(void *arg, const char *key, void *item)
+{
+  if (key != NULL) {
+    player_t* curr = item;
+    printf("curr player name is: %s\n", curr->name);
+    // send the player gold information (UPDATE LATER)
+    send_gold(curr->address, 0, curr->gold_number, game->gold_remaining);
+
+    // send the player a display of the grid
+    send_display(curr->address);
+  }
+}
 
 game_t*
 game_new(char *map_filename)
@@ -274,11 +297,13 @@ game_new(char *map_filename)
 
 
 player_t*
-player_new(addr_t *address, char *name, char symbol, bool active, position_t *pos)
+player_new(addr_t address, char *name, char symbol, bool active, position_t *pos)
 {
   player_t* player = malloc(sizeof(player_t));
-  player->name = name;
+  player->name = malloc(strlen(name)+1);
+  strcpy(player->name, name);
   player->symbol = symbol;
+  //player->address = malloc(sizeof(addr_t*));
   player->address = address;
   player->gold_number = 0;
   player->active = active;
