@@ -143,8 +143,7 @@ void send_gold(addr_t *address, int n, int p, int r) {
 
 void send_display(addr_t *address) {
   char *string = grid_string(game->main_grid);
-
-  char *display_info = malloc(sizeof(char *));
+  char *display_info = malloc(strlen(string) * sizeof(char*));
   sprintf(display_info, "DISPLAY\n%s", string);
   message_send(*address, display_info);
 }
