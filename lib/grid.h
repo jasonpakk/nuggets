@@ -26,7 +26,9 @@ grid_struct_t* grid_struct_new(char* filename);
 
 int grid_load(grid_struct_t *grid, char* filename, bool seen);
 
-char grid_swap(grid_struct_t *grid_struct, char newChar, position_t *pos);
+char grid_set(grid_struct_t *grid_struct, char newChar, position_t *pos);
+
+void grid_swap(grid_struct_t *grid_struct, position_t *pos1, position_t *pos2);
 
 char* grid_string(grid_struct_t *grid_struct);
 
@@ -39,5 +41,9 @@ int grid_get_nC(grid_struct_t *grid_struct);
 char grid_get_point_c(grid_struct_t *grid_struct, int x, int y);
 
 position_t* position_new(int x, int y);
+
+int pos_get_x(position_t *pos);
+
+int pos_get_y(position_t *pos);
 
 #endif // __GRID_H
