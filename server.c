@@ -190,6 +190,20 @@ generate_position(grid_struct_t *grid_struct, char valid_symbol) {
   return NULL;
 }
 
+void move(addr_t *address, int x, int y) {
+  // Get the player
+  char portnum[100];
+  sprintf(portnum, "%d",ntohs((*address).sin_port));
+  player_t *curr = hashtable_find(game->players, portnum);
+  // Get the position to the left of the player
+
+  position_t *new = position_new(pos_get_x(curr->pos) + x, pos_get_y(curr->pos) + y);
+
+  grid_swap(game->main_grid, new, curr->pos);
+  curr->pos = new;
+  refresh();
+}
+
 int
 parse_message(const char *message, addr_t *address)
 {
@@ -262,21 +276,31 @@ parse_message(const char *message, addr_t *address)
     if (strcmp(remainder, "n") == 0) {
       // send appropriate message depending on if client is spectator or player
       if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        // Get the player
-        char portnum[100];
-        sprintf(portnum, "%d",ntohs((*address).sin_port));
-        player_t *curr = hashtable_find(game->players, portnum);
-        // Get the position to the left of the player
-
-        position_t *left = position_new(pos_get_x(curr->pos) - 1, pos_get_y(curr->pos));
-
-        grid_swap(game->main_grid, curr->pos, left);
-        curr->pos = left;
-        refresh();
+        // Move to the left by 1
+        move(address, -1, 0);
       }
     }
 
+    if (strcmp(remainder, "l") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+        move(address, 1, 0);
+      }
+    }
 
+    if (strcmp(remainder, "k") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+        move(address, 0, -1);
+      }
+    }
+
+    if (strcmp(remainder, "j") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+        move(address, 0, 1);
+      }
+    }
 
   } else {
     message_send(*address, "ERROR unable to understand message");

@@ -149,9 +149,12 @@ void grid_swap(grid_struct_t *grid_struct, position_t *pos1, position_t *pos2) {
   char symbol2 = grid_get_point_c(grid_struct, pos2->x, pos2->y);
 
   // If the movement is valid
+  // DOESN'T WORK. FIX IT
   if (strcmp(&symbol2, "-") != 0 && strcmp(&symbol2, "|") != 0 && strcmp(&symbol2, "+") != 0) {
     // Change the first position's symbol to the second position's symbol
     char symbol1 = grid_set(grid_struct, symbol2, pos1);
+
+    printf("Swapping %d with %d\n", symbol1, symbol2);
 
 
     // Change the second position's symbol to the first position's symbol
