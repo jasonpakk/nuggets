@@ -15,6 +15,7 @@
 #include "message.h"
 #include "log.h"
 #include "hashtable.h"
+#include "set.h"
 #include "grid.h"
 
 typedef struct player {
@@ -34,6 +35,7 @@ typedef struct game {
   char curr_symbol;
   grid_struct_t *main_grid;
   hashtable_t *players;
+  set_t* symbol_to_port;
   player_t *spectator; // STORE IN HASHTABLE, keep bool of if there is a spectator // have special symbol for spectator
 } game_t;
 
@@ -190,18 +192,46 @@ generate_position(grid_struct_t *grid_struct, char valid_symbol) {
   return NULL;
 }
 
-void move(addr_t *address, int x, int y) {
+void nameprint(FILE *fp, const char *key, void *item)
+{
+  char *name = item;
+  if (name == NULL) {
+    fprintf(fp, "(null)");
+  }
+  else {
+    fprintf(fp, "(%s,%s)", key, name);
+  }
+}
+
+bool move(addr_t *address, int x, int y) {
   // Get the player
   char portnum[100];
   sprintf(portnum, "%d",ntohs((*address).sin_port));
   player_t *curr = hashtable_find(game->players, portnum);
   // Get the position to the left of the player
+  int new_x = pos_get_x(curr->pos) + x;
+  int new_y = pos_get_y(curr->pos) + y;
+  char curr_at_point = grid_get_point_c(game->main_grid, new_x, new_y);
+  if(curr_at_point == '.' || isalpha(curr_at_point)) {
+    position_t *new = position_new(pos_get_x(curr->pos) + x, pos_get_y(curr->pos) + y);
+    grid_swap(game->main_grid, new, curr->pos);
 
-  position_t *new = position_new(pos_get_x(curr->pos) + x, pos_get_y(curr->pos) + y);
+    if(isalpha(curr_at_point)) {
+      char* port = set_find(game->symbol_to_port, &(curr_at_point));
+      set_print(game->symbol_to_port, stdout, nameprint);
+      printf("curr: %s\n", &curr_at_point);
+      player_t *curr2 = hashtable_find(game->players, port);
+      if(curr2 != NULL) {
+        printf("updated\n");
+        pos_update(curr2->pos, pos_get_x(curr->pos), pos_get_y(curr->pos));
+      }
+    }
 
-  grid_swap(game->main_grid, new, curr->pos);
-  curr->pos = new;
-  refresh();
+    curr->pos = new;
+    refresh();
+    return true;
+  }
+  return false;
 }
 
 int
@@ -270,35 +300,133 @@ parse_message(const char *message, addr_t *address)
       }
     }
 
-
-
-
-    if (strcmp(remainder, "n") == 0) {
+    // Move left
+    if (strcmp(remainder, "h") == 0) {
       // send appropriate message depending on if client is spectator or player
       if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
         // Move to the left by 1
+        move(address, 0, -1);
+      }
+    }
+
+    // Move left (until not possible)
+    if (strcmp(remainder, "H") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+        // Move to the left by 1
+        while(move(address, 0, -1));
+      }
+    }
+
+    // Move right
+    if (strcmp(remainder, "l") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+        move(address, 0, 1);
+      }
+    }
+
+    // Move right (until not possible)
+    if (strcmp(remainder, "L") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+        while(move(address, 0, 1));
+      }
+    }
+
+    // Move up
+    if (strcmp(remainder, "k") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
         move(address, -1, 0);
       }
     }
 
-    if (strcmp(remainder, "l") == 0) {
+    // Move up (until not possible)
+    if (strcmp(remainder, "K") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+        while(move(address, -1, 0));
+      }
+    }
+
+    // Move down
+    if (strcmp(remainder, "j") == 0) {
       // send appropriate message depending on if client is spectator or player
       if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
         move(address, 1, 0);
       }
     }
 
-    if (strcmp(remainder, "k") == 0) {
+    // Move down (until not possible)
+    if (strcmp(remainder, "J") == 0) {
       // send appropriate message depending on if client is spectator or player
       if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        move(address, 0, -1);
+        while(move(address, 1, 0));
       }
     }
 
-    if (strcmp(remainder, "j") == 0) {
+    // move diagonally up and left
+    if (strcmp(remainder, "y") == 0) {
       // send appropriate message depending on if client is spectator or player
       if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        move(address, 0, 1);
+        move(address, -1, -1);
+      }
+    }
+
+    // move diagonally up and left (until not possible)
+    if (strcmp(remainder, "Y") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+        while(move(address, -1, -1));
+      }
+    }
+
+    // move diagonally up and right
+    if (strcmp(remainder, "u") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+        move(address, -1, 1);
+      }
+    }
+
+    // move diagonally up and right (until not possible)
+    if (strcmp(remainder, "U") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+        while(move(address, -1, 1));
+      }
+    }
+
+    // move diagonally down and left
+    if (strcmp(remainder, "b") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+        move(address, 1, -1);
+      }
+    }
+
+    // move diagonally down and left (until not possible)
+    if (strcmp(remainder, "B") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+        while(move(address, 1, -1));
+      }
+    }
+
+    // move diagonally down and right
+    if (strcmp(remainder, "n") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+        move(address, 1, 1);
+      }
+    }
+
+    // move diagonally down and right (until not possible)
+    if (strcmp(remainder, "N") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+        while(move(address, 1, 1));
       }
     }
 
@@ -352,6 +480,7 @@ game_new(char *map_filename)
   game->player_number = 0;
   game->curr_symbol = 'A';
   hashtable_t *ht = hashtable_new(MaxPlayers);
+  game->symbol_to_port = set_new();
   game->players = ht;
   game->spectator = NULL;
   game->main_grid = NULL;
@@ -395,6 +524,10 @@ add_player(addr_t *address, char* player_name)
   char portnum[100];
   sprintf(portnum, "%d",ntohs((*address).sin_port));
   hashtable_insert(game->players, portnum, new_player);
+  char player_symbol[3];
+  sprintf(player_symbol, "%c", new_player->symbol);
+  set_insert(game->symbol_to_port, player_symbol, portnum);
+  set_print(game->symbol_to_port, stdout, nameprint);
 
   // send player the accept message
   char player_info[5];

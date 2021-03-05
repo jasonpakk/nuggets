@@ -220,6 +220,12 @@ position_new(int x, int y)
   return pos;
 }
 
+void
+pos_update(position_t *pos, int x, int y) {
+  pos->x = x;
+  pos->y = y;
+}
+
 int
 pos_get_x(position_t *pos) {
   return pos->x;
