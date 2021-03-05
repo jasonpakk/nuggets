@@ -24,7 +24,7 @@ typedef struct position position_t;
 
 grid_struct_t* grid_struct_new(char* filename);
 
-int grid_load(grid_struct_t *grid, char* filename);
+int grid_load(grid_struct_t *grid, char* filename, bool seen);
 
 char grid_swap(grid_struct_t *grid_struct, char newChar, position_t *pos);
 

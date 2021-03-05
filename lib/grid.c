@@ -107,8 +107,11 @@ grid_struct_new(char *filename)
 /* see hashtable.h for comments about exported functions */
 
 
+
+// if we are loading grid for game/spectator, seen=true as all the points are seen
+// if we are loading grid for player, seen=false as all points start out false
 int
-grid_load(grid_struct_t *grid_struct, char* filename)
+grid_load(grid_struct_t *grid_struct, char* filename, bool seen)
 {
   FILE *map;
   if ((map = fopen(filename, "r")) == NULL) {
@@ -121,7 +124,7 @@ grid_load(grid_struct_t *grid_struct, char* filename)
 
   while ((line = freadlinep(map)) != NULL) {
     for (int j = 0; j < strlen(line); j ++) {
-      point_t *p = point_new(line[j], false, 0);
+      point_t *p = point_new(line[j], seen, 0);
       grid_struct->grid[i][j] = p;
     }
     i++;
@@ -139,8 +142,6 @@ grid_swap(grid_struct_t *grid_struct, char newChar, position_t *pos) {
 
   return oldChar;
 }
-
-
 
 
 
