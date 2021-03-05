@@ -20,7 +20,7 @@
 typedef struct player {
   char *name;
   char symbol;
-  addr_t address; 
+  addr_t address;
   int gold_number;
   bool active;
   position_t *pos;
@@ -190,6 +190,20 @@ generate_position(grid_struct_t *grid_struct, char valid_symbol) {
   return NULL;
 }
 
+void move(addr_t *address, int x, int y) {
+  // Get the player
+  char portnum[100];
+  sprintf(portnum, "%d",ntohs((*address).sin_port));
+  player_t *curr = hashtable_find(game->players, portnum);
+  // Get the position to the left of the player
+
+  position_t *new = position_new(pos_get_x(curr->pos) + x, pos_get_y(curr->pos) + y);
+
+  grid_swap(game->main_grid, new, curr->pos);
+  curr->pos = new;
+  refresh();
+}
+
 int
 parse_message(const char *message, addr_t *address)
 {
@@ -255,6 +269,39 @@ parse_message(const char *message, addr_t *address)
         message_send(*address, "QUIT Thanks for playing!");
       }
     }
+
+
+
+
+    if (strcmp(remainder, "n") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+        // Move to the left by 1
+        move(address, -1, 0);
+      }
+    }
+
+    if (strcmp(remainder, "l") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+        move(address, 1, 0);
+      }
+    }
+
+    if (strcmp(remainder, "k") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+        move(address, 0, -1);
+      }
+    }
+
+    if (strcmp(remainder, "j") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+        move(address, 0, 1);
+      }
+    }
+
   } else {
     message_send(*address, "ERROR unable to understand message");
   }
@@ -355,15 +402,17 @@ add_player(addr_t *address, char* player_name)
   message_send(*address, player_info);
 
   // add the player to main grid
-  grid_swap(game->main_grid, new_player->symbol, pos);
-  grid_print(game->main_grid);
+  grid_set(game->main_grid, new_player->symbol, pos);
+  // grid_print(game->main_grid);
 
   // delete pos here or in grid swap ?
+  //
+  // // initialize grid for player
+  // grid_struct_t *player_grid = grid_struct_new(game->map_filename);
+  // grid_load(player_grid, game->map_filename, false);
+  // new_player->grid = player_grid;
 
-  // initialize grid for player
-  grid_struct_t *player_grid = grid_struct_new(game->map_filename);
-  grid_load(player_grid, game->map_filename, false);
-  new_player->grid = player_grid;
+  new_player->grid = game->main_grid;
 
   // send the player the grid's information
   send_grid(*address);
