@@ -194,41 +194,44 @@ generate_position(grid_struct_t *grid_struct, char valid_symbol) {
 
 void nameprint(FILE *fp, const char *key, void *item)
 {
-  char *name = item;
+  player_t *name = item;
   if (name == NULL) {
     fprintf(fp, "(null)");
   }
   else {
-    fprintf(fp, "(%s,%s)", key, name);
+    char portnum2[100];
+    sprintf(portnum2, "%d",ntohs((name->address).sin_port));
+    fprintf(fp, "(%s,%s)", key, portnum2);
   }
 }
 
 bool move(addr_t *address, int x, int y) {
   // Get the player
-  char portnum[100];
-  sprintf(portnum, "%d",ntohs((*address).sin_port));
-  player_t *curr = hashtable_find(game->players, portnum);
+  char portnum1[100];
+  sprintf(portnum1, "%d",ntohs((*address).sin_port));
+  player_t *curr = hashtable_find(game->players, portnum1);
   // Get the position to the left of the player
   int new_x = pos_get_x(curr->pos) + x;
   int new_y = pos_get_y(curr->pos) + y;
-  char curr_at_point = grid_get_point_c(game->main_grid, new_x, new_y);
-  if(curr_at_point == '.' || isalpha(curr_at_point)) {
-    position_t *new = position_new(pos_get_x(curr->pos) + x, pos_get_y(curr->pos) + y);
+  char c = grid_get_point_c(game->main_grid, new_x, new_y);
+  if(c == '.' || isalpha(c)) {
+    position_t *new = position_new(new_x, new_y);
     grid_swap(game->main_grid, new, curr->pos);
 
-    if(isalpha(curr_at_point)) {
-      char* port = set_find(game->symbol_to_port, &(curr_at_point));
+    if(isalpha(c)) {
+      char* player2_symbol = malloc(sizeof(char) + 1);
+      sprintf(player2_symbol, "%c", c);
+
+      player_t* player2 = set_find(game->symbol_to_port, player2_symbol);
+      pos_update(player2->pos, pos_get_x(curr->pos), pos_get_y(curr->pos));
       set_print(game->symbol_to_port, stdout, nameprint);
-      printf("curr: %s\n", &curr_at_point);
-      player_t *curr2 = hashtable_find(game->players, port);
-      if(curr2 != NULL) {
-        printf("updated\n");
-        pos_update(curr2->pos, pos_get_x(curr->pos), pos_get_y(curr->pos));
-      }
     }
 
     curr->pos = new;
     refresh();
+
+    printf("MAIN GRID:\n%s", grid_string(game->main_grid));
+
     return true;
   }
   return false;
@@ -524,9 +527,10 @@ add_player(addr_t *address, char* player_name)
   char portnum[100];
   sprintf(portnum, "%d",ntohs((*address).sin_port));
   hashtable_insert(game->players, portnum, new_player);
+
   char player_symbol[3];
   sprintf(player_symbol, "%c", new_player->symbol);
-  set_insert(game->symbol_to_port, player_symbol, portnum);
+  set_insert(game->symbol_to_port, player_symbol, new_player);
   set_print(game->symbol_to_port, stdout, nameprint);
 
   // send player the accept message
