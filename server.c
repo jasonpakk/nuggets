@@ -20,7 +20,7 @@
 typedef struct player {
   char *name;
   char symbol;
-  addr_t address; // should this be ponter to address ?
+  addr_t address; 
   int gold_number;
   bool active;
   position_t *pos;
@@ -50,6 +50,13 @@ static void refresh_helper(void *arg, const char *key, void *item);
 // global variable
 game_t* game;
 
+// constants (currently commented out the ones we haven't used yet)
+//static const int MaxNameLength = 50;   // max number of chars in playerName
+static const int MaxPlayers = 26;      // maximum number of players
+static const int GoldTotal = 250;      // amount of gold in the game
+//static const int GoldMinNumPiles = 10; // minimum number of gold piles
+//static const int GoldMaxNumPiles = 30; // maximum number of gold piles
+
 int
 main(const int argc, const char *argv[])
 {
@@ -66,7 +73,6 @@ main(const int argc, const char *argv[])
     grid_load(main_grid, map_file, true);
     game->main_grid = main_grid;
     grid_print(game->main_grid);
-
 
     // no seed
     if (argc == 2) {
@@ -184,7 +190,6 @@ generate_position(grid_struct_t *grid_struct, char valid_symbol) {
   return NULL;
 }
 
-
 int
 parse_message(const char *message, addr_t *address)
 {
@@ -206,50 +211,64 @@ parse_message(const char *message, addr_t *address)
 
   // Server to Player commands;
   if (strcmp(command, play) == 0) {
-    // add player
-    if (game->player_number < 26) {
+        // add player
+    if (game->player_number <= MaxPlayers && strlen(remainder) > 0) {
       add_player(address, remainder);
-
     } else {
-      // write error message, too many players
+      if (game->player_number > MaxPlayers) {
+        // write error message, too many players
+        message_send(*address, "QUIT Game is full: no more players can join.");
+      } else if(strlen(remainder) == 0) {
+        // write error message, name not provided
+        message_send(*address, "QUIT Sorry - you must provide player's name.");
+      }
     }
   } else if (strcmp(command, spectate) == 0) {
+    // initalize new spectator
+    addr_t new = *address;
+    player_t *new_spectator = player_new(new, spectate, '!', false, NULL);
+    new_spectator->grid = game->main_grid;
+
     if (game->spectator == NULL) {
       // no current spectator
-      player_t *new_spectator = player_new(*address, spectate, '!', false, NULL);
       game->spectator = new_spectator;
-      new_spectator->grid = game->main_grid;
       printf("spectator joined\n");
-
-      // send them a map to draw
-      send_grid(*address);
-      send_display(new_spectator);
-
     } else {
-      // replace the current spectator
-
-
+      // otherwise, replace the current spectator
+      message_send(game->spectator->address, "QUIT You have been replaced by a new spectator.");
+      //LATER: call PLAYER_DELETE to free memory of previous spectator
+      game->spectator = new_spectator;
+      printf("new spectator joined\n");
     }
+
+    // send spectator a map to draw
+    send_grid(*address);
+    refresh();
 
   } else if (strcmp(command, key) == 0) {
-    if (strcmp(remainder, "Q")) {
-      message_send(*address, "QUIT Thanks for playing!");
+    // if QUIT key pressed
+    if (strcmp(remainder, "Q") == 0) {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator != NULL && message_eqAddr(game->spectator->address, *address)) {
+        message_send(*address, "QUIT Thanks for watching!");
+      } else {
+        message_send(*address, "QUIT Thanks for playing!");
+      }
     }
-
   } else {
-    printf("unknown message\n");
+    message_send(*address, "ERROR unable to understand message");
   }
 
-
-return 0;
+  return 0;
 }
 
 void
 refresh()
 {
   hashtable_iterate(game->players, NULL, refresh_helper);
-
+  // send updates to spectator
   if(game->spectator != NULL) {
+    send_gold(game->spectator->address, 0, 0, game->gold_remaining);
     send_display(game->spectator);
   }
 }
@@ -262,7 +281,6 @@ refresh()
 // {
 //
 // }
-
 
 static void
 refresh_helper(void *arg, const char *key, void *item)
@@ -283,17 +301,15 @@ game_new(char *map_filename)
 {
   game_t* game = malloc(sizeof(game_t));
   game->map_filename = map_filename;
-  game->gold_remaining = 0;
+  game->gold_remaining = GoldTotal;
   game->player_number = 0;
   game->curr_symbol = 'A';
-  hashtable_t *ht = hashtable_new(5); // best number of slots?
+  hashtable_t *ht = hashtable_new(MaxPlayers);
   game->players = ht;
   game->spectator = NULL;
   game->main_grid = NULL;
   return game;
 }
-
-
 
 player_t*
 player_new(addr_t address, char *name, char symbol, bool active, position_t *pos)
@@ -310,7 +326,6 @@ player_new(addr_t address, char *name, char symbol, bool active, position_t *pos
   return player;
 }
 
-
 // find a position
 // create a new player
 // add to hashtable
@@ -323,42 +338,40 @@ int
 add_player(addr_t *address, char* player_name)
 {
   printf("player being added with name %s and symbol %c\n", player_name, game->curr_symbol);
-  grid_print(game->main_grid);
 
   // Find a position to put the player in and create a new player
   position_t *pos = generate_position(game->main_grid, '.');
-  player_t *new_player = player_new(*address, player_name, game->curr_symbol, true, pos);
+  addr_t new = *address;
+  player_t *new_player = player_new(new, player_name, game->curr_symbol, true, pos);
 
-  // add player to ht and update current letter and player number
-  game->curr_symbol = game->curr_symbol + 1;
-  game->player_number = game->player_number + 1;
+  // add player to hashtable
   char portnum[100];
   sprintf(portnum, "%d",ntohs((*address).sin_port));
   hashtable_insert(game->players, portnum, new_player);
 
+  // send player the accept message
+  char player_info[5];
+  sprintf(player_info, "OK %c", new_player->symbol);
+  message_send(*address, player_info);
+
   // add the player to main grid
   grid_swap(game->main_grid, new_player->symbol, pos);
+  grid_print(game->main_grid);
+
   // delete pos here or in grid swap ?
 
   // initialize grid for player
   grid_struct_t *player_grid = grid_struct_new(game->map_filename);
-
   grid_load(player_grid, game->map_filename, false);
   new_player->grid = player_grid;
 
-
-  // WILL SPECTATOR GRID JUST BE MAIN GRID ?????
-
-
   // send the player the grid's information
   send_grid(*address);
-
-
-  // send the player gold information
-  //send_gold(address, 0, new_player->gold_number, game->gold_remaining);
-
-  // send the player a display of the grid
-  //send_display(address);
   refresh();
+
+  // update current letter and player number
+  game->curr_symbol = game->curr_symbol + 1;
+  game->player_number = game->player_number + 1;
+
   return 0;
 }
