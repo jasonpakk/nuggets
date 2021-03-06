@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <math.h>
 
 /**************** global types ****************/
 typedef struct grid_struct grid_struct_t;  // opaque to users of the module
@@ -34,6 +35,10 @@ char* grid_string(grid_struct_t *grid_struct);
 
 int grid_print(grid_struct_t *grid_struct);
 
+int grid_print_player(grid_struct_t *main_grid, grid_struct_t *player_grid, position_t* player_pos);
+
+char* grid_string_player(grid_struct_t *main_grid, grid_struct_t *player_grid, position_t* player_pos);
+
 int grid_get_nR(grid_struct_t *grid_struct);
 
 int grid_get_nC(grid_struct_t *grid_struct);
@@ -47,5 +52,7 @@ void pos_update(position_t *pos, int x, int y);
 int pos_get_x(position_t *pos);
 
 int pos_get_y(position_t *pos);
+
+void grid_visibility(grid_struct_t *grid_struct, position_t *pos);
 
 #endif // __GRID_H

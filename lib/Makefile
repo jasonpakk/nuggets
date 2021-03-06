@@ -19,7 +19,7 @@ CC = gcc
 MAKE = make
 
 # Build the library by archiving object files
-$(LIB): $(OBJS)
+$(LIB): $(OBJS) 
 	ar cr $(LIB) $(OBJS)
 
 # Dependencies: object files depend on header files
