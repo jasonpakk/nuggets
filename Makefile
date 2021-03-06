@@ -7,7 +7,7 @@ S = support
 
 PROG = server
 OBJS = server.o
-LLIBS = $L/lib.a $S/support.a
+LLIBS = $L/lib.a $S/support.a -lm
 
 # uncomment the following to turn on verbose memory logging
 # TESTING=-DMEMTEST

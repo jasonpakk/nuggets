@@ -76,6 +76,7 @@ main(const int argc, const char *argv[])
     game->main_grid = main_grid;
     grid_print(game->main_grid);
 
+
     // no seed
     if (argc == 2) {
       // generate a seed
@@ -160,9 +161,10 @@ void
 send_display(player_t* player) {
   // get player grid
   grid_struct_t *grid = player->grid;
+  grid_visibility(grid, player->pos);
 
   // create string to pass grid
-  char *string = grid_string(grid);
+  char *string = grid_string_player(game->main_grid, grid, player->pos);
   char *display_info = malloc(strlen(string) * sizeof(char*));
   sprintf(display_info, "DISPLAY\n%s", string);
   message_send(player->address, display_info);
@@ -177,8 +179,8 @@ generate_position(grid_struct_t *grid_struct, char valid_symbol) {
 
   while (found == false) {
     // Create x and y inside the grid row and columns
-    rand_x = rand() % grid_get_nR(grid_struct);
-    rand_y = rand() % grid_get_nC(grid_struct);
+    rand_x = rand() % grid_get_nC(grid_struct);
+    rand_y = rand() % grid_get_nR(grid_struct);
 
     // Get the point from grid
     possible_point = grid_get_point_c(grid_struct, rand_x, rand_y);
@@ -214,7 +216,7 @@ bool move(addr_t *address, int x, int y) {
   int new_x = pos_get_x(curr->pos) + x;
   int new_y = pos_get_y(curr->pos) + y;
   char c = grid_get_point_c(game->main_grid, new_x, new_y);
-  if(c == '.' || isalpha(c)) {
+  if(c == '.' || isalpha(c) || c == '#') {
     position_t *new = position_new(new_x, new_y);
     grid_swap(game->main_grid, new, curr->pos);
 
@@ -229,9 +231,6 @@ bool move(addr_t *address, int x, int y) {
 
     curr->pos = new;
     refresh();
-
-    printf("MAIN GRID:\n%s", grid_string(game->main_grid));
-
     return true;
   }
   return false;
@@ -308,7 +307,7 @@ parse_message(const char *message, addr_t *address)
       // send appropriate message depending on if client is spectator or player
       if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
         // Move to the left by 1
-        move(address, 0, -1);
+        move(address, -1, 0);
       }
     }
 
@@ -317,7 +316,7 @@ parse_message(const char *message, addr_t *address)
       // send appropriate message depending on if client is spectator or player
       if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
         // Move to the left by 1
-        while(move(address, 0, -1));
+        while(move(address, -1, 0));
       }
     }
 
@@ -325,7 +324,7 @@ parse_message(const char *message, addr_t *address)
     if (strcmp(remainder, "l") == 0) {
       // send appropriate message depending on if client is spectator or player
       if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        move(address, 0, 1);
+        move(address, 1, 0);
       }
     }
 
@@ -333,7 +332,7 @@ parse_message(const char *message, addr_t *address)
     if (strcmp(remainder, "L") == 0) {
       // send appropriate message depending on if client is spectator or player
       if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        while(move(address, 0, 1));
+        while(move(address, 1, 0));
       }
     }
 
@@ -341,7 +340,7 @@ parse_message(const char *message, addr_t *address)
     if (strcmp(remainder, "k") == 0) {
       // send appropriate message depending on if client is spectator or player
       if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        move(address, -1, 0);
+        move(address, 0, -1);
       }
     }
 
@@ -349,7 +348,7 @@ parse_message(const char *message, addr_t *address)
     if (strcmp(remainder, "K") == 0) {
       // send appropriate message depending on if client is spectator or player
       if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        while(move(address, -1, 0));
+        while(move(address, 0, -1));
       }
     }
 
@@ -357,7 +356,7 @@ parse_message(const char *message, addr_t *address)
     if (strcmp(remainder, "j") == 0) {
       // send appropriate message depending on if client is spectator or player
       if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        move(address, 1, 0);
+        move(address, 0, 1);
       }
     }
 
@@ -365,7 +364,7 @@ parse_message(const char *message, addr_t *address)
     if (strcmp(remainder, "J") == 0) {
       // send appropriate message depending on if client is spectator or player
       if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        while(move(address, 1, 0));
+        while(move(address, 0, 1));
       }
     }
 
@@ -389,7 +388,7 @@ parse_message(const char *message, addr_t *address)
     if (strcmp(remainder, "u") == 0) {
       // send appropriate message depending on if client is spectator or player
       if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        move(address, -1, 1);
+        move(address, 1, -1);
       }
     }
 
@@ -397,7 +396,7 @@ parse_message(const char *message, addr_t *address)
     if (strcmp(remainder, "U") == 0) {
       // send appropriate message depending on if client is spectator or player
       if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        while(move(address, -1, 1));
+        while(move(address, 1, -1));
       }
     }
 
@@ -405,7 +404,7 @@ parse_message(const char *message, addr_t *address)
     if (strcmp(remainder, "b") == 0) {
       // send appropriate message depending on if client is spectator or player
       if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        move(address, 1, -1);
+        move(address, -1, 1);
       }
     }
 
@@ -413,7 +412,7 @@ parse_message(const char *message, addr_t *address)
     if (strcmp(remainder, "B") == 0) {
       // send appropriate message depending on if client is spectator or player
       if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        while(move(address, 1, -1));
+        while(move(address, -1, 1));
       }
     }
 
@@ -449,6 +448,7 @@ refresh()
     send_gold(game->spectator->address, 0, 0, game->gold_remaining);
     send_display(game->spectator);
   }
+  printf("MAIN GRID:\n%s", grid_string(game->main_grid));
 }
 
 // hashtable_iterate helper function for adding a char to a grid
@@ -545,11 +545,11 @@ add_player(addr_t *address, char* player_name)
   // delete pos here or in grid swap ?
   //
   // // initialize grid for player
-  // grid_struct_t *player_grid = grid_struct_new(game->map_filename);
-  // grid_load(player_grid, game->map_filename, false);
-  // new_player->grid = player_grid;
+   grid_struct_t *player_grid = grid_struct_new(game->map_filename);
+   grid_load(player_grid, game->map_filename, false);
+   new_player->grid = player_grid;
 
-  new_player->grid = game->main_grid;
+  //new_player->grid = game->main_grid;
 
   // send the player the grid's information
   send_grid(*address);
