@@ -59,4 +59,5 @@ int pos_get_y(position_t *pos);
 
 void grid_visibility(grid_struct_t *grid_struct, position_t *pos);
 
+
 #endif // __GRID_H

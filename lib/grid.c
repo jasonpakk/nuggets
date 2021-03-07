@@ -271,6 +271,7 @@ grid_get_point_c(grid_struct_t *grid_struct, int x, int y) {
   return grid_struct->grid[y][x]->c;
 }
 
+
 int
 grid_get_point_gold(grid_struct_t *grid_struct, int x, int y) {
   return grid_struct->grid[y][x]->gold_number;
