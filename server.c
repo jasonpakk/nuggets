@@ -260,6 +260,16 @@ bool move(addr_t *address, int x, int y) {
       player2->prev_pos = player2->pos;
       pos_update(player2->pos, pos_get_x(curr->pos), pos_get_y(curr->pos));
       set_print(game->symbol_to_port, stdout, nameprint);
+
+      // If the player2 is in a passage, swap the passage booleans and the previous positions of both players
+      bool temp_passage = player2->in_passage;
+      player2->in_passage = curr->in_passage;
+      curr->in_passage = temp_passage;
+
+      position_t *temp_prev_pos = player2->prev_pos;
+      player2->prev_pos = curr->prev_pos;
+      curr->prev_pos = temp_prev_pos;
+
     }
 
 
@@ -567,7 +577,7 @@ player_new(addr_t address, char *name, char symbol, bool active, position_t *pos
 // create a new player
 // add to hashtable
 // initialize player grid
-// put player in their grid and in all other player grids 
+// put player in their grid and in all other player grids
 
 // send player gold info, grid info and the grid string
 
