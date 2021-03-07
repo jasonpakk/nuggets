@@ -47,6 +47,8 @@ int grid_get_nC(grid_struct_t *grid_struct);
 
 char grid_get_point_c(grid_struct_t *grid_struct, int x, int y);
 
+int grid_get_point_gold(grid_struct_t *grid_struct, int x, int y);
+
 position_t* position_new(int x, int y);
 
 void pos_update(position_t *pos, int x, int y);

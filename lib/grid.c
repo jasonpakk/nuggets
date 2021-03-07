@@ -264,8 +264,18 @@ grid_get_nC(grid_struct_t *grid_struct) {
 
 char
 grid_get_point_c(grid_struct_t *grid_struct, int x, int y) {
+  if (x < 0 || x >= grid_struct->nC || y < 0 || y >= grid_struct->nR) {
+    return '-';
+  }
+
   return grid_struct->grid[y][x]->c;
 }
+
+int
+grid_get_point_gold(grid_struct_t *grid_struct, int x, int y) {
+  return grid_struct->grid[y][x]->gold_number;
+}
+
 
 position_t*
 position_new(int x, int y)
