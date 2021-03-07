@@ -27,7 +27,9 @@ grid_struct_t* grid_struct_new(char* filename);
 
 int grid_load(grid_struct_t *grid, char* filename, bool seen);
 
-char grid_set(grid_struct_t *grid_struct, char newChar, position_t *pos);
+char grid_set_character(grid_struct_t *grid_struct, char newChar, position_t *pos);
+
+int grid_set_gold(grid_struct_t *grid_struct, int newGold, position_t *pos);
 
 void grid_swap(grid_struct_t *grid_struct, position_t *pos1, position_t *pos2);
 

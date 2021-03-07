@@ -41,7 +41,7 @@ typedef struct game {
   player_t *spectator; // STORE IN HASHTABLE, keep bool of if there is a spectator // have special symbol for spectator
 } game_t;
 
-int play_game(int seed);
+int play_game();
 
 static bool handleMessage(void *arg, const addr_t from, const char *message);
 int parse_message(const char *message, addr_t *address);
@@ -50,6 +50,7 @@ player_t* player_new(addr_t address, char *name, char symbol, bool active, posit
 int add_player(addr_t *address, char* player_name);
 void refresh();
 static void refresh_helper(void *arg, const char *key, void *item);
+void generate_gold(grid_struct_t *grid_struct);
 
 // global variable
 game_t* game;
@@ -58,8 +59,8 @@ game_t* game;
 //static const int MaxNameLength = 50;   // max number of chars in playerName
 static const int MaxPlayers = 26;      // maximum number of players
 static const int GoldTotal = 250;      // amount of gold in the game
-//static const int GoldMinNumPiles = 10; // minimum number of gold piles
-//static const int GoldMaxNumPiles = 30; // maximum number of gold piles
+static const int GoldMinNumPiles = 10; // minimum number of gold piles
+static const int GoldMaxNumPiles = 30; // maximum number of gold piles
 
 int
 main(const int argc, const char *argv[])
@@ -75,14 +76,13 @@ main(const int argc, const char *argv[])
     grid_struct_t *main_grid = grid_struct_new(map_file);
     // all points are seen
     grid_load(main_grid, map_file, true);
-    game->main_grid = main_grid;
-    grid_print(game->main_grid);
 
+    game->main_grid = main_grid;
 
     // no seed
     if (argc == 2) {
       // generate a seed
-        play_game(0);
+      srand(getpid());
     } else {
       //seed provided, scan it in and check it is positive
       int seed = atoi(argv[2]);
@@ -90,8 +90,15 @@ main(const int argc, const char *argv[])
         fprintf(stderr, "the seed must be a positive integer.\n");
         return 1;
       }
-      play_game(seed);
+      srand(seed);
     }
+    generate_gold(game->main_grid);
+
+
+    grid_print(game->main_grid);
+
+    play_game();
+
   } else {
     // wrong number of arguments
     fprintf(stderr, "usage: ./server map.txt [seed]\n");
@@ -100,15 +107,8 @@ main(const int argc, const char *argv[])
 }
 
 int
-play_game(int seed)
+play_game()
 {
-  if (seed == 0) {
-    // seed the RNG (random-number generator) with the time of day
-    srand(getpid());
-  } else {
-    // seed the RNG with provided seed
-    srand(seed);
-  }
   addr_t other; // address of the other side of this communication (init below)
 
   log_init(stderr);
@@ -196,6 +196,45 @@ generate_position(grid_struct_t *grid_struct, char valid_symbol) {
   return NULL;
 }
 
+void generate_gold(grid_struct_t *grid_struct) {
+  // static const int GoldTotal = 250;      // amount of gold in the game
+  // static const int GoldMinNumPiles = 10; // minimum number of gold piles
+  // static const int GoldMaxNumPiles = 30; // maximum number of gold piles
+
+  // Amount of gold piles to be generated
+  int gold_piles = (rand() % (GoldMaxNumPiles - GoldMinNumPiles + 1)) + GoldMinNumPiles;
+
+  // Current gold amount generated
+  int total_generated = 0;
+
+  // In each loop, generate a new gold pile
+  for (int i = 0; i < gold_piles; i++) {
+
+    // TODO: MAKE THE RANDOM NUMBER GENERATION ACTUALLY RANDOM.
+    // Get a random number of gold such that the future loops can also get a random number of gold in the range.
+    int curr_pile_gold = (rand() % (GoldTotal - total_generated - gold_piles + i + 1) + 1);
+
+    if (gold_piles - i == 1) {
+      curr_pile_gold = GoldTotal - total_generated;
+    }
+    total_generated += curr_pile_gold;
+
+    // Done with TODO.
+
+    // Get a random position for the pile
+    position_t *curr_pile_pos = generate_position(game->main_grid, '.');
+
+    // Change the point for the pile in the grid
+    grid_set_character(game->main_grid, '*', curr_pile_pos);
+
+    // Change the gold amount for the pile in the grid
+    grid_set_gold(game->main_grid, curr_pile_gold, curr_pile_pos);
+
+    printf("Gold pile with %d gold at location %d %d\n", curr_pile_gold, pos_get_x(curr_pile_pos), pos_get_y(curr_pile_pos));
+  }
+}
+
+
 void nameprint(FILE *fp, const char *key, void *item)
 {
   player_t *name = item;
@@ -278,7 +317,7 @@ bool move(addr_t *address, int x, int y) {
     if (c == '#') {
       // If the player is entering the passage, set the previous position to '.', instead of '#'
       if ((point_status(curr->prev_pos, curr->pos) == 1) & !curr->in_passage) {
-        grid_set(game->main_grid, '.', curr->pos);
+        grid_set_character(game->main_grid, '.', curr->pos);
         curr->in_passage = true;
       }
     }
@@ -287,7 +326,7 @@ bool move(addr_t *address, int x, int y) {
 
       // If the player is exiting a passage, set the previous position to '#' instead of '.'
       if ((point_status(curr->prev_pos, curr->pos) == 2) & curr->in_passage) {
-        grid_set(game->main_grid, '#', curr->pos);
+        grid_set_character(game->main_grid, '#', curr->pos);
         curr->in_passage = false;
       }
     }
@@ -607,7 +646,7 @@ add_player(addr_t *address, char* player_name)
   message_send(*address, player_info);
 
   // add the player to main grid
-  grid_set(game->main_grid, new_player->symbol, pos);
+  grid_set_character(game->main_grid, new_player->symbol, pos);
   // grid_print(game->main_grid);
 
   // delete pos here or in grid swap ?
