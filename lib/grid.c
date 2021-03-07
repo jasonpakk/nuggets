@@ -139,12 +139,20 @@ grid_load(grid_struct_t *grid_struct, char* filename, bool seen)
 }
 
 char
-grid_set(grid_struct_t *grid_struct, char newChar, position_t *pos) {
+grid_set_character(grid_struct_t *grid_struct, char newChar, position_t *pos) {
   char oldChar = grid_struct->grid[pos->y][pos->x]->c;
 
   grid_struct->grid[pos->y][pos->x]->c = newChar;
 
   return oldChar;
+}
+
+int grid_set_gold(grid_struct_t *grid_struct, int newGold, position_t *pos) {
+  int oldGold = grid_struct->grid[pos->y][pos->x]->gold_number;
+
+  grid_struct->grid[pos->y][pos->x]->gold_number = newGold;
+
+  return oldGold;
 }
 
 
@@ -156,13 +164,13 @@ void grid_swap(grid_struct_t *grid_struct, position_t *pos1, position_t *pos2) {
   // DOESN'T WORK. FIX IT
   if (strcmp(&symbol2, "-") != 0 && strcmp(&symbol2, "|") != 0 && strcmp(&symbol2, "+") != 0) {
     // Change the first position's symbol to the second position's symbol
-    char symbol1 = grid_set(grid_struct, symbol2, pos1);
+    char symbol1 = grid_set_character(grid_struct, symbol2, pos1);
 
     printf("Swapping %d with %d\n", symbol1, symbol2);
 
 
     // Change the second position's symbol to the first position's symbol
-    grid_set(grid_struct, symbol1, pos2);
+    grid_set_character(grid_struct, symbol1, pos2);
   }
 }
 
