@@ -25,7 +25,9 @@ typedef struct player {
   int gold_number;
   bool active;
   position_t *pos;
+  position_t *prev_pos;
   grid_struct_t *grid;
+  bool in_passage;
 } player_t;
 
 typedef struct game {
@@ -207,29 +209,93 @@ void nameprint(FILE *fp, const char *key, void *item)
   }
 }
 
+int point_status(position_t *prev_pos, position_t *next_pos) {
+
+  int prev_x = pos_get_x(prev_pos);
+  int prev_y = pos_get_y(prev_pos);
+  char prev_c = grid_get_point_c(game->main_grid, prev_x, prev_y);
+
+  int next_x = pos_get_x(next_pos);
+  int next_y = pos_get_y(next_pos);
+  char next_c = grid_get_point_c(game->main_grid, next_x, next_y);
+
+  // If the previous point was a . and the next point is a #, then it's an entry
+  if ((prev_c == '.') & (next_c == '#')) {
+    return 1;
+  }
+  // If the previous point was a # and the next point is a ., then it's an exit
+  else if ((prev_c == '#') & (next_c == '.')) {
+    return 2;
+  }
+  // Otherwise it's just normal movement
+  else {
+    return 0;
+  }
+}
+
 bool move(addr_t *address, int x, int y) {
   // Get the player
   char portnum1[100];
   sprintf(portnum1, "%d",ntohs((*address).sin_port));
   player_t *curr = hashtable_find(game->players, portnum1);
-  // Get the position to the left of the player
+  // Get the position to the direction of the player
   int new_x = pos_get_x(curr->pos) + x;
   int new_y = pos_get_y(curr->pos) + y;
+
+  // Get the character at the next point
   char c = grid_get_point_c(game->main_grid, new_x, new_y);
-  if(c == '.' || isalpha(c) || c == '#') {
+
+  // If the move is valid
+  if (c == '.' || isalpha(c) || c == '#') {
+    // Swap the player's character with the next point's character
     position_t *new = position_new(new_x, new_y);
     grid_swap(game->main_grid, new, curr->pos);
 
-    if(isalpha(c)) {
+    // If the next point is a player, then update the next player's position
+    if (isalpha(c)) {
       char* player2_symbol = malloc(sizeof(char) + 1);
       sprintf(player2_symbol, "%c", c);
 
       player_t* player2 = set_find(game->symbol_to_port, player2_symbol);
+      player2->prev_pos = player2->pos;
       pos_update(player2->pos, pos_get_x(curr->pos), pos_get_y(curr->pos));
       set_print(game->symbol_to_port, stdout, nameprint);
+
+      // If the player2 is in a passage, swap the passage booleans and the previous positions of both players
+      bool temp_passage = player2->in_passage;
+      player2->in_passage = curr->in_passage;
+      curr->in_passage = temp_passage;
+
+      position_t *temp_prev_pos = player2->prev_pos;
+      player2->prev_pos = curr->prev_pos;
+      curr->prev_pos = temp_prev_pos;
+
     }
 
+
+
+    // If the next point is a passage, adjust the grid accordingly
+    if (c == '#') {
+      // If the player is entering the passage, set the previous position to '.', instead of '#'
+      if ((point_status(curr->prev_pos, curr->pos) == 1) & !curr->in_passage) {
+        grid_set(game->main_grid, '.', curr->pos);
+        curr->in_passage = true;
+      }
+    }
+
+    if (c == '.' ) {
+
+      // If the player is exiting a passage, set the previous position to '#' instead of '.'
+      if ((point_status(curr->prev_pos, curr->pos) == 2) & curr->in_passage) {
+        grid_set(game->main_grid, '#', curr->pos);
+        curr->in_passage = false;
+      }
+    }
+
+    // Update the player's position variables to reflect the grid.
+    curr->prev_pos = curr->pos;
     curr->pos = new;
+
     refresh();
     return true;
   }
@@ -502,6 +568,8 @@ player_new(addr_t address, char *name, char symbol, bool active, position_t *pos
   player->active = active;
   player->pos = pos;
   player->grid = NULL;
+  player->in_passage = false;
+  player->prev_pos = pos;
   return player;
 }
 
