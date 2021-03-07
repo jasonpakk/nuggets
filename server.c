@@ -567,7 +567,7 @@ player_new(addr_t address, char *name, char symbol, bool active, position_t *pos
 // create a new player
 // add to hashtable
 // initialize player grid
-// put player in their grid and in all other player grids
+// put player in their grid and in all other player grids 
 
 // send player gold info, grid info and the grid string
 
