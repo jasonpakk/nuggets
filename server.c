@@ -285,7 +285,7 @@ bool move(addr_t *address, int x, int y) {
   char c = grid_get_point_c(game->main_grid, new_x, new_y);
 
   // If the move is valid
-  if (c == '.' || isalpha(c) || c == '#') {
+  if (c == '.' || isalpha(c) || c == '#' || c == '*') {
     // Swap the player's character with the next point's character
     position_t *new = position_new(new_x, new_y);
     grid_swap(game->main_grid, new, curr->pos);
@@ -330,6 +330,16 @@ bool move(addr_t *address, int x, int y) {
         curr->in_passage = false;
       }
     }
+
+    // If the next point is a gold_pile, adjust the grid accordingly
+    if (c == '*') {
+      grid_set_character(game->main_grid, '.', curr->pos);
+      int gold_picked_up = grid_get_point_gold(game->main_grid, pos_get_x(curr->pos), pos_get_y(curr->pos));
+      curr->gold_number += gold_picked_up;
+      game->gold_remaining -= gold_picked_up;
+      send_gold(curr->address, gold_picked_up, curr->gold_number, game->gold_remaining);
+    }
+
 
     // Update the player's position variables to reflect the grid.
     curr->prev_pos = curr->pos;
@@ -564,6 +574,7 @@ refresh()
 // {
 //
 // }
+
 
 static void
 refresh_helper(void *arg, const char *key, void *item)
