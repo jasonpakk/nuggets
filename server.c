@@ -512,6 +512,7 @@ parse_message(const char *message, addr_t *address)
 
     if (game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
 
+      // switch
       switch (c) {
 
         // Move to the left by 1
