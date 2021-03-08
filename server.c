@@ -34,6 +34,7 @@ typedef struct player {
 typedef struct game {
   char* map_filename;
   int gold_remaining;
+  int gold_pile_number;
   int player_number;
   char curr_symbol;
   grid_struct_t *main_grid;
@@ -51,7 +52,7 @@ player_t* player_new(addr_t address, char *name, char symbol, bool active, posit
 int add_player(addr_t *address, char* player_name);
 void refresh();
 static void refresh_helper(void *arg, const char *key, void *item);
-void generate_gold(grid_struct_t *grid_struct);
+int generate_gold(grid_struct_t *grid_struct);
 
 char* game_result_string();
 static void game_result_string_helper(void *arg, const char *key, void *item);
@@ -99,7 +100,7 @@ main(const int argc, const char *argv[])
       }
       srand(seed);
     }
-    generate_gold(game->main_grid);
+    game->gold_pile_number = generate_gold(game->main_grid);
 
     grid_print(game->main_grid);
 
@@ -240,6 +241,7 @@ send_display(player_t* player) {
 
 position_t*
 generate_position(grid_struct_t *grid_struct, char valid_symbol) {
+
   bool found = false;
   int rand_x;
   int rand_y;
@@ -262,7 +264,7 @@ generate_position(grid_struct_t *grid_struct, char valid_symbol) {
   return NULL;
 }
 
-void generate_gold(grid_struct_t *grid_struct) {
+int generate_gold(grid_struct_t *grid_struct) {
   // Number of gold piles to be generated
   int room_spot_number = grid_get_room_spot(grid_struct);
   int localMaxNumPiles;
@@ -271,7 +273,9 @@ void generate_gold(grid_struct_t *grid_struct) {
   } else {
     localMaxNumPiles = GoldMaxNumPiles;
   }
-  int gold_piles = (rand() % (localMaxNumPiles - GoldMinNumPiles + 1)) + GoldMinNumPiles;
+  // int gold_piles = (rand() % (localMaxNumPiles - GoldMinNumPiles + 1)) + GoldMinNumPiles;
+
+  int gold_piles = 30;
 
   // Current gold amount generated
   int total_generated = 0;
@@ -288,8 +292,6 @@ void generate_gold(grid_struct_t *grid_struct) {
     }
     total_generated += curr_pile_gold;
 
-    // Done with TODO.
-
     // Get a random position for the pile
     position_t *curr_pile_pos = generate_position(game->main_grid, '.');
 
@@ -301,6 +303,7 @@ void generate_gold(grid_struct_t *grid_struct) {
 
     printf("Gold pile with %d gold at location %d %d\n", curr_pile_gold, pos_get_x(curr_pile_pos), pos_get_y(curr_pile_pos));
   }
+  return gold_piles;
 }
 
 
@@ -341,11 +344,27 @@ int point_status(position_t *prev_pos, position_t *next_pos) {
   }
 }
 
-bool move(addr_t *address, int x, int y) {
-  // Get the player
+player_t *get_player(addr_t *address) {
   char portnum1[100];
   sprintf(portnum1, "%d",ntohs((*address).sin_port));
   player_t *curr = hashtable_find(game->players, portnum1);
+  return curr;
+}
+
+void pickup_gold(player_t *curr, position_t *pos, bool overwrite) {
+  if (overwrite) {
+    grid_set_character(game->main_grid, '.', curr->pos);
+  }
+  int gold_picked_up = grid_get_point_gold(game->main_grid, pos_get_x(pos), pos_get_y(pos));
+  grid_set_gold(game->main_grid, 0, pos);
+  curr->gold_number += gold_picked_up;
+  curr->gold_picked_up = gold_picked_up;
+  game->gold_remaining -= gold_picked_up;
+}
+
+
+bool move(addr_t *address, int x, int y) {
+  player_t *curr = get_player(address);
   // Get the position to the direction of the player
   int new_x = pos_get_x(curr->pos) + x;
   int new_y = pos_get_y(curr->pos) + y;
@@ -400,14 +419,7 @@ bool move(addr_t *address, int x, int y) {
 
     // If the next point is a gold_pile, adjust the grid accordingly
     if (c == '*') {
-      int gold = grid_get_point_gold(game->main_grid, new_x, new_y);
-      printf("the gold at this point is %d\n", gold);
-      grid_set_character(game->main_grid, '.', curr->pos);
-      int gold_picked_up = grid_get_point_gold(game->main_grid, new_x, new_y);
-      printf("the gold supposedly picked up is %d\n", gold_picked_up);
-      curr->gold_number += gold_picked_up;
-      curr->gold_picked_up = gold_picked_up;
-      game->gold_remaining -= gold_picked_up;
+      pickup_gold(curr, new, true);
     }
 
 
@@ -663,7 +675,19 @@ add_player(addr_t *address, char* player_name)
   printf("player being added with name %s and symbol %c\n", player_name, game->curr_symbol);
 
   // Find a position to put the player in and create a new player
-  position_t *pos = generate_position(game->main_grid, '.');
+  // If there is no empty position, put the player in a gold spot '*'
+
+  position_t *pos = malloc(sizeof(position_t *));
+
+  if (grid_get_room_spot(game->main_grid) <= game->gold_pile_number) {
+    pos = generate_position(game->main_grid, '*');
+  } else {
+    pos = generate_position(game->main_grid, '.');
+  }
+
+  printf("Position is: %d %d\n", pos_get_x(pos), pos_get_y(pos));
+
+
   // addr_t new = *address;
   player_t *new_player = player_new(*address, player_name, game->curr_symbol, true, pos);
 
@@ -683,6 +707,9 @@ add_player(addr_t *address, char* player_name)
 
   // add the player to main grid
   grid_set_character(game->main_grid, new_player->symbol, pos);
+
+  // if the player was added into a '*' position, automatically pick up the gold pile.
+  pickup_gold(new_player, pos, false);
 
   // delete pos here or in grid swap ?
 
