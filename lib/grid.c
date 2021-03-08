@@ -30,6 +30,7 @@ typedef struct point {
  typedef struct grid_struct {
    int nR; // number of rows
    int nC; // number of columns
+   int room_spot;
    point_t*** grid; // array of pointers to pointers to points
  } grid_struct_t;
 
@@ -73,6 +74,8 @@ grid_struct_new(char *filename)
   if (grid == NULL) {
     return NULL;
   }
+
+  grid->room_spot = 0;
 
   FILE *grid_file;
   if ((grid_file = fopen(filename, "r")) == NULL) {
@@ -129,6 +132,9 @@ grid_load(grid_struct_t *grid_struct, char* filename, bool seen)
   while ((line = freadlinep(map)) != NULL) {
     for (int j = 0; j < strlen(line); j ++) {
       point_t *p = point_new(line[j], seen, 0);
+      if (line[j] == '.') {
+        grid_struct->room_spot = grid_struct->room_spot +1;
+      }
       grid_struct->grid[i][j] = p;
     }
     i++;
@@ -153,6 +159,12 @@ int grid_set_gold(grid_struct_t *grid_struct, int newGold, position_t *pos) {
   grid_struct->grid[pos->y][pos->x]->gold_number = newGold;
 
   return oldGold;
+}
+
+int
+grid_get_room_spot(grid_struct_t *grid_struct)
+{
+  return grid_struct->room_spot;
 }
 
 
