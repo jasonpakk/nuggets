@@ -264,14 +264,18 @@ grid_string_player(grid_struct_t *main_grid, grid_struct_t *player_grid, positio
 int
 grid_print(grid_struct_t *grid_struct)
 {
- printf("%s\n", grid_string(grid_struct));
+ char* toPrint = grid_string(grid_struct);
+ printf("%s\n", toPrint);
+ free(toPrint);
  return 0;
 }
 
 int
 grid_print_player(grid_struct_t *main_grid, grid_struct_t *player_grid, position_t *player_pos)
 {
- printf("%s\n", grid_string_player(main_grid, player_grid, player_pos));
+ char* toPrint = grid_string_player(main_grid, player_grid, player_pos);
+ printf("%s\n", toPrint);
+ free(toPrint);
  return 0;
 }
 
@@ -534,4 +538,26 @@ calculate_helper_y(grid_struct_t *grid_struct, double x, int y) {
     }
   }
   return true;
+}
+
+void
+grid_delete(grid_struct_t *grid_struct) {
+  for (int r = 0; r < grid_struct->nR; r++) {
+    for (int c = 0; c < grid_struct->nC; c++) {
+      point_delete(grid_struct->grid[r][c]); // free each *point_t
+    }
+    free(grid_struct->grid[r]); // free each **point_t
+  }
+  free(grid_struct->grid); // free the ***point_t
+  free(grid_struct);
+}
+
+void
+point_delete(point_t *point) {
+  free(point);
+}
+
+void
+position_delete(position_t *pos) {
+  free(pos);
 }

@@ -60,6 +60,10 @@ static void game_result_string_helper(void *arg, const char *key, void *item);
 void send_game_result(char* result_string);
 static void send_game_result_helper(void *arg, const char *key, void *item);
 
+void game_delete(game_t *game);
+void spectator_delete(player_t *player);
+void player_delete(player_t *player);
+
 
 // global variable
 game_t* game;
@@ -106,6 +110,7 @@ main(const int argc, const char *argv[])
     grid_print(game->main_grid);
 
     play_game();
+    game_delete(game);
 
   } else {
     // wrong number of arguments
@@ -200,7 +205,7 @@ game_result_string_helper(void *arg, const char *key, void *item)
     char *player_string = malloc(100); // figure this out
     sprintf(player_string, "%c %*d %-3s\n", curr->symbol, 10, curr->gold_number, curr->name);
     strcat(result_string, player_string);
-
+    free(player_string);
   }
 }
 
@@ -248,6 +253,8 @@ send_display(player_t* player) {
   char *display_info = malloc(strlen(string) * sizeof(char*));
   sprintf(display_info, "DISPLAY\n%s", string);
   message_send(player->address, display_info);
+  free(string);
+  free(display_info);
 }
 
 position_t*
@@ -313,6 +320,8 @@ int generate_gold(grid_struct_t *grid_struct) {
     grid_set_gold(game->main_grid, curr_pile_gold, curr_pile_pos);
 
     printf("Gold pile with %d gold at location %d %d\n", curr_pile_gold, pos_get_x(curr_pile_pos), pos_get_y(curr_pile_pos));
+
+    position_delete(curr_pile_pos);
   }
   return gold_piles;
 }
@@ -391,52 +400,68 @@ bool move(addr_t *address, int x, int y) {
 
     // If the next point is a player, then update the next player's position
     if (isalpha(c)) {
+      // find the player we swapped positions with
       char* player2_symbol = malloc(sizeof(char) + 1);
       sprintf(player2_symbol, "%c", c);
-
       player_t* player2 = set_find(game->symbol_to_port, player2_symbol);
-      player2->prev_pos = player2->pos;
-      pos_update(player2->pos, pos_get_x(curr->pos), pos_get_y(curr->pos));
-      // set_print(game->symbol_to_port, stdout, nameprint);
+      free(player2_symbol);
 
       // If the player2 is in a passage, swap the passage booleans and the previous positions of both players
       bool temp_passage = player2->in_passage;
       player2->in_passage = curr->in_passage;
       curr->in_passage = temp_passage;
 
-      position_t *temp_prev_pos = player2->prev_pos;
-      player2->prev_pos = curr->prev_pos;
-      curr->prev_pos = temp_prev_pos;
+      //reallocate positions for both players
+      position_t *prev_pos_curr = position_new(pos_get_x(curr->prev_pos), pos_get_y(curr->prev_pos));
+      position_t *curr_pos_curr = position_new(pos_get_x(curr->pos), pos_get_y(curr->pos));
+      position_t *prev_pos_p2 = position_new(pos_get_x(player2->prev_pos), pos_get_y(player2->prev_pos));
 
-    }
+      position_delete(player2->prev_pos);
+      position_delete(player2->pos);
+      position_delete(curr->prev_pos);
+      position_delete(curr->pos);
 
-    // If the next point is a passage, adjust the grid accordingly
-    if (c == '#') {
-      // If the player is entering the passage, set the previous position to '.', instead of '#'
-      if ((point_status(curr->prev_pos, curr->pos) == 1) & !curr->in_passage) {
-        grid_set_character(game->main_grid, '.', curr->pos);
-        curr->in_passage = true;
+      player2->prev_pos = prev_pos_curr;
+      curr->prev_pos = prev_pos_p2;
+      player2->pos = curr_pos_curr;
+      curr->pos = new;
+
+    } else {
+      // If the next point is a passage, adjust the grid accordingly
+      if (c == '#') {
+        // If the player is entering the passage, set the previous position to '.', instead of '#'
+        if ((point_status(curr->prev_pos, curr->pos) == 1) & !curr->in_passage) {
+          grid_set_character(game->main_grid, '.', curr->pos);
+          curr->in_passage = true;
+        }
       }
-    }
 
-    if (c == '.' ) {
+      if (c == '.' ) {
 
-      // If the player is exiting a passage, set the previous position to '#' instead of '.'
-      if ((point_status(curr->prev_pos, curr->pos) == 2) & curr->in_passage) {
-        grid_set_character(game->main_grid, '#', curr->pos);
-        curr->in_passage = false;
+        // If the player is exiting a passage, set the previous position to '#' instead of '.'
+        if ((point_status(curr->prev_pos, curr->pos) == 2) & curr->in_passage) {
+          grid_set_character(game->main_grid, '#', curr->pos);
+          curr->in_passage = false;
+        }
       }
+
+      // If the next point is a gold_pile, adjust the grid accordingly
+      if (c == '*') {
+        pickup_gold(curr, new, true);
+      }
+
+      // Update the player's position variables to reflect the grid.
+      if(curr->prev_pos != curr->pos) {
+        // free pointer stored in prev pos before updating
+        position_delete(curr->prev_pos);
+      }
+      position_t *new_prev = position_new(pos_get_x(curr->pos), pos_get_y(curr->pos));
+      curr->prev_pos = new_prev;
+
+      // free pointer stored in curr pos before updating
+      position_delete(curr->pos);
+      curr->pos = new;
     }
-
-    // If the next point is a gold_pile, adjust the grid accordingly
-    if (c == '*') {
-      pickup_gold(curr, new, true);
-    }
-
-
-    // Update the player's position variables to reflect the grid.
-    curr->prev_pos = curr->pos;
-    curr->pos = new;
 
     refresh();
     return true;
@@ -501,7 +526,7 @@ parse_message(const char *message, addr_t *address)
     } else {
       // otherwise, replace the current spectator
       message_send(game->spectator->address, "QUIT You have been replaced by a new spectator.");
-      //LATER: call PLAYER_DELETE to free memory of previous spectator
+      spectator_delete(game->spectator);
       game->spectator = new_spectator;
       printf("new spectator joined\n");
     }
@@ -640,10 +665,16 @@ refresh()
   if(game->spectator != NULL) {
     send_display(game->spectator);
   }
-  printf("MAIN GRID:\n%s", grid_string(game->main_grid));
+
+  // remove these three lines later
+  char* main_grid_string = grid_string(game->main_grid);
+  printf("MAIN GRID:\n%s", main_grid_string);
+  free(main_grid_string);
+
   if (game->gold_remaining == 0) {
     char* result = game_result_string();
     send_game_result(result);
+    free(result);
     game->playing_game = false;
 
   }
@@ -714,7 +745,7 @@ add_player(addr_t *address, char* player_name)
   // Find a position to put the player in and create a new player
   // If there is no empty position, put the player in a gold spot '*'
 
-  position_t *pos = malloc(sizeof(position_t *));
+  position_t *pos;
 
   if (grid_get_room_spot(game->main_grid) <= game->gold_pile_number) {
     pos = generate_position(game->main_grid, '*');
@@ -748,8 +779,6 @@ add_player(addr_t *address, char* player_name)
   // if the player was added into a '*' position, automatically pick up the gold pile.
   pickup_gold(new_player, pos, false);
 
-  // delete pos here or in grid swap ?
-
   // // initialize grid for player
    grid_struct_t *player_grid = grid_struct_new(game->map_filename);
    grid_load(player_grid, game->map_filename, false);
@@ -764,4 +793,43 @@ add_player(addr_t *address, char* player_name)
   game->player_number += 1;
 
   return 0;
+}
+
+static void
+ht_delete_helper(void *item)
+{
+  if (item != NULL) {
+    player_delete(item);
+  }
+}
+
+void
+game_delete(game_t *game) {
+  if(game != NULL) {
+    free(game->map_filename);
+    grid_delete(game->main_grid);
+    hashtable_delete(game->players, ht_delete_helper);
+    set_delete(game->symbol_to_port, NULL);
+    spectator_delete(game->spectator);
+    free(game);
+  }
+}
+
+void
+spectator_delete(player_t *player) {
+  if(player != NULL) {
+    free(player->name);
+    free(player);
+  }
+}
+
+void
+player_delete(player_t *player) {
+  if(player != NULL) {
+    free(player->name);
+    free(player->pos);
+    free(player->prev_pos);
+    grid_delete(player->grid);
+    free(player);
+  }
 }
