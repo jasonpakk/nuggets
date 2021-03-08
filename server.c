@@ -499,6 +499,7 @@ parse_message(const char *message, addr_t *address)
 
   } else if (strcmp(command, key) == 0) {
     char c = *remainder;
+    printf("%c\n", c);
     if (c == 'Q') {
       // send appropriate message depending on if client is spectator or player
       if(game->spectator != NULL && message_eqAddr(game->spectator->address, *address)) {
@@ -511,220 +512,95 @@ parse_message(const char *message, addr_t *address)
 
     if (game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
 
-      // switch (c) {
-      //
-      //   // Move to the left by 1
-      //   case 'h':
-      //     move(address, -1, 0);
-      //
-      //   // Move to the left by 1
-      //   case 'H':
-      //     while(move(address, -1, 0));
-      //
-      //   // Move right
-      //   case 'l':
-      //     move(address, 1, 0);
-      //
-      //   // Move right (until not possible)
-      //   case 'L':
-      //     while(move(address, 1, 0));
-      //
-      //   // Move up
-      //   case 'k':
-      //     move(address, 0, -1);
-      //
-      //   // Move up (until not possible)
-      //   case 'K':
-      //     while(move(address, 0, -1));
-      //
-      //   // Move down
-      //   case 'j':
-      //     move(address, 0, 1);
-      //
-      //   // Move down (until not possible)
-      //   case 'J':
-      //     while(move(address, 0, 1));
-      //
-      //   // move diagonally up and left
-      //   case 'y':
-      //     move(address, -1, -1);
-      //
-      //   // move diagonally up and left (until not possible)
-      //   case 'Y':
-      //     while(move(address, -1, -1));
-      //
-      //   // move diagonally up and right
-      //   case 'u':
-      //     move(address, 1, -1);
-      //
-      //   // move diagonally up and right (until not possible)
-      //   case 'U':
-      //     while(move(address, 1, -1));
-      //
-      //   // move diagonally down and left
-      //   case 'b':
-      //     move(address, -1, 1);
-      //
-      //   // move diagonally down and left (until not possible)
-      //   case 'B':
-      //     while(move(address, -1, 1));
-      //
-      //   // move diagonally down and right
-      //   case 'n':
-      //     move(address, 1, 1);
-      //
-      //   // move diagonally down and right (until not possible)
-      //   case 'N':
-      //     while(move(address, 1, 1));
-      //
-      //   default:
-      //   // bad key
-      //     message_send(*address, "ERROR unable to understand message");
-      // }
-    }
+      switch (c) {
 
-
-
-    // if QUIT key pressed
-    if (strcmp(remainder, "Q") == 0) {
-      // send appropriate message depending on if client is spectator or player
-      if(game->spectator != NULL && message_eqAddr(game->spectator->address, *address)) {
-        message_send(*address, "QUIT Thanks for watching!");
-      } else {
-        message_send(*address, "QUIT Thanks for playing!");
-      }
-    }
-
-    // Move left
-    if (strcmp(remainder, "h") == 0) {
-      // send appropriate message depending on if client is spectator or player
-      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
         // Move to the left by 1
-        move(address, -1, 0);
-      }
-    }
+        case 'h':
+          move(address, -1, 0);
+          break;
 
-    // Move left (until not possible)
-    if (strcmp(remainder, "H") == 0) {
-      // send appropriate message depending on if client is spectator or player
-      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
         // Move to the left by 1
-        while(move(address, -1, 0));
+        case 'H':
+          while(move(address, -1, 0));
+          break;
+
+        // Move right
+        case 'l':
+          move(address, 1, 0);
+          break;
+
+        // Move right (until not possible)
+        case 'L':
+          while(move(address, 1, 0));
+          break;
+
+        // Move up
+        case 'k':
+          move(address, 0, -1);
+          break;
+
+        // Move up (until not possible)
+        case 'K':
+          while(move(address, 0, -1));
+          break;
+
+        // Move down
+        case 'j':
+          move(address, 0, 1);
+          break;
+
+        // Move down (until not possible)
+        case 'J':
+          while(move(address, 0, 1));
+          break;
+
+        // move diagonally up and left
+        case 'y':
+          move(address, -1, -1);
+          break;
+
+        // move diagonally up and left (until not possible)
+        case 'Y':
+          while(move(address, -1, -1));
+          break;
+
+        // move diagonally up and right
+        case 'u':
+          move(address, 1, -1);
+          break;
+
+        // move diagonally up and right (until not possible)
+        case 'U':
+          while(move(address, 1, -1));
+          break;
+
+        // move diagonally down and left
+        case 'b':
+          move(address, -1, 1);
+          break;
+
+        // move diagonally down and left (until not possible)
+        case 'B':
+          while(move(address, -1, 1));
+          break;
+
+        // move diagonally down and right
+        case 'n':
+          move(address, 1, 1);
+          break;
+
+        // move diagonally down and right (until not possible)
+        case 'N':
+          while(move(address, 1, 1));
+          break;
+
+
+        default:
+        // bad key
+          message_send(*address, "ERROR unable to understand message");
+          break;
       }
     }
-
-    // Move right
-    if (strcmp(remainder, "l") == 0) {
-      // send appropriate message depending on if client is spectator or player
-      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        move(address, 1, 0);
-      }
-    }
-
-    // Move right (until not possible)
-    if (strcmp(remainder, "L") == 0) {
-      // send appropriate message depending on if client is spectator or player
-      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        while(move(address, 1, 0));
-      }
-    }
-
-    // Move up
-    if (strcmp(remainder, "k") == 0) {
-      // send appropriate message depending on if client is spectator or player
-      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        move(address, 0, -1);
-      }
-    }
-
-    // Move up (until not possible)
-    if (strcmp(remainder, "K") == 0) {
-      // send appropriate message depending on if client is spectator or player
-      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        while(move(address, 0, -1));
-      }
-    }
-
-    // Move down
-    if (strcmp(remainder, "j") == 0) {
-      // send appropriate message depending on if client is spectator or player
-      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        move(address, 0, 1);
-      }
-    }
-
-    // Move down (until not possible)
-    if (strcmp(remainder, "J") == 0) {
-      // send appropriate message depending on if client is spectator or player
-      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        while(move(address, 0, 1));
-      }
-    }
-
-    // move diagonally up and left
-    if (strcmp(remainder, "y") == 0) {
-      // send appropriate message depending on if client is spectator or player
-      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        move(address, -1, -1);
-      }
-    }
-
-    // move diagonally up and left (until not possible)
-    if (strcmp(remainder, "Y") == 0) {
-      // send appropriate message depending on if client is spectator or player
-      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        while(move(address, -1, -1));
-      }
-    }
-
-    // move diagonally up and right
-    if (strcmp(remainder, "u") == 0) {
-      // send appropriate message depending on if client is spectator or player
-      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        move(address, 1, -1);
-      }
-    }
-
-    // move diagonally up and right (until not possible)
-    if (strcmp(remainder, "U") == 0) {
-      // send appropriate message depending on if client is spectator or player
-      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        while(move(address, 1, -1));
-      }
-    }
-
-    // move diagonally down and left
-    if (strcmp(remainder, "b") == 0) {
-      // send appropriate message depending on if client is spectator or player
-      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        move(address, -1, 1);
-      }
-    }
-
-    // move diagonally down and left (until not possible)
-    if (strcmp(remainder, "B") == 0) {
-      // send appropriate message depending on if client is spectator or player
-      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        while(move(address, -1, 1));
-      }
-    }
-
-    // move diagonally down and right
-    if (strcmp(remainder, "n") == 0) {
-      // send appropriate message depending on if client is spectator or player
-      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        move(address, 1, 1);
-      }
-    }
-
-    // move diagonally down and right (until not possible)
-    if (strcmp(remainder, "N") == 0) {
-      // send appropriate message depending on if client is spectator or player
-      if(game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
-        while(move(address, 1, 1));
-      }
-    }
-
   } else {
     message_send(*address, "ERROR unable to understand message");
   }
