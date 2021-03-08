@@ -416,9 +416,16 @@ bool move(addr_t *address, int x, int y) {
       position_t *curr_pos_curr = position_new(pos_get_x(curr->pos), pos_get_y(curr->pos));
       position_t *prev_pos_p2 = position_new(pos_get_x(player2->prev_pos), pos_get_y(player2->prev_pos));
 
-      position_delete(player2->prev_pos);
+      if(player2->prev_pos != player2->pos) {
+        // free pointer stored in prev pos before updating
+        position_delete(player2->prev_pos);
+      }
       position_delete(player2->pos);
-      position_delete(curr->prev_pos);
+
+      if(curr->prev_pos != curr->pos) {
+        // free pointer stored in prev pos before updating
+        position_delete(curr->prev_pos);
+      }
       position_delete(curr->pos);
 
       player2->prev_pos = prev_pos_curr;
