@@ -108,7 +108,7 @@ grid_struct_new(char *filename)
 
 /**************** global functions ****************/
 /* that is, visible outside this file */
-/* see hashtable.h for comments about exported functions */
+/* see grid.h for comments about exported functions */
 
 
 
@@ -210,7 +210,7 @@ grid_string_player(grid_struct_t *main_grid, grid_struct_t *player_grid, positio
   char *grid_text = malloc((main_grid->nR)*(main_grid->nC+1)*sizeof(char*));
   bool first_char = true;
 
-  for (int i = 0; i < main_grid->nR; i++) { // < or <=
+  for (int i = 0; i < main_grid->nR; i++) {
     for (int j = 0; j < main_grid->nC; j++) {
       // Get the character at (i,j)
       char a;
