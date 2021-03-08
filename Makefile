@@ -27,7 +27,12 @@ $S/support.a:
 $L/lib.a:
 	make -C $L lib.a
 
-.PHONY: test valgrind clean
+.PHONY: test valgrind clean all
+
+all:
+	$(MAKE) -C lib
+	$(MAKE) -C support
+	make
 
 clean:
 	make -C $S clean

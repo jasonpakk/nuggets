@@ -32,6 +32,7 @@ typedef struct player {
 } player_t;
 
 typedef struct game {
+  bool playing_game;
   char* map_filename;
   int gold_remaining;
   int gold_pile_number;
@@ -111,6 +112,7 @@ main(const int argc, const char *argv[])
     fprintf(stderr, "usage: ./server map.txt [seed]\n");
     return 2;
   }
+  return 0;
 }
 
 int
@@ -146,8 +148,11 @@ handleMessage(void *arg, const addr_t from, const char *message)
          ntohs(from.sin_port),     // port number of the sender
          message);                 // message from the sender
   parse_message(message, otherp);
-
   fflush(stdout);
+
+  if(game->playing_game == false) { // if game has ended, return false
+    return true;
+  }
   return false;
 }
 
@@ -230,10 +235,16 @@ send_display(player_t* player) {
 
   // get player grid
   grid_struct_t *grid = player->grid;
-  grid_visibility(grid, player->pos);
+  char *string;
+
+  if(player == game->spectator) {
+    string = grid_string(game->main_grid);
+  } else {
+    grid_visibility(grid, player->pos);
+    string = grid_string_player(game->main_grid, grid, player->pos);
+  }
 
   // create string to pass grid
-  char *string = grid_string_player(game->main_grid, grid, player->pos);
   char *display_info = malloc(strlen(string) * sizeof(char*));
   sprintf(display_info, "DISPLAY\n%s", string);
   message_send(player->address, display_info);
@@ -456,6 +467,17 @@ parse_message(const char *message, addr_t *address)
   if (strcmp(command, play) == 0) {
         // add player
     if (game->player_number <= MaxPlayers && strlen(remainder) > 0) {
+      // truncate player name to MaxNameLength
+      if(strlen(remainder) > MaxNameLength) {
+        remainder[MaxNameLength] = '\0';
+      }
+      // update nongraph/nonblank chars to underscores
+      for(int i = 0; i < strlen(remainder); i++) {
+        char c = remainder[i];
+        if(!isgraph(c) && !isblank(c)) {
+          remainder[i] = '_';
+        }
+      }
       add_player(address, remainder);
     } else {
       if (game->player_number > MaxPlayers) {
@@ -497,6 +519,17 @@ parse_message(const char *message, addr_t *address)
         message_send(*address, "QUIT Thanks for watching!");
       } else {
         message_send(*address, "QUIT Thanks for playing!");
+
+        // get pointer to player who just quit using their address
+        char portnum1[100];
+        sprintf(portnum1, "%d",ntohs((*address).sin_port));
+        player_t *curr = hashtable_find(game->players, portnum1);
+        curr->active = false;
+
+        // remove their symbol from the main grid
+        char toReplace = grid_get_point_c(curr->grid, pos_get_x(curr->pos), pos_get_y(curr->pos));
+        grid_set_character(game->main_grid, toReplace, curr->pos);
+        refresh();
       }
       return 0;
     }
@@ -611,6 +644,7 @@ refresh()
   if (game->gold_remaining == 0) {
     char* result = game_result_string();
     send_game_result(result);
+    game->playing_game = false;
 
   }
 
@@ -621,10 +655,12 @@ refresh_helper(void *arg, const char *key, void *item)
 {
   if (key != NULL) {
     player_t* curr = item;
-    printf("curr player name is: %s\n", curr->name);
+    if(curr->active) {
+      printf("curr player name is: %s\n", curr->name);
 
-    // send the player gold information and a display of the grid
-    send_display(curr);
+      // send the player gold information and a display of the grid
+      send_display(curr);
+    }
   }
 }
 
@@ -632,6 +668,7 @@ game_t*
 game_new(char *map_filename)
 {
   game_t* game = malloc(sizeof(game_t));
+  game->playing_game = true;
   game->map_filename = map_filename;
   game->gold_remaining = GoldTotal;
   game->player_number = 0;
