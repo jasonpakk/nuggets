@@ -23,7 +23,8 @@
 /**************** global types ****************/
 typedef struct point {
   char c;
-  bool seen;
+  bool seen_before;
+  bool visible_now;
   int gold_number;
 } point_t;
 
@@ -45,9 +46,10 @@ typedef struct point {
 
  /**************** local functions ****************/
  /* not visible outside this file */
+ static void calculate_vision_passage(grid_struct_t *grid_struct, int x, int y);
  static bool calculate_vision(grid_struct_t *grid_struct, int x1, int y1, int x2, int y2);
- static bool calculate_helper_y(grid_struct_t *grid_struct, double x, int y, bool *found);
- static bool calculate_helper_x(grid_struct_t *grid_struct, int x, double y, bool *found);
+ static bool calculate_helper_y(grid_struct_t *grid_struct, double x, int y);
+ static bool calculate_helper_x(grid_struct_t *grid_struct, int x, double y);
 
 
  point_t*
@@ -61,7 +63,8 @@ typedef struct point {
    // point->c = malloc(sizeof(char*)); // yes?
    // strcpy(point->c, c);
    point->c = c;
-   point->seen = seen;
+   point->seen_before = seen;
+   point->visible_now = seen;
    point->gold_number = gold_number;
    return point;
  }
@@ -196,7 +199,7 @@ grid_string(grid_struct_t *grid_struct) {
     for (int j = 0; j < grid_struct->nC; j++) {
       // Get the character at (i,j)
       char a;
-      if(grid_struct->grid[i][j]->seen) {
+      if(grid_struct->grid[i][j]->seen_before) {
         a = grid_struct->grid[i][j]->c;
       } else {
         a = ' ';
@@ -228,8 +231,16 @@ grid_string_player(grid_struct_t *main_grid, grid_struct_t *player_grid, positio
       char a;
       if(pos_get_x(player_pos) == j && pos_get_y(player_pos) == i) {
         a = '@';
-      } else if(player_grid->grid[i][j]->seen) {
-        a = main_grid->grid[i][j]->c;
+      } else if(player_grid->grid[i][j]->seen_before) {
+          if(main_grid->grid[i][j]->c == '*') {
+            if(player_grid->grid[i][j]->visible_now) {
+              a = '*';
+            } else {
+              a = '.';
+            }
+          } else {
+              a = main_grid->grid[i][j]->c;
+          }
       } else {
         a = ' ';
       }
@@ -266,11 +277,17 @@ grid_print_player(grid_struct_t *main_grid, grid_struct_t *player_grid, position
 
 int
 grid_get_nR(grid_struct_t *grid_struct) {
+  if( grid_struct == NULL ) {
+    return -1;
+  }
   return grid_struct->nR;
 }
 
 int
 grid_get_nC(grid_struct_t *grid_struct) {
+  if( grid_struct == NULL ) {
+    return -1;
+  }
   return grid_struct->nC;
 }
 
@@ -282,12 +299,13 @@ grid_get_point_c(grid_struct_t *grid_struct, int x, int y) {
   return grid_struct->grid[y][x]->c;
 }
 
-
 int
 grid_get_point_gold(grid_struct_t *grid_struct, int x, int y) {
+  if (grid_struct == NULL || x < 0 || x >= grid_struct->nC || y < 0 || y >= grid_struct->nR) {
+    return 0;
+  }
   return grid_struct->grid[y][x]->gold_number;
 }
-
 
 position_t*
 position_new(int x, int y)
@@ -300,42 +318,85 @@ position_new(int x, int y)
 
 void
 pos_update(position_t *pos, int x, int y) {
+  if(pos == NULL) {
+    return;
+  }
   pos->x = x;
   pos->y = y;
 }
 
 int
 pos_get_x(position_t *pos) {
+  if(pos == NULL) {
+    return -1;
+  }
   return pos->x;
 }
 
 int
 pos_get_y(position_t *pos) {
+  if(pos == NULL) {
+    return -1;
+  }
   return pos->y;
 }
 
 void
 grid_visibility(grid_struct_t *grid_struct, position_t *pos) {
-  // looking through all points in the grid
+  // if currently in passage-way:
+  if(grid_struct->grid[pos_get_y(pos)][pos_get_x(pos)]->c == '#') {
+    calculate_vision_passage(grid_struct, pos_get_x(pos), pos_get_y(pos));
+    return;
+  }
+  // otherwise, look through all points in the grid
   for(int r = 0; r < grid_struct->nR; r++) {
     for(int c = 0; c < grid_struct->nC; c++) {
-      // if player hasn't seen this point yet
-      if(!(grid_struct->grid[r][c]->seen)) {
-        // calculate whether they can see this point froom their current position
-        if(calculate_vision(grid_struct, pos_get_x(pos), pos_get_y(pos), c, r)) {
-          // if so, mark the point's "seen" as true
-          grid_struct->grid[r][c]->seen = true;
-        }
+      // calculate whether they can see this point froom their current position
+      if(calculate_vision(grid_struct, pos_get_x(pos), pos_get_y(pos), c, r)) {
+        // if so, mark the point's "seen" as true
+        grid_struct->grid[r][c]->seen_before = true;
+        grid_struct->grid[r][c]->visible_now = true;
+      } else {
+        grid_struct->grid[r][c]->visible_now = false;
       }
     }
   }
-  //grid_print(grid_struct); // for testing, comment out later
+}
+
+static void
+calculate_vision_passage(grid_struct_t *grid_struct, int x, int y) {
+  grid_struct->grid[y][x]->seen_before = true;
+  grid_struct->grid[y][x]->visible_now = true;
+
+  if(y+1 < grid_struct->nR) {
+    if(grid_struct->grid[y+1][x]->c == '#' || grid_struct->grid[y+1][x]->c == '.') {
+      grid_struct->grid[y+1][x]->seen_before = true;
+      grid_struct->grid[y][x]->visible_now = true;
+    }
+  }
+  if(y-1 >= 0) {
+    if(grid_struct->grid[y-1][x]->c == '#' || grid_struct->grid[y-1][x]->c == '.') {
+      grid_struct->grid[y-1][x]->seen_before = true;
+      grid_struct->grid[y][x]->visible_now = true;
+    }
+  }
+  if(x+1 < grid_struct->nC) {
+    if(grid_struct->grid[y][x+1]->c == '#' || grid_struct->grid[y][x+1]->c == '.') {
+      grid_struct->grid[y][x+1]->seen_before = true;
+      grid_struct->grid[y][x]->visible_now = true;
+    }
+  }
+  if(x-1 >= 0 && grid_struct->grid[y][x-1]->c == '#') {
+    if(grid_struct->grid[y][x-1]->c == '#' || grid_struct->grid[y][x-1]->c == '.') {
+      grid_struct->grid[y][x-1]->seen_before = true;
+      grid_struct->grid[y][x]->visible_now = true;
+    }
+  }
 }
 
 static bool
 calculate_vision(grid_struct_t *grid_struct, int x1, int y1, int x2, int y2) {
   //printf("calculate: (%d,%d) (%d,%d)\n", x1,y1,x2,y2);
-  bool found_non_room = false; // track whether we've run into a non-room space yet
 
   // 1. Comparing the SAME POINT
   if(x1 == x2 && y1 == y2) {
@@ -343,88 +404,78 @@ calculate_vision(grid_struct_t *grid_struct, int x1, int y1, int x2, int y2) {
   // 2. UNDEFINED SLOPE (vertical line)
   } else if(x1 == x2) {
     // go through each y in the line segment
-    for(int y = 1; y <= abs(y2-y1); y++) {
+    for(int y = 1; y <= abs(y2-y1) - 1; y++) {
       int curr_y;   // determining which one to start from (the smaller one)
       if(y1 > y2) {
         curr_y = y1 - y;
       } else {
         curr_y = y1 + y;
       }
-      // if not a room spot
+      // if not a room spot, return false
       if(grid_struct->grid[curr_y][x1]->c != '.')  {
-        // return false if we've already reached a non-room or we've reached solid rock
-        if(found_non_room || grid_struct->grid[curr_y][x1]->c == ' ') {
-          return false;
-        }
-        // otherwise, this is the first encounter of a non-room char
-        found_non_room = true;
+        return false;
       }
     }
   // 3. SLOPE OF ZERO (horizontal line)
   } else if (y1 == y2) {
     // go through each x in the line segment
-    for(int x = 1; x <= abs(x2-x1); x++) {
+    for(int x = 1; x <= abs(x2-x1) - 1; x++) {
       int curr_x;   // determining which one to start from (the smaller one)
       if(x1 > x2) {
         curr_x = x1 - x;
       } else {
         curr_x = x1 + x;
       }
-      // if not a room spot
+      // if not a room spot, return false
       if(grid_struct->grid[y1][curr_x]->c != '.')  {
-        // return false if we've already reached a non-room or we've reached solid rock
-        if(found_non_room || grid_struct->grid[y1][curr_x]->c == ' ') {
-          return false;
-        }
-        // otherwise, this is the first encounter of a non-room char
-        found_non_room = true;
+        return false;
       }
     }
   // 4. LINE SEGMENT
   } else {
-    //// PART 1 - Going through each x in the line segment
+    //// PART 1 - Going through each COLUMN (x) in the line segment
     double slope = (double) (y2 - y1) / (x2 - x1);  // calculate slope
     if(x1 < x2) {
       // For each x in the line segment:
       double curr_y = y1;
-      for(int x = x1+1; x <= x2; x++) {
+      for(int x = x1+1; x <= x2-1; x++) {
         curr_y += slope;  // find its respective y value
         // return false if non-room char encountered
-        if(!calculate_helper_x(grid_struct, x, curr_y, &found_non_room)) {
+        if(!calculate_helper_x(grid_struct, x, curr_y)) {
           return false;
         }
       }
     } else if (x1 > x2) {
       // For each x in the line segment:
       double curr_y = y1;
-      for(int x = x1-1; x >= x2; x--) {
+      for(int x = x1-1; x >= x2+1; x--) {
         curr_y = curr_y - slope; // find its respective y value
         // return false if non-room char encountered
-        if(!calculate_helper_x(grid_struct, x, curr_y, &found_non_room)) {
+        if(!calculate_helper_x(grid_struct, x, curr_y)) {
           return false;
         }
       }
     }
-    //// PART 2 - Going through each y in the line segment
+
+    //// PART 2 - Going through each ROW (y) in the line segment
     slope = (double) (x2 - x1) / (y2 - y1);   // calculate slope
-    found_non_room = false;                   // reset tracking non-room char
     if(y1 < y2) {
       // For each y in the line segment:
       double curr_x = x1;
-      for(int y = y1+1; y <= y2; y++) {
+      for(int y = y1+1; y <= y2-1; y++) {
         curr_x += slope;  // find its respective x value
         // return false if non-room char encountered
-        if(!calculate_helper_y(grid_struct, curr_x, y, &found_non_room)) {
+        if(!calculate_helper_y(grid_struct, curr_x, y)) {
           return false;
         }
     }
   } else if (y1 > y2) {
       // For each y in the line segment:
       double curr_x = x1;
-      for(int y = y1-1; y >= y2; y--) {
+      for(int y = y1-1; y >= y2+1; y--) {
         curr_x = curr_x - slope;  // find its respective x value
         // return false if non-room char encountered
-        if(!calculate_helper_y(grid_struct, curr_x, y, &found_non_room)) {
+        if(!calculate_helper_y(grid_struct, curr_x, y)) {
           return false;
         }
       }
@@ -435,7 +486,7 @@ calculate_vision(grid_struct_t *grid_struct, int x1, int y1, int x2, int y2) {
 }
 
 static bool
-calculate_helper_x(grid_struct_t *grid_struct, int x, double y, bool *found) {
+calculate_helper_x(grid_struct_t *grid_struct, int x, double y) {
   int c = ceil(fabs(y));  // ceiling function on y value
   int f = floor(fabs(y)); // floor function on y value
   // check boundary cases:
@@ -446,33 +497,22 @@ calculate_helper_x(grid_struct_t *grid_struct, int x, double y, bool *found) {
   }
   // if line segment intersects a gridpoint exactly
   if(c == f) {
-    // if gridpoint is not a 'room spot'
+    // if gridpoint is not a 'room spot', return false
     if(grid_struct->grid[c][x]->c != '.')  {
-      // return false if we've already reached a non-room or we've reached solid rock
-      if((*found == true) || grid_struct->grid[c][x]->c == ' ') {
-        return false;
-      }
-      // otherwise, this is the first encounter of a non-room char
-      *found = true;
+      return false;
     }
   // if line segment passes between pairs of map gridpoints
   } else {
-    // if gridpoint is not a 'room spot'
+    // if both gridpoints are not a 'room spot', return false
     if(grid_struct->grid[c][x]->c != '.' && grid_struct->grid[f][x]->c != '.')  {
-      // return false if we've already reached a non-room or we've reached solid rock
-      if((*found == true) ||
-            (((grid_struct->grid[c][x]->c == ' ') && (grid_struct->grid[f][x]->c == ' ')))) {
-        return false;
-      }
-      // otherwise, this is the first encounter of a non-room char
-      *found = true;
+      return false;
     }
   }
   return true;
 }
 
 static bool
-calculate_helper_y(grid_struct_t *grid_struct, double x, int y, bool *found) {
+calculate_helper_y(grid_struct_t *grid_struct, double x, int y) {
   int c = ceil(fabs(x));   // ceiling function on x value
   int f = floor(fabs(x));   // floor function on x value
   // check boundary cases:
@@ -483,25 +523,14 @@ calculate_helper_y(grid_struct_t *grid_struct, double x, int y, bool *found) {
   }
   // if line segment intersects a gridpoint exactly
   if(c == f) {
-    // if gridpoint is not a 'room spot'
+    // if gridpoint is not a 'room spot', return false
     if(grid_struct->grid[y][c]->c != '.')  {
-      // return false if we've already reached a non-room or we've reached solid rock
-      if((*found == true) || grid_struct->grid[y][c]->c == ' ') {
-        return false;
-      }
-      // otherwise, this is the first encounter of a non-room char
-      *found = true;
+      return false;
     }
   } else {
-    // if gridpoint is not a 'room spot'
+    // if both gridpoints are not a 'room spot', return false
     if(grid_struct->grid[y][c]->c != '.' && grid_struct->grid[y][f]->c != '.')  {
-      // return false if we've already reached a non-room or we've reached solid rock
-      if((*found == true) ||
-            (((grid_struct->grid[y][c]->c == ' ') && (grid_struct->grid[y][f]->c == ' ')))) {
-        return false;
-      }
-      // otherwise, this is the first encounter of a non-room char
-      *found = true;
+      return false;
     }
   }
   return true;
