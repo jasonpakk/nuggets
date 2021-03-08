@@ -1,0 +1,1839 @@
+START OF LOG
+START OF LOG
+message_init: ready at port '40802'
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+PLAY nina
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+OK A
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GRID 14 11
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |@**....**.|
+  |*..***.***|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 1 1 249
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |.@*....**.|
+  |*..***.***|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 1 2 248
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |..@....**.|
+  |*..***.***|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY k
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY j
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 2 248
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |.......**.|
+  |*.@***.***|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 1 3 247
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |.......**.|
+  |*..@**.***|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 1 4 246
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |.......**.|
+  |*...@*.***|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 1 5 245
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |.......**.|
+  |*....@.***|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY k
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 5 245
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |.....@.**.|
+  |*......***|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 5 245
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |......@**.|
+  |*......***|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 2 7 243
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |.......@*.|
+  |*......***|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 1 8 242
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |........@.|
+  |*......***|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 8 242
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |.........@|
+  |*......***|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY k
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY j
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 197 205 45
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |..........|
+  |*......**@|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY h
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 1 206 44
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |..........|
+  |*......*@.|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY h
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 1 207 43
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |..........|
+  |*......@..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY h
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 207 43
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |..........|
+  |*.....@...|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY h
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 207 43
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |..........|
+  |*....@....|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY h
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 207 43
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |..........|
+  |*...@.....|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY h
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 207 43
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |..........|
+  |*..@......|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY h
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 207 43
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |..........|
+  |*.@.......|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY h
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 207 43
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |..........|
+  |*@........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY h
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 3 210 40
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |..........|
+  |@.........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 210 40
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |..........|
+  |.@........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY k
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 210 40
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |.@........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY k
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 210 40
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+    #         
+  +-@--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY k
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 210 40
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+    #         
+    @         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY k
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 210 40
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+    #         
+    @         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY k
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 210 40
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+              
+  |..*.***    
+   ****.      
+   -#-        
+    @         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY k
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 210 40
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..*.***.*.|
+  |****.***.*|
+   -@-        
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY k
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 1 211 39
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..*.***.*.|
+  |*@**.***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY j
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 211 39
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..*.***.*.|
+  |*.**.***.*|
+  +-@--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY k
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 211 39
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..*.***.*.|
+  |*@**.***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY h
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 1 212 38
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..*.***.*.|
+  |@.**.***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY k
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 212 38
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |@.*.***.*.|
+  |..**.***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 212 38
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |.@*.***.*.|
+  |..**.***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43403
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 1 213 37
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.***.*.|
+  |..**.***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+PLAY sfgfs
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+OK B
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GRID 14 11
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 37
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.***.*.|
+  |..**.***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |B.........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 0 0 37
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |..........|
+  |@.........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 37
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.***.*.|
+  |..**.***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |.B........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 0 0 37
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |..........|
+  |.@........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY i
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY k
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 37
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.***.*.|
+  |..**.***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |.B........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 0 0 37
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+              
+  +-#--------+
+  |.@........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY k
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 37
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.***.*.|
+  |..**.***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-B--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 0 0 37
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+              
+    #         
+  +-@--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY k
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 37
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.***.*.|
+  |..**.***.*|
+  +-.--------+
+    #         
+    #         
+    B         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 0 0 37
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+              
+    #         
+    @         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY k
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 37
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.***.*.|
+  |..**.***.*|
+  +-.--------+
+    #         
+    B         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 0 0 37
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+              
+              
+              
+              
+    #         
+    @         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY k
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 37
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.***.*.|
+  |..**.***.*|
+  +-.--------+
+    B         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 0 0 37
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+              
+  |..A.***    
+   ..**.      
+   -.-        
+    @         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY k
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 37
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.***.*.|
+  |..**.***.*|
+  +-B--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 0 0 37
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..A.***.*.|
+  |..**.***.*|
+   -@-        
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY k
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 37
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.***.*.|
+  |.B**.***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 0 0 37
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..A.***.*.|
+  |.@**.***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 36
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.***.*.|
+  |..B*.***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 1 1 36
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..A.***.*.|
+  |..@*.***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 35
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.***.*.|
+  |...B.***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 1 2 35
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..A.***.*.|
+  |...@.***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 35
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.***.*.|
+  |....B***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 0 2 35
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..A.***.*.|
+  |....@***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY k
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 34
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.B**.*.|
+  |.....***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 1 3 34
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..A.@**.*.|
+  |.....***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 33
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@..B*.*.|
+  |.....***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 1 4 33
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..A..@*.*.|
+  |.....***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 32
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@...B.*.|
+  |.....***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 1 5 32
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..A...@.*.|
+  |.....***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 32
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@....B*.|
+  |.....***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 0 5 32
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..A....@*.|
+  |.....***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 31
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.....B.|
+  |.....***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 1 6 31
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..A.....@.|
+  |.....***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 31
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@......B|
+  |.....***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 0 6 31
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..A......@|
+  |.....***.*|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY j
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 30
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.......|
+  |.....***.B|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 1 7 30
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..A.......|
+  |.....***.@|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY j
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY k
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 30
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@......B|
+  |.....***..|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 0 7 30
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..A......@|
+  |.....***..|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY k
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY j
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 30
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.......|
+  |.....***.B|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 0 7 30
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..A.......|
+  |.....***.@|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY h
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 30
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.......|
+  |.....***B.|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 0 7 30
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..A.......|
+  |.....***@.|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY h
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 2
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.......|
+  |.....**B..|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 28 35 2
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..A.......|
+  |.....**@..|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY h
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 1
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.......|
+  |.....*B...|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 1 36 1
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..A.......|
+  |.....*@...|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45534
+message_loop: 1 lines:
+KEY h
+message_send: TO 127.0.0.1:43403
+message_send: 1 lines:
+GOLD 0 213 0
+message_send: TO 127.0.0.1:43403
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..@.......|
+  |.....B....|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:45534
+message_send: 1 lines:
+GOLD 1 37 0
+message_send: TO 127.0.0.1:45534
+message_send: 12 lines:
+DISPLAY
+  +----------+
+  |..A.......|
+  |.....@....|
+  +-.--------+
+    #         
+    #         
+    #         
+  +-#--------+
+  |..........|
+  |..........|
+  +----------+
+
+message_send: TO 127.0.0.1:43403
+message_send: 3 lines:
+QUIT GAME OVER:
+A        213 nina
+B         37 sfgfs
+
+message_send: TO 127.0.0.1:45534
+message_send: 3 lines:
+QUIT GAME OVER:
+A        213 nina
+B         37 sfgfs
+

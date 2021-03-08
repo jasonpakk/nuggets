@@ -23,6 +23,7 @@ typedef struct player {
   char symbol;
   addr_t address;
   int gold_number;
+  int gold_picked_up;
   bool active;
   position_t *pos;
   position_t *prev_pos;
@@ -38,7 +39,7 @@ typedef struct game {
   grid_struct_t *main_grid;
   hashtable_t *players;
   set_t* symbol_to_port;
-  player_t *spectator; // STORE IN HASHTABLE, keep bool of if there is a spectator // have special symbol for spectator
+  player_t *spectator;
 } game_t;
 
 int play_game();
@@ -52,11 +53,17 @@ void refresh();
 static void refresh_helper(void *arg, const char *key, void *item);
 void generate_gold(grid_struct_t *grid_struct);
 
+char* game_result_string();
+static void game_result_string_helper(void *arg, const char *key, void *item);
+void send_game_result(char* result_string);
+static void send_game_result_helper(void *arg, const char *key, void *item);
+
+
 // global variable
 game_t* game;
 
 // constants (currently commented out the ones we haven't used yet)
-//static const int MaxNameLength = 50;   // max number of chars in playerName
+static const int MaxNameLength = 50;   // max number of chars in playerName
 static const int MaxPlayers = 26;      // maximum number of players
 static const int GoldTotal = 250;      // amount of gold in the game
 static const int GoldMinNumPiles = 10; // minimum number of gold piles
@@ -93,7 +100,6 @@ main(const int argc, const char *argv[])
       srand(seed);
     }
     generate_gold(game->main_grid);
-
 
     grid_print(game->main_grid);
 
@@ -153,14 +159,74 @@ void send_grid(addr_t address) {
 }
 
 void
-send_gold(addr_t address, int n, int p, int r) {
+send_gold(player_t* player)
+{
+  int n = player->gold_picked_up;
+  int p = player->gold_number;
+  int r = game->gold_remaining;
   char gold_info[256];
   sprintf(gold_info, "GOLD %d %d %d", n, p, r);
-  message_send(address, gold_info);
+  message_send(player->address, gold_info);
+  player->gold_picked_up = 0;
+}
+
+
+char*
+game_result_string()
+{
+  //sizeof(char) or sizeof(char*)
+  // 12 for first part + end of char + new line
+  // or no malloc?
+  char* result_string = malloc((14 + MaxNameLength * sizeof(char))*(game->player_number+1));
+  char* first_line = "QUIT GAME OVER:\n";
+  strcpy(result_string, first_line);
+  hashtable_iterate(game->players, result_string, game_result_string_helper);
+  printf("%s\n", result_string);
+  return result_string;
+}
+
+static void
+game_result_string_helper(void *arg, const char *key, void *item)
+{
+  char *result_string = arg;
+  if (key != NULL) {
+    player_t* curr = item;
+    char *player_string = malloc(100); // figure this out
+    sprintf(player_string, "%c %*d %-3s\n", curr->symbol, 10, curr->gold_number, curr->name);
+    strcat(result_string, player_string);
+
+  }
 }
 
 void
+send_game_result(char* result_string)
+{
+  hashtable_iterate(game->players, result_string, send_game_result_helper);
+  // send updates to spectator
+  if(game->spectator != NULL) {
+    message_send(game->spectator->address, result_string);
+
+  }
+
+}
+
+static void
+send_game_result_helper(void *arg, const char *key, void *item)
+{
+  if (key != NULL) {
+    char* result_string = arg;
+    player_t* curr = item;
+    message_send(curr->address, result_string);
+  }
+}
+
+
+
+void
 send_display(player_t* player) {
+  // send gold
+  send_gold(player);
+
   // get player grid
   grid_struct_t *grid = player->grid;
   grid_visibility(grid, player->pos);
@@ -197,11 +263,7 @@ generate_position(grid_struct_t *grid_struct, char valid_symbol) {
 }
 
 void generate_gold(grid_struct_t *grid_struct) {
-  // static const int GoldTotal = 250;      // amount of gold in the game
-  // static const int GoldMinNumPiles = 10; // minimum number of gold piles
-  // static const int GoldMaxNumPiles = 30; // maximum number of gold piles
-
-  // Amount of gold piles to be generated
+  // Number of gold piles to be generated
   int gold_piles = (rand() % (GoldMaxNumPiles - GoldMinNumPiles + 1)) + GoldMinNumPiles;
 
   // Current gold amount generated
@@ -298,7 +360,7 @@ bool move(addr_t *address, int x, int y) {
       player_t* player2 = set_find(game->symbol_to_port, player2_symbol);
       player2->prev_pos = player2->pos;
       pos_update(player2->pos, pos_get_x(curr->pos), pos_get_y(curr->pos));
-      set_print(game->symbol_to_port, stdout, nameprint);
+      // set_print(game->symbol_to_port, stdout, nameprint);
 
       // If the player2 is in a passage, swap the passage booleans and the previous positions of both players
       bool temp_passage = player2->in_passage;
@@ -310,7 +372,33 @@ bool move(addr_t *address, int x, int y) {
       curr->prev_pos = temp_prev_pos;
 
     }
-
+    // switch (c) {
+    //   case '#':
+    //   if ((point_status(curr->prev_pos, curr->pos) == 1) & !curr->in_passage) {
+    //     grid_set_character(game->main_grid, '.', curr->pos);
+    //     curr->in_passage = true;
+    //   }
+    //   break;
+    //
+    //   case '.':
+    //   // If the player is exiting a passage, set the previous position to '#' instead of '.'
+    //   if ((point_status(curr->prev_pos, curr->pos) == 2) & curr->in_passage) {
+    //     grid_set_character(game->main_grid, '#', curr->pos);
+    //     curr->in_passage = false;
+    //   }
+    //   break;
+    //
+    //   case '*':
+    //   int gold = grid_get_point_gold(game->main_grid, new_x, new_y);
+    //   printf("the gold at this point is %d\n", gold);
+    //   grid_set_character(game->main_grid, '.', curr->pos);
+    //   int gold_picked_up = grid_get_point_gold(game->main_grid, new_x, new_y);
+    //   printf("the gold supposedly picked up is %d\n", gold_picked_up);
+    //   curr->gold_number += gold_picked_up;
+    //   curr->gold_picked_up = gold_picked_up;
+    //   game->gold_remaining -= gold_picked_up;
+    //   break;
+    // }
 
 
     // If the next point is a passage, adjust the grid accordingly
@@ -333,11 +421,14 @@ bool move(addr_t *address, int x, int y) {
 
     // If the next point is a gold_pile, adjust the grid accordingly
     if (c == '*') {
+      int gold = grid_get_point_gold(game->main_grid, new_x, new_y);
+      printf("the gold at this point is %d\n", gold);
       grid_set_character(game->main_grid, '.', curr->pos);
-      int gold_picked_up = grid_get_point_gold(game->main_grid, pos_get_x(curr->pos), pos_get_y(curr->pos));
+      int gold_picked_up = grid_get_point_gold(game->main_grid, new_x, new_y);
+      printf("the gold supposedly picked up is %d\n", gold_picked_up);
       curr->gold_number += gold_picked_up;
+      curr->gold_picked_up = gold_picked_up;
       game->gold_remaining -= gold_picked_up;
-      send_gold(curr->address, gold_picked_up, curr->gold_number, game->gold_remaining);
     }
 
 
@@ -407,6 +498,93 @@ parse_message(const char *message, addr_t *address)
     refresh();
 
   } else if (strcmp(command, key) == 0) {
+    char c = *remainder;
+    if (c == 'Q') {
+      // send appropriate message depending on if client is spectator or player
+      if(game->spectator != NULL && message_eqAddr(game->spectator->address, *address)) {
+        message_send(*address, "QUIT Thanks for watching!");
+      } else {
+        message_send(*address, "QUIT Thanks for playing!");
+      }
+      return 0;
+    }
+
+    if (game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+
+      // switch (c) {
+      //
+      //   // Move to the left by 1
+      //   case 'h':
+      //     move(address, -1, 0);
+      //
+      //   // Move to the left by 1
+      //   case 'H':
+      //     while(move(address, -1, 0));
+      //
+      //   // Move right
+      //   case 'l':
+      //     move(address, 1, 0);
+      //
+      //   // Move right (until not possible)
+      //   case 'L':
+      //     while(move(address, 1, 0));
+      //
+      //   // Move up
+      //   case 'k':
+      //     move(address, 0, -1);
+      //
+      //   // Move up (until not possible)
+      //   case 'K':
+      //     while(move(address, 0, -1));
+      //
+      //   // Move down
+      //   case 'j':
+      //     move(address, 0, 1);
+      //
+      //   // Move down (until not possible)
+      //   case 'J':
+      //     while(move(address, 0, 1));
+      //
+      //   // move diagonally up and left
+      //   case 'y':
+      //     move(address, -1, -1);
+      //
+      //   // move diagonally up and left (until not possible)
+      //   case 'Y':
+      //     while(move(address, -1, -1));
+      //
+      //   // move diagonally up and right
+      //   case 'u':
+      //     move(address, 1, -1);
+      //
+      //   // move diagonally up and right (until not possible)
+      //   case 'U':
+      //     while(move(address, 1, -1));
+      //
+      //   // move diagonally down and left
+      //   case 'b':
+      //     move(address, -1, 1);
+      //
+      //   // move diagonally down and left (until not possible)
+      //   case 'B':
+      //     while(move(address, -1, 1));
+      //
+      //   // move diagonally down and right
+      //   case 'n':
+      //     move(address, 1, 1);
+      //
+      //   // move diagonally down and right (until not possible)
+      //   case 'N':
+      //     while(move(address, 1, 1));
+      //
+      //   default:
+      //   // bad key
+      //     message_send(*address, "ERROR unable to understand message");
+      // }
+    }
+
+
+
     // if QUIT key pressed
     if (strcmp(remainder, "Q") == 0) {
       // send appropriate message depending on if client is spectator or player
@@ -550,7 +728,6 @@ parse_message(const char *message, addr_t *address)
   } else {
     message_send(*address, "ERROR unable to understand message");
   }
-
   return 0;
 }
 
@@ -560,21 +737,16 @@ refresh()
   hashtable_iterate(game->players, NULL, refresh_helper);
   // send updates to spectator
   if(game->spectator != NULL) {
-    send_gold(game->spectator->address, 0, 0, game->gold_remaining);
     send_display(game->spectator);
   }
   printf("MAIN GRID:\n%s", grid_string(game->main_grid));
+  if (game->gold_remaining == 0) {
+    char* result = game_result_string();
+    send_game_result(result);
+
+  }
+
 }
-
-// hashtable_iterate helper function for adding a char to a grid
-// call hashtable_iterate(game->players, char, add_char)
-// need to pass a position and a char (?)
-// static void
-// add_char()
-// {
-//
-// }
-
 
 static void
 refresh_helper(void *arg, const char *key, void *item)
@@ -582,10 +754,8 @@ refresh_helper(void *arg, const char *key, void *item)
   if (key != NULL) {
     player_t* curr = item;
     printf("curr player name is: %s\n", curr->name);
-    // send the player gold information (UPDATE LATER)
-    send_gold(curr->address, 0, curr->gold_number, game->gold_remaining);
 
-    // send the player a display of the grid
+    // send the player gold information and a display of the grid
     send_display(curr);
   }
 }
@@ -613,6 +783,7 @@ player_new(addr_t address, char *name, char symbol, bool active, position_t *pos
   player->name = malloc(strlen(name)+1);
   strcpy(player->name, name);
   player->symbol = symbol;
+  player->gold_picked_up = 0;
   player->address = address;
   player->gold_number = 0;
   player->active = active;
@@ -628,7 +799,6 @@ player_new(addr_t address, char *name, char symbol, bool active, position_t *pos
 // add to hashtable
 // initialize player grid
 // put player in their grid and in all other player grids
-
 // send player gold info, grid info and the grid string
 
 int
@@ -638,8 +808,8 @@ add_player(addr_t *address, char* player_name)
 
   // Find a position to put the player in and create a new player
   position_t *pos = generate_position(game->main_grid, '.');
-  addr_t new = *address;
-  player_t *new_player = player_new(new, player_name, game->curr_symbol, true, pos);
+  // addr_t new = *address;
+  player_t *new_player = player_new(*address, player_name, game->curr_symbol, true, pos);
 
   // add player to hashtable
   char portnum[100];
@@ -649,7 +819,6 @@ add_player(addr_t *address, char* player_name)
   char player_symbol[3];
   sprintf(player_symbol, "%c", new_player->symbol);
   set_insert(game->symbol_to_port, player_symbol, new_player);
-  set_print(game->symbol_to_port, stdout, nameprint);
 
   // send player the accept message
   char player_info[5];
@@ -658,24 +827,21 @@ add_player(addr_t *address, char* player_name)
 
   // add the player to main grid
   grid_set_character(game->main_grid, new_player->symbol, pos);
-  // grid_print(game->main_grid);
 
   // delete pos here or in grid swap ?
-  //
+
   // // initialize grid for player
    grid_struct_t *player_grid = grid_struct_new(game->map_filename);
    grid_load(player_grid, game->map_filename, false);
    new_player->grid = player_grid;
-
-  //new_player->grid = game->main_grid;
 
   // send the player the grid's information
   send_grid(*address);
   refresh();
 
   // update current letter and player number
-  game->curr_symbol = game->curr_symbol + 1;
-  game->player_number = game->player_number + 1;
+  game->curr_symbol += 1;
+  game->player_number += 1;
 
   return 0;
 }
