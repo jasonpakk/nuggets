@@ -264,7 +264,14 @@ generate_position(grid_struct_t *grid_struct, char valid_symbol) {
 
 void generate_gold(grid_struct_t *grid_struct) {
   // Number of gold piles to be generated
-  int gold_piles = (rand() % (GoldMaxNumPiles - GoldMinNumPiles + 1)) + GoldMinNumPiles;
+  int room_spot_number = grid_get_room_spot(grid_struct);
+  int localMaxNumPiles;
+  if (room_spot_number < GoldMaxNumPiles) {
+    localMaxNumPiles = room_spot_number;
+  } else {
+    localMaxNumPiles = GoldMaxNumPiles;
+  }
+  int gold_piles = (rand() % (localMaxNumPiles - GoldMinNumPiles + 1)) + GoldMinNumPiles;
 
   // Current gold amount generated
   int total_generated = 0;
@@ -372,34 +379,6 @@ bool move(addr_t *address, int x, int y) {
       curr->prev_pos = temp_prev_pos;
 
     }
-    // switch (c) {
-    //   case '#':
-    //   if ((point_status(curr->prev_pos, curr->pos) == 1) & !curr->in_passage) {
-    //     grid_set_character(game->main_grid, '.', curr->pos);
-    //     curr->in_passage = true;
-    //   }
-    //   break;
-    //
-    //   case '.':
-    //   // If the player is exiting a passage, set the previous position to '#' instead of '.'
-    //   if ((point_status(curr->prev_pos, curr->pos) == 2) & curr->in_passage) {
-    //     grid_set_character(game->main_grid, '#', curr->pos);
-    //     curr->in_passage = false;
-    //   }
-    //   break;
-    //
-    //   case '*':
-    //   int gold = grid_get_point_gold(game->main_grid, new_x, new_y);
-    //   printf("the gold at this point is %d\n", gold);
-    //   grid_set_character(game->main_grid, '.', curr->pos);
-    //   int gold_picked_up = grid_get_point_gold(game->main_grid, new_x, new_y);
-    //   printf("the gold supposedly picked up is %d\n", gold_picked_up);
-    //   curr->gold_number += gold_picked_up;
-    //   curr->gold_picked_up = gold_picked_up;
-    //   game->gold_remaining -= gold_picked_up;
-    //   break;
-    // }
-
 
     // If the next point is a passage, adjust the grid accordingly
     if (c == '#') {
