@@ -59,5 +59,7 @@ int pos_get_y(position_t *pos);
 
 void grid_visibility(grid_struct_t *grid_struct, position_t *pos);
 
+int grid_get_room_spot(grid_struct_t *grid_struct);
+
 
 #endif // __GRID_H
