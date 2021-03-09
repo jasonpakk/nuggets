@@ -345,21 +345,26 @@ int point_status(position_t *prev_pos, position_t *next_pos) {
   int prev_x = pos_get_x(prev_pos);
   int prev_y = pos_get_y(prev_pos);
   char prev_c = grid_get_point_c(game->main_grid, prev_x, prev_y);
+  printf("prev c: %c\n", prev_c);
 
   int next_x = pos_get_x(next_pos);
   int next_y = pos_get_y(next_pos);
   char next_c = grid_get_point_c(game->main_grid, next_x, next_y);
+  printf("next c: %c\n", next_c);
 
-  // If the previous point was a . and the next point is a #, then it's an entry
-  if ((prev_c == '.') & (next_c == '#')) {
+  // If the previous point was a . (or player themselves) and the next point is a #, then it's an entry
+  if ((prev_c == '.' || isalpha(prev_c)) & (next_c == '#')) {
+    printf("returning 1: entry\n");
     return 1;
   }
-  // If the previous point was a # and the next point is a ., then it's an exit
-  else if ((prev_c == '#') & (next_c == '.')) {
+  // If the previous point was a # (or player themselves) and the next point is a ., then it's an exit
+  else if ((prev_c == '#' || isalpha(prev_c)) & (next_c == '.')) {
+    printf("returning 2: exit\n");
     return 2;
   }
   // Otherwise it's just normal movement
   else {
+    printf("returning 0: normal\n");
     return 0;
   }
 }
