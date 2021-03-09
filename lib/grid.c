@@ -429,6 +429,9 @@ point_new(char c, bool seen, int gold_number)
 {
   // allocate memory; error message on error
   point_t *point = count_malloc_assert(sizeof(point_t), "point_t");
+  if (point == NULL) {
+    return NULL;
+  }
   point->c = c;
   point->seen_before = seen;
   point->visible_now = seen;
@@ -454,6 +457,9 @@ position_new(int x, int y)
 {
   // allocate memory; error message on error
   position_t* pos = count_malloc_assert(sizeof(position_t), "position_t");
+  if (pos == NULL) {
+    return NULL;
+  }
   pos->x = x;
   pos->y = y;
   return pos;
