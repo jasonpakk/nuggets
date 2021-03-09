@@ -61,5 +61,11 @@ void grid_visibility(grid_struct_t *grid_struct, position_t *pos);
 
 int grid_get_room_spot(grid_struct_t *grid_struct);
 
+void grid_delete(grid_struct_t *grid_struct);
+
+void point_delete(point_t *point);
+
+void position_delete(position_t *pos);
+
 
 #endif // __GRID_H
