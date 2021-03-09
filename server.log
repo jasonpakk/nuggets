@@ -1,3 +1,422 @@
 START OF LOG
 START OF LOG
-message_init: ready at port '37804'
+message_init: ready at port '34818'
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:60685
+message_loop: 1 lines:
+PLAY hi
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+OK A
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GRID 14 5
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*******.**|
+  |*@***.****|
+  |*.*******.|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:60685
+message_loop: 1 lines:
+KEY L
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 13 13 237
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*******.**|
+  |*.@**.****|
+  |*.*******.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 10 23 227
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*******.**|
+  |*..@*.****|
+  |*.*******.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 9 32 218
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*******.**|
+  |*...@.****|
+  |*.*******.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 0 32 218
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*******.**|
+  |*....@****|
+  |*.*******.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 8 40 210
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*******.**|
+  |*.....@***|
+  |*.*******.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 9 49 201
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*******.**|
+  |*......@**|
+  |*.*******.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 7 56 194
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*******.**|
+  |*.......@*|
+  |*.*******.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 8 64 186
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*******.**|
+  |*........@|
+  |*.*******.|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:60685
+message_loop: 1 lines:
+KEY I
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+ERROR unable to understand message
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:60685
+message_loop: 1 lines:
+KEY I
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+ERROR unable to understand message
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:60685
+message_loop: 1 lines:
+KEY K
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 11 75 175
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*******.*@|
+  |*.........|
+  |*.*******.|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:60685
+message_loop: 1 lines:
+KEY H
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 13 88 162
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*******.@.|
+  |*.........|
+  |*.*******.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 0 88 162
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*******@..|
+  |*.........|
+  |*.*******.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 8 96 154
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |******@...|
+  |*.........|
+  |*.*******.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 7 103 147
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*****@....|
+  |*.........|
+  |*.*******.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 7 110 140
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |****@.....|
+  |*.........|
+  |*.*******.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 7 117 133
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |***@......|
+  |*.........|
+  |*.*******.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 12 129 121
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |**@.......|
+  |*.........|
+  |*.*******.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 11 140 110
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*@........|
+  |*.........|
+  |*.*******.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 11 151 99
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |@.........|
+  |*.........|
+  |*.*******.|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:60685
+message_loop: 1 lines:
+KEY j
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 19 170 80
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |@.........|
+  |*.*******.|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:60685
+message_loop: 1 lines:
+KEY j
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 8 178 72
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |@.*******.|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:60685
+message_loop: 1 lines:
+KEY L
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 0 178 72
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |.@*******.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 10 188 62
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |..@******.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 11 199 51
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |...@*****.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 13 212 38
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |....@****.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 7 219 31
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |.....@***.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 11 230 20
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |......@**.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 12 242 8
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |.......@*.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 8 250 0
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |........@.|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 2 lines:
+QUIT GAME OVER:
+A        250 hi 
+
+message_send: TO 127.0.0.1:60685
+message_send: 1 lines:
+GOLD 0 250 0
+message_send: TO 127.0.0.1:60685
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |.........@|
+  +----------+
+
+message_send: TO 127.0.0.1:60685
+message_send: 2 lines:
+QUIT GAME OVER:
+A        250 hi 
+
+message_done: message module closing down.

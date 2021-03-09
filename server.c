@@ -106,6 +106,10 @@ main(const int argc, const char *argv[])
       srand(seed);
     }
     game->gold_pile_number = generate_gold(game->main_grid);
+    if (game->gold_pile_number == 1) {
+      fprintf(stderr, "grid must have at least 10 avaiable room spots to place gold\n");
+      return 2;
+    }
 
     grid_print(game->main_grid);
 
@@ -285,47 +289,46 @@ generate_position(grid_struct_t *grid_struct, char valid_symbol) {
 int generate_gold(grid_struct_t *grid_struct) {
   // Number of gold piles to be generated
   int room_spot_number = grid_get_room_spot(grid_struct);
+  if (room_spot_number < 10) {
+    return 1;
+  }
+
   int localMaxNumPiles;
   if (room_spot_number < GoldMaxNumPiles) {
     localMaxNumPiles = room_spot_number;
   } else {
     localMaxNumPiles = GoldMaxNumPiles;
   }
-  // int gold_piles = (rand() % (localMaxNumPiles - GoldMinNumPiles + 1)) + GoldMinNumPiles;
+  int n_gold_piles = (rand() % (localMaxNumPiles - GoldMinNumPiles + 1)) + GoldMinNumPiles;
 
-  int gold_piles = 30;
+  // we have x gold piles so make array 0 to x-1
+  int gold_pile_array[n_gold_piles - 1];
 
-  // Current gold amount generated
-  int total_generated = 0;
+  // add 1 to every pile
+  for (int i = 0; i < n_gold_piles; i++) {
+    gold_pile_array[i] = 1;
+  }
 
-  // In each loop, generate a new gold pile
-  for (int i = 0; i < gold_piles; i++) {
+  int pile_num;
+  for (int j = 0; j < GoldTotal - n_gold_piles; j++) {
+    pile_num = (rand() % (n_gold_piles)); // generates random number between 0 and number of gold piles - 1
+    gold_pile_array[pile_num] = gold_pile_array[pile_num] + 1;
+  }
 
-    // TODO: MAKE THE RANDOM NUMBER GENERATION ACTUALLY RANDOM.
-    // Get a random number of gold such that the future loops can also get a random number of gold in the range.
-    int curr_pile_gold = (rand() % (GoldTotal - total_generated - gold_piles + i + 1) + 1);
-
-    if (gold_piles - i == 1) {
-      curr_pile_gold = GoldTotal - total_generated;
-    }
-    total_generated += curr_pile_gold;
+  // add each gold pile to the grid
+  for (int k = 0; k <= n_gold_piles - 1; k++) {
 
     // Get a random position for the pile
     position_t *curr_pile_pos = generate_position(game->main_grid, '.');
-
     // Change the point for the pile in the grid
     grid_set_character(game->main_grid, '*', curr_pile_pos);
-
     // Change the gold amount for the pile in the grid
-    grid_set_gold(game->main_grid, curr_pile_gold, curr_pile_pos);
-
-    printf("Gold pile with %d gold at location %d %d\n", curr_pile_gold, pos_get_x(curr_pile_pos), pos_get_y(curr_pile_pos));
-
+    grid_set_gold(game->main_grid, gold_pile_array[k], curr_pile_pos);
     position_delete(curr_pile_pos);
   }
-  return gold_piles;
-}
 
+  return n_gold_piles;
+}
 
 void nameprint(FILE *fp, const char *key, void *item)
 {
@@ -756,6 +759,8 @@ add_player(addr_t *address, char* player_name)
 
   if (grid_get_room_spot(game->main_grid) <= game->gold_pile_number) {
     pos = generate_position(game->main_grid, '*');
+    // TODO: immediately add the gold to the players total
+
   } else {
     pos = generate_position(game->main_grid, '.');
   }
@@ -765,6 +770,8 @@ add_player(addr_t *address, char* player_name)
 
   // addr_t new = *address;
   player_t *new_player = player_new(*address, player_name, game->curr_symbol, true, pos);
+
+  // new_player->gold_number =
 
   // add player to hashtable
   char portnum[100];
