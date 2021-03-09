@@ -286,19 +286,19 @@ parse_message(const char *message, addr_t *address)
         message_send(*address, "QUIT Thanks for watching!");
       } else {
         message_send(*address, "QUIT Thanks for playing!");
+
+        // get pointer to player who just quit using their address
+        char portnum1[100];
+        sprintf(portnum1, "%d",ntohs((*address).sin_port));
+        server_player_t *curr = hashtable_find(game->players, portnum1);
+        server_player_setActive(curr, false); // no longer active
+
+        // remove their symbol from the main grid
+        position_t *playerPos = server_player_getPos(curr);
+        char toReplace = grid_get_point_c(server_player_getGrid(curr), pos_get_x(playerPos), pos_get_y(playerPos));
+        grid_set_character(game->main_grid, toReplace, playerPos);
+        refresh();
       }
-
-      // get pointer to player who just quit using their address
-      char portnum1[100];
-      sprintf(portnum1, "%d",ntohs((*address).sin_port));
-      server_player_t *curr = hashtable_find(game->players, portnum1);
-      server_player_setActive(curr, false); // no longer active
-
-      // remove their symbol from the main grid
-      position_t *playerPos = server_player_getPos(curr);
-      char toReplace = grid_get_point_c(server_player_getGrid(curr), pos_get_x(playerPos), pos_get_y(playerPos));
-      grid_set_character(game->main_grid, toReplace, playerPos);
-      refresh();
     }
 
     // MOVEMENT key command
