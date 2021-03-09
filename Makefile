@@ -42,3 +42,4 @@ clean:
 	rm -f $(PROG)
 	rm -f core
 	rm -f vgcore*
+	rm -f *.log

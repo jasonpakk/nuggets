@@ -295,7 +295,6 @@ parse_message(const char *message, addr_t *address)
   } else if (strcmp(command, key) == 0) {
     // read what the key is
     char c = *remainder;
-    printf("%c\n", c);
 
     // QUIT key command
     if (c == 'Q') {
@@ -867,7 +866,6 @@ game_result_string()
   char* first_line = "QUIT GAME OVER:\n";
   strcpy(result_string, first_line);
   hashtable_iterate(game->players, result_string, game_result_string_helper);
-  printf("%s\n", result_string);
   return result_string;
 }
 
