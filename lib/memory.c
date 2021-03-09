@@ -1,10 +1,10 @@
-/* 
- * memory - count_malloc and related functions 
- * 
+/*
+ * memory - count_malloc and related functions
+ *
  * 1. Replacements for malloc(), calloc(), and free(),
  *    that count the number of calls to each,
  *    so you can print reports about the current balance of memory.
- * 
+ *
  * 2. Variants that 'assert' the result is non-NULL;
  *    if NULL occurs, kick out an error and die.
  *
@@ -81,7 +81,7 @@ count_calloc(const size_t nmemb, const size_t size)
 
 /**************** count_free() ****************/
 /* see memory.h for description */
-void 
+void
 count_free(void *ptr)
 {
   if (ptr != NULL) {
@@ -95,10 +95,10 @@ count_free(void *ptr)
 
 /**************** count_report() ****************/
 /* see memory.h for description */
-void 
+void
 count_report(FILE *fp, const char *message)
 {
-  fprintf(fp, "%s: %d malloc, %d free, %d free(NULL), %d net\n", 
+  fprintf(fp, "%s: %d malloc, %d free, %d free(NULL), %d net\n",
           message, nmalloc, nfree, nfreenull, nmalloc - nfree - nfreenull);
 }
 
