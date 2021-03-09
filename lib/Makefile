@@ -5,8 +5,9 @@
 
 # object files, and the target library
 
-OBJS = hashtable.o memory.o set.o jhash.o file.o grid.o
+OBJS = hashtable.o memory.o set.o jhash.o file.o grid.o server_player.o $L/message.h
 LIB = lib.a
+L = ../support
 
 # add -DNOSLEEP to disable the automatic sleep after web-page fetches
 #               (students, please do not use -DNOSLEEP!)
@@ -14,12 +15,12 @@ LIB = lib.a
 # (and run `make clean; make` whenever you change this)
 FLAGS = # -DMEMTEST  # -DNOSLEEP
 
-CFLAGS = -Wall -pedantic -std=c11 -ggdb $(FLAGS)
+CFLAGS = -Wall -pedantic -std=c11 -ggdb -I$L $(FLAGS)
 CC = gcc
 MAKE = make
 
 # Build the library by archiving object files
-$(LIB): $(OBJS) 
+$(LIB): $(OBJS)
 	ar cr $(LIB) $(OBJS)
 
 # Dependencies: object files depend on header files
@@ -29,6 +30,7 @@ memory.o: memory.h
 set.o: set.h
 file.o: file.h
 grid.o: grid.h
+server_player.o: server_player.h $L/message.h
 
 .PHONY: clean sourcelist
 
