@@ -165,7 +165,7 @@ void send_grid(addr_t address) {
   char map_info[256];
   int nC = grid_get_nC(game->main_grid);
   int nR = grid_get_nR(game->main_grid);
-  sprintf(map_info, "GRID %d %d", nC, nR);
+  sprintf(map_info, "GRID %d %d", nR, nC);
   message_send(address, map_info);
 }
 
