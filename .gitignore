@@ -1,1 +1,4 @@
 server
+server.log
+player.log
+spectator.log
