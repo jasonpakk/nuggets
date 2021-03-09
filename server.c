@@ -20,21 +20,7 @@
 #include "hashtable.h"
 #include "set.h"
 #include "grid.h"
-
-/* struct that stores data about one player
-*/
-typedef struct player {
-  char *name;   // player name
-  char symbol;  // player symbol on the game map
-  addr_t address; // address to send/recieves messages from
-  int gold_number;  // total gold in player purse
-  int gold_picked_up; // amt of gold just picked up by player
-  bool active;    // whether the player is currently playing
-  position_t *pos;    // current player position
-  position_t *prev_pos;   // last position the player was in
-  grid_struct_t *grid;    // player grid that tracks visibility
-  bool in_passage;    // whether the player is currently in a passage way
-} player_t;
+#include "server_player.h"
 
 /* struct that stores data about the overall game
 */
@@ -48,11 +34,11 @@ typedef struct game {
   grid_struct_t *main_grid;   // game grid that sees all
   hashtable_t *players;   // stores all players; key is their address
   set_t* symbol_to_player;  // stores all players; key is their symbol
-  player_t *spectator;  // pointer to the spectator watching the game
+  server_player_t *spectator;  // pointer to the spectator watching the game
 } game_t;
 
 // global variable
-game_t* game;
+static game_t* game;
 
 // local constants
 static const int MaxNameLength = 50;   // max number of chars in playerName
@@ -71,12 +57,13 @@ static int generate_gold(grid_struct_t *grid_struct);
 static void add_player(addr_t *address, char* player_name);
 
 static bool move(addr_t *address, int x, int y);
-static void pickup_gold(player_t *curr, position_t *pos, bool overwrite);
+static server_player_t *get_player(addr_t *address);
+static void pickup_gold(server_player_t *curr, position_t *pos, bool overwrite);
 static int point_status(position_t *prev_pos, position_t *next_pos);
 
 static void send_grid(addr_t address);
-static void send_gold(player_t* player);
-static void send_display(player_t* player);
+static void send_gold(server_player_t* player);
+static void send_display(server_player_t* player);
 static void refresh();
 static void refresh_helper(void *arg, const char *key, void *item);
 
@@ -88,11 +75,6 @@ static void send_game_result_helper(void *arg, const char *key, void *item);
 game_t* game_new(char *map_filename);
 void game_delete(game_t *game);
 static void game_delete_helper(void *item);
-
-player_t* player_new(addr_t address, char *name, char symbol, bool active, position_t *pos);
-static player_t *get_player(addr_t *address);
-void player_delete(player_t *player);
-void spectator_delete(player_t *player);
 
 /*
  * main function of program; checks whether arguments
@@ -277,13 +259,13 @@ parse_message(const char *message, addr_t *address)
   } else if (strcmp(command, spectate) == 0) {
     // initalize new spectator
     addr_t new = *address;
-    player_t *new_spectator = player_new(new, spectate, '!', false, NULL);
-    new_spectator->grid = game->main_grid;
+    server_player_t *new_spectator = server_player_new(new, spectate, '!', false, NULL);
+    server_player_setGrid(new_spectator, game->main_grid, false);
 
     // if there is already a spectator, replace them
    if (game->spectator != NULL) {
-     message_send(game->spectator->address, "QUIT You have been replaced by a new spectator.");
-     spectator_delete(game->spectator);
+     message_send(server_player_getAddress(game->spectator), "QUIT You have been replaced by a new spectator.");
+     server_spectator_delete(game->spectator);
     }
     game->spectator = new_spectator;
 
@@ -300,7 +282,7 @@ parse_message(const char *message, addr_t *address)
     if (c == 'Q') {
 
       // send appropriate message depending on if client is spectator or player
-      if(game->spectator != NULL && message_eqAddr(game->spectator->address, *address)) {
+      if(game->spectator != NULL && message_eqAddr(server_player_getAddress(game->spectator), *address)) {
         message_send(*address, "QUIT Thanks for watching!");
       } else {
         message_send(*address, "QUIT Thanks for playing!");
@@ -309,17 +291,18 @@ parse_message(const char *message, addr_t *address)
       // get pointer to player who just quit using their address
       char portnum1[100];
       sprintf(portnum1, "%d",ntohs((*address).sin_port));
-      player_t *curr = hashtable_find(game->players, portnum1);
-      curr->active = false; // no longer active
+      server_player_t *curr = hashtable_find(game->players, portnum1);
+      server_player_setActive(curr, false); // no longer active
 
       // remove their symbol from the main grid
-      char toReplace = grid_get_point_c(curr->grid, pos_get_x(curr->pos), pos_get_y(curr->pos));
-      grid_set_character(game->main_grid, toReplace, curr->pos);
+      position_t *playerPos = server_player_getPos(curr);
+      char toReplace = grid_get_point_c(server_player_getGrid(curr), pos_get_x(playerPos), pos_get_y(playerPos));
+      grid_set_character(game->main_grid, toReplace, playerPos);
       refresh();
     }
 
     // MOVEMENT key command
-    else if (game->spectator == NULL || !message_eqAddr(game->spectator->address, *address)) {
+    else if (game->spectator == NULL || !message_eqAddr(server_player_getAddress(game->spectator), *address)) {
 
       // switch statement to handle different keys
       switch (c) {
@@ -524,7 +507,7 @@ add_player(addr_t *address, char* player_name)
   } else {
     pos = generate_position(game->main_grid, '.');
   }
-  player_t *new_player = player_new(*address, player_name, game->curr_symbol, true, pos);
+  server_player_t *new_player = server_player_new(*address, player_name, game->curr_symbol, true, pos);
 
   // add player to hashtable (portnum->player)
   char portnum[100];
@@ -533,16 +516,16 @@ add_player(addr_t *address, char* player_name)
 
   // add player to set (symbol->player)
   char player_symbol[3];
-  sprintf(player_symbol, "%c", new_player->symbol);
+  sprintf(player_symbol, "%c", server_player_getSymbol(new_player));
   set_insert(game->symbol_to_player, player_symbol, new_player);
 
   // send player the accept message
   char player_info[5];
-  sprintf(player_info, "OK %c", new_player->symbol);
+  sprintf(player_info, "OK %c", server_player_getSymbol(new_player));
   message_send(*address, player_info);
 
   // add the player symbol to main grid
-  grid_set_character(game->main_grid, new_player->symbol, pos);
+  grid_set_character(game->main_grid, server_player_getSymbol(new_player), pos);
 
   // if the player was added into a '*' position, automatically pick up the gold pile.
   pickup_gold(new_player, pos, false);
@@ -550,7 +533,7 @@ add_player(addr_t *address, char* player_name)
   // initialize grid for player
   grid_struct_t *player_grid = grid_struct_new(game->map_filename);
   grid_load(player_grid, game->map_filename, false);
-  new_player->grid = player_grid;
+  server_player_setGrid(new_player, player_grid, false);
 
   // send the player the grid's information
   send_grid(*address);
@@ -610,11 +593,11 @@ point_status(position_t *prev_pos, position_t *next_pos)
  *        with a room character '.'
  */
 static void
-pickup_gold(player_t *curr, position_t *pos, bool overwrite)
+pickup_gold(server_player_t *curr, position_t *pos, bool overwrite)
 {
   // if we need to update the gold char with a room symbol
   if (overwrite) {
-    grid_set_character(game->main_grid, '.', curr->pos);
+    grid_set_character(game->main_grid, '.', server_player_getPos(curr));
   }
   // obtain amount of gold picked up
   int gold_picked_up = grid_get_point_gold(game->main_grid, pos_get_x(pos), pos_get_y(pos));
@@ -622,8 +605,8 @@ pickup_gold(player_t *curr, position_t *pos, bool overwrite)
   grid_set_gold(game->main_grid, 0, pos);
   game->gold_remaining -= gold_picked_up;
   // update player's gold count
-  curr->gold_number += gold_picked_up;
-  curr->gold_picked_up = gold_picked_up;
+  server_player_setGoldNumber(curr, server_player_getGoldNumber(curr) + gold_picked_up);
+  server_player_setGoldPickedUp(curr, gold_picked_up);
 }
 
 /**************** move ****************/
@@ -640,9 +623,9 @@ static bool
 move(addr_t *address, int x, int y)
 {
   // Get the position to the direction of the player
-  player_t *curr = get_player(address);
-  int new_x = pos_get_x(curr->pos) + x;
-  int new_y = pos_get_y(curr->pos) + y;
+  server_player_t *curr = get_player(address);
+  int new_x = pos_get_x(server_player_getPos(curr)) + x;
+  int new_y = pos_get_y(server_player_getPos(curr)) + y;
 
   // ensure we aren't moving out of bonds
   if (new_x < 0 || new_x >= grid_get_nC(game->main_grid)
@@ -657,57 +640,59 @@ move(addr_t *address, int x, int y)
   if (c == '.' || isalpha(c) || c == '#' || c == '*') {
     // Swap the player's character with the next point's character
     position_t *new = position_new(new_x, new_y);
-    grid_swap(game->main_grid, new, curr->pos);
+    grid_swap(game->main_grid, new, server_player_getPos(curr));
 
     // If the next point is a player, then update the next player's position
     if (isalpha(c)) {
       // find the player we swapped positions with
       char* player2_symbol = malloc(sizeof(char) + 1);
       sprintf(player2_symbol, "%c", c);
-      player_t* player2 = set_find(game->symbol_to_player, player2_symbol);
+      server_player_t* player2 = set_find(game->symbol_to_player, player2_symbol);
       free(player2_symbol);
 
       // If the player2 is in a passage, swap the passage booleans and the previous positions of both players
-      bool temp_passage = player2->in_passage;
-      player2->in_passage = curr->in_passage;
-      curr->in_passage = temp_passage;
+      bool temp_passage = server_player_getInPassage(player2);
+      server_player_setInPassage(player2, server_player_getInPassage(curr));
+      server_player_setInPassage(curr, temp_passage);
 
       //reallocate positions for both players
-      position_t *prev_pos_p1 = position_new(pos_get_x(curr->prev_pos), pos_get_y(curr->prev_pos));
-      position_t *curr_pos_p1 = position_new(pos_get_x(curr->pos), pos_get_y(curr->pos));
-      position_t *prev_pos_p2 = position_new(pos_get_x(player2->prev_pos), pos_get_y(player2->prev_pos));
+      position_t *prev_pos_p1 = position_new(pos_get_x(server_player_getPrevPos(curr)), pos_get_y(server_player_getPrevPos(curr)));
+      position_t *curr_pos_p1 = position_new(pos_get_x(server_player_getPos(curr)), pos_get_y(server_player_getPos(curr)));
+      position_t *prev_pos_p2 = position_new(pos_get_x(server_player_getPrevPos(player2)), pos_get_y(server_player_getPrevPos(player2)));
 
       // free pointer stored in prev pos before updating
-      if(player2->prev_pos != player2->pos) {
-        position_delete(player2->prev_pos);
+      if(server_player_getPrevPos(player2) != server_player_getPos(player2)) {
+        position_delete(server_player_getPrevPos(player2));
       }
-      if(curr->prev_pos != curr->pos) {
-        position_delete(curr->prev_pos);
+      if(server_player_getPrevPos(curr) != server_player_getPos(curr)) {
+        position_delete(server_player_getPrevPos(curr));
       }
-      position_delete(player2->pos);
-      position_delete(curr->pos);
+      position_delete(server_player_getPos(player2));
+      position_delete(server_player_getPos(curr));
 
       // update each player's positions appropriately
-      player2->prev_pos = prev_pos_p1;
-      curr->prev_pos = prev_pos_p2;
-      player2->pos = curr_pos_p1;
-      curr->pos = new;
+      server_player_setPrevPos(player2, prev_pos_p1);
+      server_player_setPrevPos(curr, prev_pos_p2);
+      server_player_setPos(player2, curr_pos_p1);
+      server_player_setPos(curr, new);
 
     } else {
       // If the next point is a passage, adjust the grid accordingly
       if (c == '#') {
         // If the player is entering the passage, set the previous position to '.', instead of '#'
-        if ((point_status(curr->prev_pos, curr->pos) == 1) & !curr->in_passage) {
-          grid_set_character(game->main_grid, '.', curr->pos);
-          curr->in_passage = true;
+        if ((point_status(server_player_getPrevPos(curr), server_player_getPos(curr)) == 1)
+                  && !(server_player_getInPassage(curr))) {
+          grid_set_character(game->main_grid, '.', server_player_getPos(curr));
+          server_player_setInPassage(curr, true);
         }
       }
 
       if (c == '.' ) {
         // If the player is exiting a passage, set the previous position to '#' instead of '.'
-        if ((point_status(curr->prev_pos, curr->pos) == 2) & curr->in_passage) {
-          grid_set_character(game->main_grid, '#', curr->pos);
-          curr->in_passage = false;
+        if ((point_status(server_player_getPrevPos(curr), server_player_getPos(curr)) == 2)
+                && (server_player_getInPassage(curr))) {
+          grid_set_character(game->main_grid, '#', server_player_getPos(curr));
+          server_player_setInPassage(curr, false);
         }
       }
 
@@ -717,22 +702,39 @@ move(addr_t *address, int x, int y)
       }
 
       // free pointer stored in prev pos before updating
-      if(curr->prev_pos != curr->pos) {
-        position_delete(curr->prev_pos);
+      if(server_player_getPrevPos(curr) != server_player_getPos(curr)) {
+        position_delete(server_player_getPrevPos(curr));
       }
       // Update the player's position variables to reflect the grid.
-      position_t *new_prev = position_new(pos_get_x(curr->pos), pos_get_y(curr->pos));
-      curr->prev_pos = new_prev;
+      position_t *curr_pos = server_player_getPos(curr);
+      position_t *new_prev = position_new(pos_get_x(curr_pos), pos_get_y(curr_pos));
+      server_player_setPrevPos(curr, new_prev);
 
       // free pointer stored in curr pos before updating
-      position_delete(curr->pos);
-      curr->pos = new;
+      position_delete(curr_pos);
+      server_player_setPos(curr, new);
     }
 
     refresh();
     return true;
   }
   return false;
+}
+
+/**************** get_player ****************/
+/* Searches the hashtable of players to find the player
+ * that corresponds to the provided address.
+ * User provides:
+ *      valid address of the player we are searching for
+ * We return a pointer to the player found, otherwise NULL.
+ */
+static server_player_t *get_player(addr_t *address)
+{
+  // search hashtable for player with the address
+  char portnum1[100];
+  sprintf(portnum1, "%d",ntohs((*address).sin_port));
+  server_player_t *curr = hashtable_find(game->players, portnum1);
+  return curr;
 }
 
 /**************** send_grid ****************/
@@ -763,16 +765,16 @@ send_grid(addr_t address)
 `*   valid player pointer to the player to send the message
  */
 static void
-send_gold(player_t* player)
+send_gold(server_player_t* player)
 {
-  int n = player->gold_picked_up;
-  int p = player->gold_number;
+  int n = server_player_getGoldPickedUp(player);
+  int p = server_player_getGoldNumber(player);
   int r = game->gold_remaining;
   char gold_info[256];
   sprintf(gold_info, "GOLD %d %d %d", n, p, r);
-  message_send(player->address, gold_info);
+  message_send(server_player_getAddress(player), gold_info);
   // reset to 0; no longer picked up new gold
-  player->gold_picked_up = 0;
+  server_player_setGoldPickedUp(player, 0);
 }
 
 /**************** send_display ****************/
@@ -785,7 +787,7 @@ send_gold(player_t* player)
 `*   valid player pointer to the player to send the message
  */
 static void
-send_display(player_t* player)
+send_display(server_player_t* player)
 {
   send_gold(player); // first inform player of their gold
 
@@ -795,15 +797,15 @@ send_display(player_t* player)
     string = grid_string(game->main_grid);
   // if a regular player, retrieve string based on visibility
   } else {
-    grid_struct_t *grid = player->grid;
-    grid_visibility(grid, player->pos);
-    string = grid_string_player(game->main_grid, grid, player->pos);
+    grid_struct_t *grid = server_player_getGrid(player);
+    grid_visibility(grid, server_player_getPos(player));
+    string = grid_string_player(game->main_grid, grid, server_player_getPos(player));
   }
 
   // create string to send the grid message
   char *display_info = malloc(strlen(string) * sizeof(char*));
   sprintf(display_info, "DISPLAY\n%s", string);
-  message_send(player->address, display_info);
+  message_send(server_player_getAddress(player), display_info);
   free(string);
   free(display_info);
 }
@@ -842,11 +844,11 @@ static void
 refresh_helper(void *arg, const char *key, void *item)
 {
   if (key != NULL) {
-    player_t* curr = item;
+    server_player_t* curr = item;
     // if player is active, send the player a display of the grid
     // since send_display also sends gold messages, active players
     // also recieve updates on the amount of gold they currently have
-    if(curr->active) {
+    if(server_player_getActive(curr)) {
       send_display(curr);
     }
   }
@@ -880,9 +882,10 @@ game_result_string_helper(void *arg, const char *key, void *item)
 {
   char *result_string = arg;
   if (key != NULL) {
-    player_t* curr = item;
-    char *player_string = malloc(100); // figure this out
-    sprintf(player_string, "%c %*d %-3s\n", curr->symbol, 10, curr->gold_number, curr->name);
+    server_player_t* curr = item;
+    char *player_string = malloc(100);
+    sprintf(player_string, "%c %*d %-3s\n", server_player_getSymbol(curr), 10,
+                    server_player_getGoldNumber(curr), server_player_getName(curr));
     strcat(result_string, player_string);
     free(player_string);
   }
@@ -902,7 +905,7 @@ send_game_result(char* result_string)
   hashtable_iterate(game->players, result_string, send_game_result_helper);
   // send updates to spectator
   if(game->spectator != NULL) {
-    message_send(game->spectator->address, result_string);
+    message_send(server_player_getAddress(game->spectator), result_string);
   }
 }
 
@@ -916,8 +919,8 @@ send_game_result_helper(void *arg, const char *key, void *item)
 {
   if (key != NULL) {
     char* result_string = arg;
-    player_t* curr = item;
-    message_send(curr->address, result_string);
+    server_player_t* curr = item;
+    message_send(server_player_getAddress(curr), result_string);
   }
 }
 
@@ -958,7 +961,7 @@ game_delete(game_t *game)
     grid_delete(game->main_grid);
     hashtable_delete(game->players, game_delete_helper);
     set_delete(game->symbol_to_player, NULL);
-    spectator_delete(game->spectator);
+    server_spectator_delete(game->spectator);
     free(game);
   }
 }
@@ -972,83 +975,6 @@ static void
 game_delete_helper(void *item)
 {
   if (item != NULL) {
-    player_delete(item);
-  }
-}
-
-/**************** player_new ****************/
-/* Initalizes a new player_t structure.
- * User provides:
- *      valid address to send/recieve messages from the player
- *      valid char* representing the player's name
- *      valid char representing the player's symbol on the game map
- *      valid bool representing whether the player is currently playing
- *      valid position_t* representing position the player is at
- * We return a pointer to the newly initalized player structure.
- */
-player_t*
-player_new(addr_t address, char *name, char symbol, bool active, position_t *pos)
-{
-  player_t* player = count_malloc_assert(sizeof(player_t), "player_t");
-  player->name = count_malloc_assert(strlen(name)+1, "player_t name string");
-  strcpy(player->name, name);
-  player->symbol = symbol;
-  player->gold_picked_up = 0;
-  player->address = address;
-  player->gold_number = 0;
-  player->active = active;
-  player->pos = pos;
-  player->grid = NULL;
-  player->in_passage = false;
-  player->prev_pos = pos;
-  return player;
-}
-
-/**************** get_player ****************/
-/* Searches the hashtable of players to find the player
- * that corresponds to the provided address.
- * User provides:
- *      valid address of the player we are searching for
- * We return a pointer to the player found, otherwise NULL.
- */
-static player_t *get_player(addr_t *address)
-{
-  // search hashtable for player with the address
-  char portnum1[100];
-  sprintf(portnum1, "%d",ntohs((*address).sin_port));
-  player_t *curr = hashtable_find(game->players, portnum1);
-  return curr;
-}
-
-/**************** player_delete ****************/
-/* Frees memory used for the player_t structure.
- * User provides:
- *      valid player_t* representing the player structure
- *      we wish to free.
- */
-void
-player_delete(player_t *player)
-{
-  if(player != NULL) {
-    free(player->name);
-    free(player->pos);
-    free(player->prev_pos);
-    grid_delete(player->grid);
-    free(player);
-  }
-}
-
-/**************** spectator_delete ****************/
-/* Frees memory used to store the spectator.
- * User provides:
- *      valid player_t* representing the spectator
- *      we wish to free.
- */
-void
-spectator_delete(player_t *player)
-{
-  if(player != NULL) {
-    free(player->name);
-    free(player);
+    server_player_delete(item);
   }
 }
