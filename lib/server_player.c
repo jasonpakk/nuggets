@@ -70,7 +70,7 @@ grid_struct_t* server_player_getGrid(const server_player_t *player) {
   return player ? player->grid : NULL;
 }
 bool server_player_getInPassage(const server_player_t *player) {
-  return player->active;
+  return player->in_passage;
 }
 
 /* *********************************************************************** */
@@ -103,7 +103,7 @@ void server_player_setGrid(server_player_t *player, grid_struct_t* grid, bool b)
   player->grid = grid;
 }
 void server_player_setInPassage(server_player_t *player, bool b) {
-  player->active = b;
+  player->in_passage = b;
 }
 
 /**************** server_player_new ****************/

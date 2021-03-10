@@ -284,21 +284,22 @@ parse_message(const char *message, addr_t *address)
       // send appropriate message depending on if client is spectator or player
       if(game->spectator != NULL && message_eqAddr(server_player_getAddress(game->spectator), *address)) {
         message_send(*address, "QUIT Thanks for watching!");
+        server_spectator_delete(game->spectator);
       } else {
         message_send(*address, "QUIT Thanks for playing!");
+
+        // get pointer to player who just quit using their address
+        char portnum1[100];
+        sprintf(portnum1, "%d",ntohs((*address).sin_port));
+        server_player_t *curr = hashtable_find(game->players, portnum1);
+        server_player_setActive(curr, false); // no longer active
+
+        // remove their symbol from the main grid
+        position_t *playerPos = server_player_getPos(curr);
+        char toReplace = grid_get_point_c(server_player_getGrid(curr), pos_get_x(playerPos), pos_get_y(playerPos));
+        grid_set_character(game->main_grid, toReplace, playerPos);
+        refresh();
       }
-
-      // get pointer to player who just quit using their address
-      char portnum1[100];
-      sprintf(portnum1, "%d",ntohs((*address).sin_port));
-      server_player_t *curr = hashtable_find(game->players, portnum1);
-      server_player_setActive(curr, false); // no longer active
-
-      // remove their symbol from the main grid
-      position_t *playerPos = server_player_getPos(curr);
-      char toReplace = grid_get_point_c(server_player_getGrid(curr), pos_get_x(playerPos), pos_get_y(playerPos));
-      grid_set_character(game->main_grid, toReplace, playerPos);
-      refresh();
     }
 
     // MOVEMENT key command
@@ -568,12 +569,14 @@ point_status(position_t *prev_pos, position_t *next_pos)
   int next_y = pos_get_y(next_pos);
   char next_c = grid_get_point_c(game->main_grid, next_x, next_y);
 
-  // If the previous point was a . (or player themselves) and the next point is a #, then it's an entry
-  if ((prev_c == '.' || isalpha(prev_c)) & (next_c == '#')) {
+  // If the previous point was a . (or player themselves)
+  // and the next point is a #, then it's an entry
+  if ((prev_c == '.' || isalpha(prev_c)) && (next_c == '#')) {
     return 1;
   }
-  // If the previous point was a # (or player themselves) and the next point is a ., then it's an exit
-  else if ((prev_c == '#' || isalpha(prev_c)) & (next_c == '.')) {
+  // If the previous point was a # (or player themselves)
+  // and the next point is a room spot, then it's an exit
+  else if ((prev_c == '#' || isalpha(prev_c)) && (next_c == '.' || next_c == '*')) {
     return 2;
   }
   // Otherwise it's just normal movement
@@ -627,13 +630,8 @@ move(addr_t *address, int x, int y)
   int new_x = pos_get_x(server_player_getPos(curr)) + x;
   int new_y = pos_get_y(server_player_getPos(curr)) + y;
 
-  // ensure we aren't moving out of bonds
-  if (new_x < 0 || new_x >= grid_get_nC(game->main_grid)
-          || new_y < 0 || new_y >= grid_get_nR(game->main_grid)) {
-    return false;
-  }
-
   // Get the character at the next point
+  // (grid_get_point_c ensures we aren't out of bounds so we dont check here)
   char c = grid_get_point_c(game->main_grid, new_x, new_y);
 
   // If the move is valid
@@ -699,6 +697,12 @@ move(addr_t *address, int x, int y)
       // If the next point is a gold_pile, adjust the grid accordingly
       if (c == '*') {
         pickup_gold(curr, new, true);
+        // If the player is exiting a passage, set the previous position to '#' instead of '.'
+        if ((point_status(server_player_getPrevPos(curr), server_player_getPos(curr)) == 2)
+                && (server_player_getInPassage(curr))) {
+          grid_set_character(game->main_grid, '#', server_player_getPos(curr));
+          server_player_setInPassage(curr, false);
+        }
       }
 
       // free pointer stored in prev pos before updating
@@ -848,7 +852,7 @@ refresh_helper(void *arg, const char *key, void *item)
     // if player is active, send the player a display of the grid
     // since send_display also sends gold messages, active players
     // also recieve updates on the amount of gold they currently have
-    if(server_player_getActive(curr)) {
+    if(server_player_getActive(curr) == true) {
       send_display(curr);
     }
   }
@@ -933,6 +937,9 @@ send_game_result_helper(void *arg, const char *key, void *item)
 game_t*
 game_new(char *map_filename)
 {
+  if(map_filename == NULL) {
+    return NULL;
+  }
   game_t* game = count_malloc_assert(sizeof(game_t), "game_t");
   game->playing_game = true;
   game->map_filename = map_filename;

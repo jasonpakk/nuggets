@@ -91,7 +91,7 @@ The server will run as follows:
 			6.4.3.1 Quit the game for each client.
 			6.4.3.2 Send the clients the summary of the game
 7. Close Server
-  
+
 
 ### Dataflow through modules
 
@@ -104,14 +104,14 @@ The server will run as follows:
 5b. Keystroke input from player (movement or quit)
 
 ### Major Data Structures
- 
+
 ***player*** to store data about player clients.
 ***hashtable*** of players' names with their player object
 ***message*** to handle client-server communication  
 ***grid*** to represent the map
 NR X NC matrix array representing each coordinate
 ***goldpile[]*** array of gold piles  
-***goldpile*** 
+***goldpile***
 ***position*** to represent X and Y coordinates
 Amount of gold
 
