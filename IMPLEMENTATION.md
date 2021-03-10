@@ -37,101 +37,141 @@ The server for the Nuggets game initializes a server using the ***message*** mod
 
 ### ***main***
 1. Check number of command-line arguments to ensure user used proper usage syntax:
+
     * `./server map.txt [seed]`
+
 2. Verify arguments; if error, exit non-zero
+
 3. Initialize the ***game_t*** structure using the map filename
+
 4. Initialize the game map by reading the text file and building a ***grid_struct_t***
+
 5. If the user provided a seed, use if for the random number generator
+
 6. If a seed was not provided, generate our own seed by calling ***getpid()***
+
 7. Generate gold piles in the map by calling *generate_gold*
+
 8. Start gameplay by calling *play_game*
+
 9. At conclusion of the game, free memory all the memory used
 
 ### ***play_game***
 1. Initialize the ***log*** module to log messages to
+
 2. Initialize the network using the ***message*** module
+
 3. Announce the port number
+
 4. Wait for incoming messages from clients and react to each inbound message appropriately
+
 5. Close the network once the game has concluded
 
 ### ***handleMessage***
 1. Read the incoming message
+
 2. Call *parse_message* to handle the specific message
+
 3. If the game play has ended, return true to end the ***message*** module's looping for messages
 
 ### ***parse_message***
 1. Parse the message string to obtain the command (PLAY, KEY, or SPECTATE)
+
 2. Parse the message string to obtain what came after the command
+
 3. If the command was PLAY:
 
-  3.1. Ensure we haven't reached max number of players, otherwise send error message
+    3.1. Ensure we haven't reached max number of players, otherwise send error message
 
-  3.2. Ensure a player name was provided, otherwise send error message
+    3.2. Ensure a player name was provided, otherwise send error message
 
-  3.3. Truncate player name to MaxNameLength
+    3.3. Truncate player name to MaxNameLength
 
-  3.4. Replace nongraph/nonblank characters to an underscore
+    3.4. Replace nongraph/nonblank characters to an underscore
 
-  3.5. Call *add_player* to add the player to our game using their parsed name
+    3.5. Call *add_player* to add the player to our game using their parsed name
 
 4. If the command was SPECTATE:
 
-  4.1. Initialize a new spectator
+    4.1. Initialize a new spectator
 
-  4.2. If a spectator currently exists, send them a QUIT message and remove them
+    4.2. If a spectator currently exists, send them a QUIT message and remove them
 
-  4.3. Assign the new spectator as our current spectator
+    4.3. Assign the new spectator as our current spectator
 
-  4.4. Send the spectator a GRID message
+    4.4. Send the spectator a GRID message
 
-  4.5. Call *refresh* to send the spectator a GOLD and DISPLAY message
+    4.5. Call *refresh* to send the spectator a GOLD and DISPLAY message
 
 5. If the command was KEY
 
-  5.1. Determine what key was pressed by reading what follows the KEY message
+    5.1. Determine what key was pressed by reading what follows the KEY message
 
-  5.2. If the key was "Q", remove the player or spectator who sent the quit message
+    5.2. If the key was "Q", remove the player or spectator who sent the quit message
 
-  5.3 If the key was a movement key, call *move* using the direction we want to move towards
+    5.3 If the key was a movement key, call *move* using the direction we want to move towards
 
-  5.4 If the key was an invalid key, send an error message
+    5.4 If the key was an invalid key, send an error message
 
 6. If a message that doesn't match the syntax specified in the specs was received, send an error message
 
 ### ***generate_position***
 1. Generate a random x position in the current map
+
 2. Generate a random y position in the current map
+
 3. Using the randomly generated (x,y), obtain the character at that location
+
 4. If the character doesn't match the character we are looking for, repeat steps 1-3
+
 5. If the character we are looking for was obtained, return the position at which the character was found
 
 ### ***add_player***
 1. Call *generate_position* to find an available room spot
+
 2. Instantiate a new ***server_player_t***, initializing their starting position to the position obtained above
+
 3. Add the player to the hashtable of players using its port number
+
 4. Add the player to the set of players using its symbol
+
 5. Send the accept message ("OK L") to the player
+
 6. Add the player's symbol to the game grid
+
 7. Initialize a grid for the player to track visibility
+
 8. Send the spectator a GRID message
+
 9. Call *refresh* to send the spectator a GOLD and DISPLAY message
+
 10. Update the current symbol and player number to use for the next player that is added
 
 ### ***generate_gold***
 1. Obtain the total number of room spots available in the current map
+
 2. If the number of available rooms spots is less than the minimum number of gold piles we must generate, return error
+
 3. If the number of available room spots is less than the maximum number of gold piles we must generate, set our max number of gold piles to generate as the number of available room spots
 4. Otherwise, just use the given maximum number of gold piles we must generate
+
 5. Randomly generate a number of gold piles to created between our values for the min & max number of gold piles to generate
+
 6. Create an array, using the number of gold piles we just generated as the array size
+
 7. Start off by adding one gold to each pile in the array
+
 8. Randomly add gold to the piles in the array until all of the gold we need to allocate has been used
+
 9. For each gold pile in the array, add it to the game grid
 
 ### ***move***
 1. Obtain the current position of the player we are trying to move
+
 2. Obtain the new position that the player is trying to move towards
+
 3. Obtain the char at this new position
+
 4. If this char is another player (alphabet):
 
   4.1. Obtain the second player that we are swapping places with
@@ -163,35 +203,47 @@ The server for the Nuggets game initializes a server using the ***message*** mod
   7.1 Call *pickup_gold* to appropriately handle picking up a new gold pile
 
 8. Update the player's previous position with the current position
+
 9. Update the player's current position with the new position the player has moved into
+
 10. Call *refresh* to send everyone a new GOLD and DISPLAY message
 
 ### ***pickup_gold***
 1. If necessary, replace the gold char in the game map with a room symbol
+
 2. Obtain the amount of gold that was contained in the gold pile
+
 3. Update the amount of gold in this pile to zero
+
 4. Subtract the amount of gold in this pile from the total gold remaining
+
 5. Update the player's gold count using the amount of gold they just picked up
 
 ### ***send_grid***
 1. Obtain the size of the grid (nrows and ncols)
+
 2. Send the size of the grid to the client using the ***message*** module
 
 ### ***send_gold***
 1. Obtain the amount of gold collected, amount of gold in purse, and the amount of gold left for a player
+
 2. Send this data about gold to the client using the ***message*** module
 
 ### ***send_display***
 1. Obtain the map based on a player's visibility as a string
+
 2. Send the map state based on the client's visibility using the ***message*** module
 
 ### ***refresh***
 1. For each active player, call *send_display* to send the player a display of the grid
+
 2. If there is a spectator, call *send_display* to send the spectator a display of the grid
+
 3. If no more gold remains, call *send_game_result* to send the game result to all players and end the game
 
 ### ***send_game_result***
 1. Send each player the result string that specifies how much gold each player collected
+
 2. If there is a spectator, send the spectator the result string as well
 
 ### Function Prototypes and their Parameters

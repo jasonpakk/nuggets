@@ -285,6 +285,7 @@ parse_message(const char *message, addr_t *address)
       if(game->spectator != NULL && message_eqAddr(server_player_getAddress(game->spectator), *address)) {
         message_send(*address, "QUIT Thanks for watching!");
         server_spectator_delete(game->spectator);
+        game->spectator = NULL;
       } else {
         message_send(*address, "QUIT Thanks for playing!");
 
