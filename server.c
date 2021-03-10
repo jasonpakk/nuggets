@@ -55,7 +55,7 @@ static void parse_message(const char *message, addr_t *address);
 
 static position_t* generate_position(grid_struct_t *grid_struct, char valid_symbol);
 static int generate_gold(grid_struct_t *grid_struct);
-static void add_player(addr_t *address, char* player_name);
+static int add_player(addr_t *address, char* player_name);
 
 static bool move(addr_t *address, int x, int y);
 static server_player_t *get_player(addr_t *address);
@@ -95,8 +95,18 @@ main(const int argc, const char *argv[])
 
     // initialize first grid
     grid_struct_t *main_grid = grid_struct_new(map_file);
-    grid_load(main_grid, map_file, true); // all points are seen
-    game->main_grid = main_grid;
+    if (main_grid == NULL) {
+      fprintf(stderr, "error loading grid.\n");
+      return 1;
+    }
+
+      // all points are seen
+      bool loaded = grid_load(main_grid, map_file, true);
+      if (!loaded) {
+        fprintf(stderr, "error loading grid.\n");
+        return 1;
+      }
+      game->main_grid = main_grid;
 
     // no seed
     if (argc == 2) {
@@ -143,8 +153,6 @@ main(const int argc, const char *argv[])
 int
 play_game()
 {
-  addr_t other; // address of the other side of this communication (init below)
-
   log_init(stderr);
   // initialize the message module
   int ourPort = message_init(stderr);
@@ -154,7 +162,8 @@ play_game()
   }
   // announce the port number
   printf("waiting on port %d for contact....\n", ourPort);
-  other = message_noAddr(); // no correspondent yet
+  // address of the other side of this communication
+  addr_t other = message_noAddr(); // no correspondent yet
 
   // Loop, waiting for messages; If message recieved, take care of it
   // using handleMessage function. We use the 'arg' parameter to carry a pointer
@@ -230,7 +239,7 @@ parse_message(const char *message, addr_t *address)
   // 1) Command to ADD A NEW PLAYER
   if (strcmp(command, play) == 0) {
     // write error message, too many players
-    if (game->player_number + 1 > MaxPlayers) {
+    if (game->player_number > MaxPlayers) {
       // write error message, too many players
       message_send(*address, "QUIT Game is full: no more players can join.");
 
@@ -253,7 +262,9 @@ parse_message(const char *message, addr_t *address)
         }
       }
       // add player to game using their parsed player name
-      add_player(address, remainder);
+      if (add_player(address, remainder) != 0) {
+        message_send(*address, "QUIT Game is full: no more space on the grid for players to join.");
+      }
     }
 
   // 2) Command to ADD A NEW SPECTATOR
@@ -295,6 +306,7 @@ parse_message(const char *message, addr_t *address)
         sprintf(portnum1, "%d",ntohs((*address).sin_port));
         server_player_t *curr = hashtable_find(game->players, portnum1);
         server_player_setActive(curr, false); // no longer active
+        game->n_active_players--;
 
         // remove their symbol from the main grid
         position_t *playerPos = server_player_getPos(curr);
@@ -500,11 +512,11 @@ generate_gold(grid_struct_t *grid_struct)
         player we are adding
      valid char* representing the player name
  */
-static void
+static int
 add_player(addr_t *address, char* player_name)
 {
-  if (grid_get_room_spot(game->main_grid) - game->player_number ) {
-
+  if (grid_get_room_spot(game->main_grid) - game->n_active_players <= 0) {
+    return 1;
   }
   // Find a position to put the player in and create a new player
   position_t *pos;
@@ -549,6 +561,8 @@ add_player(addr_t *address, char* player_name)
   // update current letter and player number
   game->curr_symbol += 1;
   game->player_number += 1;
+
+  return 0;
 }
 
 /**************** point_status ****************/
