@@ -1,0 +1,1180 @@
+START OF LOG
+START OF LOG
+message_init: ready at port '56625'
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:57329
+message_loop: 1 lines:
+PLAY 1
+message_send: TO 127.0.0.1:57329
+message_send: 1 lines:
+OK A
+message_send: TO 127.0.0.1:57329
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:57329
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:57329
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                          +-------+            
+                                                          |.......|            
+                                                          #@......|            
+                                                          +---#---+            
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:57329
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:57329
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:54112
+message_loop: 1 lines:
+PLAY 2
+message_send: TO 127.0.0.1:54112
+message_send: 1 lines:
+OK B
+message_send: TO 127.0.0.1:54112
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:54112
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:54112
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                     +--------#--+             
+                                                     |...........|             
+                                                     #.@.........|             
+                                                     |...........|             
+                                                     |...........|             
+                                                     +-----------+             
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:54112
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:54112
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43103
+message_loop: 1 lines:
+PLAY 3
+message_send: TO 127.0.0.1:43103
+message_send: 1 lines:
+OK C
+message_send: TO 127.0.0.1:43103
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:43103
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:43103
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                           +--------#+                         
+                                           |.........|                         
+                                           |......*@*|                         
+                                           #.........|                         
+                                           +----#----+                         
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:43103
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:43103
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:53054
+message_loop: 1 lines:
+PLAY 4
+message_send: TO 127.0.0.1:53054
+message_send: 1 lines:
+OK D
+message_send: TO 127.0.0.1:53054
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:53054
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:53054
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                     +--------#--+             
+                                                     |...........|             
+                                                     #@..........|             
+                                                     |...........|             
+                                                     |...........|             
+                                                     +-----------+             
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:53054
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:53054
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:53713
+message_loop: 1 lines:
+PLAY 5
+message_send: TO 127.0.0.1:53713
+message_send: 1 lines:
+OK E
+message_send: TO 127.0.0.1:53713
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:53713
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:53713
+message_send: 22 lines:
+DISPLAY
+  +----------+                                                                 
+  |.....*....|                                                                 
+  |......@...#                                                                 
+  |..........|                                                                 
+  +---------#+                                                                 
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:53713
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:53713
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:57462
+message_loop: 1 lines:
+PLAY 6
+message_send: TO 127.0.0.1:57462
+message_send: 1 lines:
+OK F
+message_send: TO 127.0.0.1:57462
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:57462
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:57462
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                          +-------+            
+                                                          |.......|            
+                                                          #..@....|            
+                                                          +---#---+            
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:57462
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:57462
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:60719
+message_loop: 1 lines:
+PLAY 7
+message_send: TO 127.0.0.1:60719
+message_send: 1 lines:
+OK G
+message_send: TO 127.0.0.1:60719
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:60719
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:60719
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+     +------------                                                             
+     |..........                                                               
+     |..*.....                                                                 
+     |......+                                                                  
+     |....@*|                                                                  
+     |......|                                                                  
+     |......|                                                                  
+     |....*.|                                                                  
+     +------+                                                                  
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:60719
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:60719
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:41035
+message_loop: 1 lines:
+PLAY 8
+message_send: TO 127.0.0.1:41035
+message_send: 1 lines:
+OK H
+message_send: TO 127.0.0.1:41035
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:41035
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:41035
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                    -------------------+                                       
+                       .......*........|                                       
+                          .............|                                       
+                            +..........|                                       
+                            |..........#                                       
+                            |..*..@....|                                       
+                            |.....*....|                                       
+                            |..........|                                       
+                            +----------+                                       
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:41035
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:41035
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:56929
+message_loop: 1 lines:
+PLAY 9
+message_send: TO 127.0.0.1:56929
+message_send: 1 lines:
+OK I
+message_send: TO 127.0.0.1:56929
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:56929
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:56929
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                       ----------------+                                       
+                         .....*........|                                       
+                           ............|                                       
+                            +..........|                                       
+                            |..........#                                       
+                            |..*@......|                                       
+                            |.....*....|                                       
+                            |..........|                                       
+                            +----------+                                       
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:56929
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:56929
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:50145
+message_loop: 1 lines:
+PLAY 10
+message_send: TO 127.0.0.1:50145
+message_send: 1 lines:
+OK J
+message_send: TO 127.0.0.1:50145
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:50145
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:50145
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                     +--------#--+             
+                                                     |...........|             
+                                                     #...........|             
+                                                     |...........|             
+                                                     |...@.......|             
+                                                     +-----------+             
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:50145
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:50145
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45866
+message_loop: 1 lines:
+PLAY 11
+message_send: TO 127.0.0.1:45866
+message_send: 1 lines:
+OK K
+message_send: TO 127.0.0.1:45866
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:45866
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:45866
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+     +---------------------------------+                                       
+     |......@.................*........|                                       
+     |..*......*..*....................|                                       
+     |......+---------------+..........|                                       
+     |.....*                         ..#                                       
+     |......                                                                   
+     |......                                                                   
+     |....*.                                                                   
+     +------                                                                   
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:45866
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:45866
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:33539
+message_loop: 1 lines:
+PLAY 12
+message_send: TO 127.0.0.1:33539
+message_send: 1 lines:
+OK L
+message_send: TO 127.0.0.1:33539
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:33539
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:33539
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                     +--------#--+             
+                                                     |...........|             
+                                                     #..@........|             
+                                                     |...........|             
+                                                     |...........|             
+                                                     +-----------+             
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:33539
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:33539
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:56343
+message_loop: 1 lines:
+PLAY 13
+message_send: TO 127.0.0.1:56343
+message_send: 1 lines:
+OK M
+message_send: TO 127.0.0.1:56343
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:56343
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:56343
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+     +---------------------------------+                                       
+     |........................*........|                                       
+     |..*......*..*.....@..............|                                       
+     |......+---------------+..........|                                       
+                                 ......#                                       
+                                     ..|                                       
+                                                                               
+                                                                               
+                                                                               
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:56343
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:56343
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:46635
+message_loop: 1 lines:
+PLAY 14
+message_send: TO 127.0.0.1:46635
+message_send: 1 lines:
+OK N
+message_send: TO 127.0.0.1:46635
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:46635
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:46635
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                          +-------+            
+                                                          |.@.....|            
+                                                          #.......|            
+                                                          +---#---+            
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:46635
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:46635
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:32967
+message_loop: 1 lines:
+PLAY 15
+message_send: TO 127.0.0.1:32967
+message_send: 1 lines:
+OK O
+message_send: TO 127.0.0.1:32967
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:32967
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:32967
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+     +------------                                                             
+     |..........                                                               
+     |..*.....                                                                 
+     |......+                                                                  
+     |.....*|                                                                  
+     |......|                                                                  
+     |.@....|                                                                  
+     |....*.|                                                                  
+     +------+                                                                  
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:32967
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:32967
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:53547
+message_loop: 1 lines:
+PLAY 16
+message_send: TO 127.0.0.1:53547
+message_send: 1 lines:
+OK P
+message_send: TO 127.0.0.1:53547
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:53547
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:53547
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+     +---------------------------------+                                       
+     |.....@..................*........|                                       
+     |..*......*..*....................|                                       
+     |......+---------------+..........|                                       
+     |.....*|                        ..#                                       
+     |......|                                                                  
+     |......|                                                                  
+     |....*.|                                                                  
+     +------+                                                                  
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:53547
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:53547
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:44452
+message_loop: 1 lines:
+PLAY 17
+message_send: TO 127.0.0.1:44452
+message_send: 1 lines:
+OK Q
+message_send: TO 127.0.0.1:44452
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:44452
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:44452
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+     +---------------------------------+                                       
+     |........................*....@...|                                       
+     |..*......*..*....................|                                       
+     |......+---------------+..........|                                       
+                            |..........#                                       
+                            |..*.......|                                       
+                            |.....*....|                                       
+                            |..........|                                       
+                            +----------+                                       
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:44452
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:44452
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:48366
+message_loop: 1 lines:
+PLAY 18
+message_send: TO 127.0.0.1:48366
+message_send: 1 lines:
+OK R
+message_send: TO 127.0.0.1:48366
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:48366
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:48366
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                     +--------#--+             
+                                                     |...........|             
+                                                     #....@......|             
+                                                     |...........|             
+                                                     |...........|             
+                                                     +-----------+             
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:48366
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:48366
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:40448
+message_loop: 1 lines:
+PLAY 19
+message_send: TO 127.0.0.1:40448
+message_send: 1 lines:
+OK S
+message_send: TO 127.0.0.1:40448
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:40448
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:40448
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+               +-----------+                                                   
+               #...........#                                                   
+               |.........@.|                                                   
+               +-----------+                                                   
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:40448
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:40448
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:57149
+message_loop: 1 lines:
+PLAY 20
+message_send: TO 127.0.0.1:57149
+message_send: 1 lines:
+OK T
+message_send: TO 127.0.0.1:57149
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:57149
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:57149
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+     +---------------------------------+                                       
+     |........................*.......@|                                       
+     |..*......*..*....................|                                       
+     |......+---------------+..........|                                       
+                            |..........#                                       
+                            |..*.......|                                       
+                            |.....*....|                                       
+                            |..........|                                       
+                            +----------+                                       
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:57149
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:57149
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:37940
+message_loop: 1 lines:
+PLAY 21
+message_send: TO 127.0.0.1:37940
+message_send: 1 lines:
+OK U
+message_send: TO 127.0.0.1:37940
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:37940
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:37940
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+     +---------------------------------+                                       
+     |.......................@*........|                                       
+     |..*......*..*....................|                                       
+     |......+---------------+..........|                                       
+                            |..........#                                       
+                            |..*.......|                                       
+                            |.....*....|                                       
+                            |..........|                                       
+                            +----------+                                       
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:37940
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:37940
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:33544
+message_loop: 1 lines:
+PLAY 22
+message_send: TO 127.0.0.1:33544
+message_send: 1 lines:
+OK V
+message_send: TO 127.0.0.1:33544
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:33544
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:33544
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+     +---------------------------------+                                       
+     |..................@.....*........|                                       
+     |..*......*..*....................|                                       
+     |......+---------------+..........|                                       
+     |                         ........#                                       
+                                 ......|                                       
+                                   ....|                                       
+                                     ..|                                       
+                                       +                                       
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:33544
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:33544
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:40037
+message_loop: 1 lines:
+PLAY 23
+message_send: TO 127.0.0.1:40037
+message_send: 1 lines:
+OK W
+message_send: TO 127.0.0.1:40037
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:40037
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:40037
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                           +--------#+                         
+                                           |...@.....|                         
+                                           |......*.*|                         
+                                           #.........|                         
+                                           +----#----+                         
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:40037
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:40037
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:54930
+message_loop: 1 lines:
+PLAY 24
+message_send: TO 127.0.0.1:54930
+message_send: 1 lines:
+OK X
+message_send: TO 127.0.0.1:54930
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:54930
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:54930
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+     +---------------------------------+                                       
+     |.......@................*........|                                       
+     |..*......*..*....................|                                       
+     |......+---------------+..........|                                       
+     |.....*                        ...#                                       
+     |.....                                                                    
+     |.....                                                                    
+     |....                                                                     
+     +----                                                                     
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:54930
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:54930
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:33399
+message_loop: 1 lines:
+PLAY 25
+message_send: TO 127.0.0.1:33399
+message_send: 1 lines:
+OK Y
+message_send: TO 127.0.0.1:33399
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:33399
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:33399
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                     +--------#--+             
+                                                     |...........|             
+                                                     #..........@|             
+                                                     |...........|             
+                                                     |...........|             
+                                                     +-----------+             
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:33399
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:33399
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:39811
+message_loop: 1 lines:
+PLAY 26
+message_send: TO 127.0.0.1:39811
+message_send: 1 lines:
+OK Z
+message_send: TO 127.0.0.1:39811
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:39811
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:39811
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+     +---------------------------------+                                       
+     |........................*........|                                       
+     |..*......*..*...............@....|                                       
+     |......+---------------+..........|                                       
+                            |..........#                                       
+                            |..*.......|                                       
+                            |.....*....|                                       
+                            |..........|                                       
+                            +----------+                                       
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:39811
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:39811
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:44915
+message_loop: 1 lines:
+PLAY 27
+message_send: TO 127.0.0.1:44915
+message_send: 1 lines:
+QUIT Game is full: no more players can join.

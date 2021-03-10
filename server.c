@@ -95,7 +95,6 @@ main(const int argc, const char *argv[])
     // initialize first grid
     grid_struct_t *main_grid = grid_struct_new(map_file);
     if (main_grid == NULL) {
-      fprintf(stderr, "error loading grid.\n");
       return 1;
     }
 
@@ -238,7 +237,7 @@ parse_message(const char *message, addr_t *address)
   // 1) Command to ADD A NEW PLAYER
   if (strcmp(command, play) == 0) {
     // write error message, too many players
-    if (game->player_number > MaxPlayers) {
+    if (game->player_number >= MaxPlayers) {
       // write error message, too many players
       message_send(*address, "QUIT Game is full: no more players can join.");
 

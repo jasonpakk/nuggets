@@ -1,0 +1,401 @@
+START OF LOG
+START OF LOG
+message_init: ready at port '39558'
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:34046
+message_loop: 1 lines:
+PLAY player1
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+OK A
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GRID 5 14
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*.*.**.***|
+  |.........*|
+  |*...@*.*..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:34046
+message_loop: 1 lines:
+KEY h
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*.*.**.***|
+  |.........*|
+  |*..@.*.*..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:34046
+message_loop: 1 lines:
+KEY H
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*.*.**.***|
+  |.........*|
+  |*.@..*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*.*.**.***|
+  |.........*|
+  |*@...*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 30 30 220
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*.*.**.***|
+  |.........*|
+  |@....*.*..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:34046
+message_loop: 1 lines:
+KEY J
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:34046
+message_loop: 1 lines:
+KEY K
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 0 30 220
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*.*.**.***|
+  |@........*|
+  |.....*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 22 52 198
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |@.*.**.***|
+  |.........*|
+  |.....*.*..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:34046
+message_loop: 1 lines:
+KEY L
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 0 52 198
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |.@*.**.***|
+  |.........*|
+  |.....*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 23 75 175
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..@.**.***|
+  |.........*|
+  |.....*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 0 75 175
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |...@**.***|
+  |.........*|
+  |.....*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 20 95 155
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |....@*.***|
+  |.........*|
+  |.....*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 18 113 137
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |.....@.***|
+  |.........*|
+  |.....*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 0 113 137
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |......@***|
+  |.........*|
+  |.....*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 17 130 120
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |.......@**|
+  |.........*|
+  |.....*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 27 157 93
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |........@*|
+  |.........*|
+  |.....*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 30 187 63
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |.........@|
+  |.........*|
+  |.....*.*..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:34046
+message_loop: 1 lines:
+KEY K
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:34046
+message_loop: 1 lines:
+KEY J
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 16 203 47
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |.........@|
+  |.....*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 0 203 47
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |.....*.*.@|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:34046
+message_loop: 1 lines:
+KEY H
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 0 203 47
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |.....*.*@.|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 29 232 18
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |.....*.@..|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 0 232 18
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |.....*@...|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 18 250 0
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |.....@....|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 2 lines:
+QUIT GAME OVER:
+A        250 player1
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 0 250 0
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |....@.....|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 2 lines:
+QUIT GAME OVER:
+A        250 player1
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 0 250 0
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |...@......|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 2 lines:
+QUIT GAME OVER:
+A        250 player1
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 0 250 0
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |..@.......|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 2 lines:
+QUIT GAME OVER:
+A        250 player1
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 0 250 0
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |.@........|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 2 lines:
+QUIT GAME OVER:
+A        250 player1
+
+message_send: TO 127.0.0.1:34046
+message_send: 1 lines:
+GOLD 0 250 0
+message_send: TO 127.0.0.1:34046
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..........|
+  |..........|
+  |@.........|
+  +----------+
+
+message_send: TO 127.0.0.1:34046
+message_send: 2 lines:
+QUIT GAME OVER:
+A        250 player1
+
+message_done: message module closing down.
+END OF LOG
