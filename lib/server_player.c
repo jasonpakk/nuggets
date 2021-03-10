@@ -28,7 +28,6 @@ typedef struct server_player {
   int gold_picked_up; // amt of gold just picked up by player
   bool active;    // whether the player is currently playing
   position_t *pos;    // current player position
-  position_t *prev_pos;   // last position the player was in
   grid_struct_t *grid;    // player grid that tracks visibility
   bool in_passage;    // whether the player is currently in a passage way
 } server_player_t;
@@ -63,9 +62,6 @@ bool server_player_getActive(const server_player_t *player) {
 position_t* server_player_getPos(const server_player_t *player) {
   return player ? player->pos : NULL;
 }
-position_t* server_player_getPrevPos(const server_player_t *player) {
-  return player ? player->prev_pos : NULL;
-}
 grid_struct_t* server_player_getGrid(const server_player_t *player) {
   return player ? player->grid : NULL;
 }
@@ -96,10 +92,7 @@ void server_player_setActive(server_player_t *player, bool b) {
 void server_player_setPos(server_player_t *player, position_t* pos) {
   player->pos = pos;
 }
-void server_player_setPrevPos(server_player_t *player, position_t* pos) {
-  player->prev_pos = pos;
-}
-void server_player_setGrid(server_player_t *player, grid_struct_t* grid, bool b) {
+void server_player_setGrid(server_player_t *player, grid_struct_t* grid) {
   player->grid = grid;
 }
 void server_player_setInPassage(server_player_t *player, bool b) {
@@ -122,7 +115,6 @@ server_player_new(addr_t address, char *name, char symbol, bool active, position
   player->pos = pos;
   player->grid = NULL;
   player->in_passage = false;
-  player->prev_pos = pos;
   return player;
 }
 
@@ -133,9 +125,6 @@ server_player_delete(server_player_t *player)
 {
   if(player != NULL) {
     free(player->name);
-    if(player->pos != player->prev_pos) {
-      free(player->prev_pos);
-    }
     free(player->pos);
     grid_delete(player->grid);
     free(player);

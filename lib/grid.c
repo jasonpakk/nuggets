@@ -46,7 +46,6 @@ typedef struct point {
 
 /**************** local functions ****************/
 /* not visible outside this file */
-static void calculate_vision_passage(grid_struct_t *grid_struct, int x, int y);
 static bool calculate_vision(grid_struct_t *grid_struct, int x1, int y1, int x2, int y2);
 static bool calculate_helper_y(grid_struct_t *grid_struct, double x, int y);
 static bool calculate_helper_x(grid_struct_t *grid_struct, int x, double y);
@@ -383,11 +382,6 @@ grid_visibility(grid_struct_t *grid_struct, position_t *pos)
     return;
   }
 
-  // if currently in passage-way:
-  if(grid_struct->grid[pos_get_y(pos)][pos_get_x(pos)]->c == '#') {
-    calculate_vision_passage(grid_struct, pos_get_x(pos), pos_get_y(pos));
-    return;
-  }
   // otherwise, look through all points in the grid
   for(int r = 0; r < grid_struct->nR; r++) {
     for(int c = 0; c < grid_struct->nC; c++) {
@@ -513,56 +507,6 @@ position_delete(position_t *pos)
 /***********************************************************************
  * INTERNAL FUNCTIONS
  ***********************************************************************/
-
- /**************** calculate_vision_passage ****************/
- /* Helper method to calculate visibility when player is in a passageway ('#')
-  *
-  * Parameters:
-  *   grid_struct   must be a grid* representing the grid to calculate
-                    visbility on
-  *     x           must be a valid int representing the x coordinate of the
-                    current player location
-  *     y           must be a valid int representing the y coordinate of the
-                    current player location
-  * Since this is a helper method called within our functions, we assume the
-  * arguments provided in the function are valid.
-  */
-static void
-calculate_vision_passage(grid_struct_t *grid_struct, int x, int y)
-{
- // current spot the player is located at is always visible
- grid_struct->grid[y][x]->seen_before = true;
- grid_struct->grid[y][x]->visible_now = true;
-
- // check for visibility downward
- if(y+1 < grid_struct->nR) {
-   if(grid_struct->grid[y+1][x]->c == '#' || grid_struct->grid[y+1][x]->c == '.') {
-     grid_struct->grid[y+1][x]->seen_before = true;
-     grid_struct->grid[y][x]->visible_now = true;
-   }
- }
- // check for visibility upwards
- if(y-1 >= 0) {
-   if(grid_struct->grid[y-1][x]->c == '#' || grid_struct->grid[y-1][x]->c == '.') {
-     grid_struct->grid[y-1][x]->seen_before = true;
-     grid_struct->grid[y][x]->visible_now = true;
-   }
- }
- // check for visibility rightwards
- if(x+1 < grid_struct->nC) {
-   if(grid_struct->grid[y][x+1]->c == '#' || grid_struct->grid[y][x+1]->c == '.') {
-     grid_struct->grid[y][x+1]->seen_before = true;
-     grid_struct->grid[y][x]->visible_now = true;
-   }
- }
- // check for visibility leftwards
- if(x-1 >= 0 && grid_struct->grid[y][x-1]->c == '#') {
-   if(grid_struct->grid[y][x-1]->c == '#' || grid_struct->grid[y][x-1]->c == '.') {
-     grid_struct->grid[y][x-1]->seen_before = true;
-     grid_struct->grid[y][x]->visible_now = true;
-   }
- }
-}
 
 /**************** calculate_vision ****************/
 /* Helper method to calculate visibility between two points
