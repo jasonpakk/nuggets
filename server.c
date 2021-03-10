@@ -229,7 +229,7 @@ parse_message(const char *message, addr_t *address)
   // 1) Command to ADD A NEW PLAYER
   if (strcmp(command, play) == 0) {
     // write error message, too many players
-    if (game->player_number > MaxPlayers) {
+    if (game->player_number + 1 > MaxPlayers) {
       // write error message, too many players
       message_send(*address, "QUIT Game is full: no more players can join.");
 

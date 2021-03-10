@@ -133,8 +133,10 @@ server_player_delete(server_player_t *player)
 {
   if(player != NULL) {
     free(player->name);
+    if(player->pos != player->prev_pos) {
+      free(player->prev_pos);
+    }
     free(player->pos);
-    free(player->prev_pos);
     grid_delete(player->grid);
     free(player);
   }
