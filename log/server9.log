@@ -1,30 +1,327 @@
 START OF LOG
 START OF LOG
-message_init: ready at port '52012'
+message_init: ready at port '46984'
 message_loop: message ready on socket
-message_loop: FROM 127.0.0.1:57955
+message_loop: FROM 127.0.0.1:56000
 message_loop: 1 lines:
-PLAY hi
-message_send: TO 127.0.0.1:57955
+PLAY player1
+message_send: TO 127.0.0.1:56000
 message_send: 1 lines:
 OK A
-message_send: TO 127.0.0.1:57955
+message_send: TO 127.0.0.1:56000
 message_send: 1 lines:
-GRID 3 12
-message_send: TO 127.0.0.1:57955
+GRID 5 14
+message_send: TO 127.0.0.1:56000
 message_send: 1 lines:
-GOLD 28 28 222
-message_send: TO 127.0.0.1:57955
-message_send: 4 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:56000
+message_send: 6 lines:
 DISPLAY
-+----------+
-|***@******|
-+----------+
+  +----------+
+  |*.*.**.***|
+  |.........*|
+  |*...@*.*..|
+  +----------+
 
 message_loop: message ready on socket
-message_loop: FROM 127.0.0.1:57955
+message_loop: FROM 127.0.0.1:56000
+message_loop: 1 lines:
+KEY 
+message_send: TO 127.0.0.1:56000
+message_send: 1 lines:
+ERROR invalid keystroke
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:56000
+message_loop: 1 lines:
+KEY [
+message_send: TO 127.0.0.1:56000
+message_send: 1 lines:
+ERROR invalid keystroke
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:56000
+message_loop: 1 lines:
+KEY D
+message_send: TO 127.0.0.1:56000
+message_send: 1 lines:
+ERROR invalid keystroke
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:56000
+message_loop: 1 lines:
+KEY 
+message_send: TO 127.0.0.1:56000
+message_send: 1 lines:
+ERROR invalid keystroke
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:56000
+message_loop: 1 lines:
+KEY [
+message_send: TO 127.0.0.1:56000
+message_send: 1 lines:
+ERROR invalid keystroke
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:56000
+message_loop: 1 lines:
+KEY D
+message_send: TO 127.0.0.1:56000
+message_send: 1 lines:
+ERROR invalid keystroke
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:42615
+message_loop: 1 lines:
+PLAY player2
+message_send: TO 127.0.0.1:42615
+message_send: 1 lines:
+OK B
+message_send: TO 127.0.0.1:42615
+message_send: 1 lines:
+GRID 5 14
+message_send: TO 127.0.0.1:42615
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:42615
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*@*.**.***|
+  |.........*|
+  |*...A*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:56000
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:56000
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*B*.**.***|
+  |.........*|
+  |*...@*.*..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:42615
+message_loop: 1 lines:
+KEY h
+message_send: TO 127.0.0.1:42615
+message_send: 1 lines:
+GOLD 22 22 228
+message_send: TO 127.0.0.1:42615
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |@.*.**.***|
+  |.........*|
+  |*...A*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:56000
+message_send: 1 lines:
+GOLD 0 0 228
+message_send: TO 127.0.0.1:56000
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |B.*.**.***|
+  |.........*|
+  |*...@*.*..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:42615
+message_loop: 1 lines:
+KEY k
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:42615
+message_loop: 1 lines:
+KEY j
+message_send: TO 127.0.0.1:42615
+message_send: 1 lines:
+GOLD 0 22 228
+message_send: TO 127.0.0.1:42615
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..*.**.***|
+  |@........*|
+  |*...A*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:56000
+message_send: 1 lines:
+GOLD 0 0 228
+message_send: TO 127.0.0.1:56000
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..*.**.***|
+  |B........*|
+  |*...@*.*..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:42615
+message_loop: 1 lines:
+KEY j
+message_send: TO 127.0.0.1:42615
+message_send: 1 lines:
+GOLD 30 52 198
+message_send: TO 127.0.0.1:42615
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..*.**.***|
+  |.........*|
+  |@...A*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:56000
+message_send: 1 lines:
+GOLD 0 0 198
+message_send: TO 127.0.0.1:56000
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..*.**.***|
+  |.........*|
+  |B...@*.*..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:42615
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:42615
+message_send: 1 lines:
+GOLD 0 52 198
+message_send: TO 127.0.0.1:42615
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..*.**.***|
+  |.........*|
+  |.@..A*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:56000
+message_send: 1 lines:
+GOLD 0 0 198
+message_send: TO 127.0.0.1:56000
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..*.**.***|
+  |.........*|
+  |.B..@*.*..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:42615
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:42615
+message_send: 1 lines:
+GOLD 0 52 198
+message_send: TO 127.0.0.1:42615
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..*.**.***|
+  |.........*|
+  |..@.A*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:56000
+message_send: 1 lines:
+GOLD 0 0 198
+message_send: TO 127.0.0.1:56000
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..*.**.***|
+  |.........*|
+  |..B.@*.*..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:42615
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:42615
+message_send: 1 lines:
+GOLD 0 52 198
+message_send: TO 127.0.0.1:42615
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..*.**.***|
+  |.........*|
+  |...@A*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:56000
+message_send: 1 lines:
+GOLD 0 0 198
+message_send: TO 127.0.0.1:56000
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..*.**.***|
+  |.........*|
+  |...B@*.*..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:42615
+message_loop: 1 lines:
+KEY l
+message_send: TO 127.0.0.1:42615
+message_send: 1 lines:
+GOLD 0 52 198
+message_send: TO 127.0.0.1:42615
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..*.**.***|
+  |.........*|
+  |...A@*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:56000
+message_send: 1 lines:
+GOLD 0 0 198
+message_send: TO 127.0.0.1:56000
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..*.**.***|
+  |.........*|
+  |...@B*.*..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:42615
 message_loop: 1 lines:
 KEY Q
-message_send: TO 127.0.0.1:57955
+message_send: TO 127.0.0.1:42615
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_send: TO 127.0.0.1:56000
+message_send: 1 lines:
+GOLD 0 0 198
+message_send: TO 127.0.0.1:56000
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |..*.**.***|
+  |.........*|
+  |...@.*.*..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:56000
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:56000
 message_send: 1 lines:
 QUIT Thanks for playing!

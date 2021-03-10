@@ -1,0 +1,11 @@
+START OF LOG
+player on port 51621
+spectate
+GRID message received: GRID 21 79
+displayStart: Success
+wRows = 24
+wCols = 80
+GOLD message received: GOLD 0 0 250
+DISPLAY message received
+QUIT message received: QUIT You have been replaced by a new spectator.
+END OF LOG

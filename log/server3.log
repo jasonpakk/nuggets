@@ -1,3 +1,41 @@
 START OF LOG
 START OF LOG
-message_init: ready at port '39841'
+message_init: ready at port '43642'
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:54504
+message_loop: 1 lines:
+PLAY abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwx
+message_send: TO 127.0.0.1:54504
+message_send: 1 lines:
+OK A
+message_send: TO 127.0.0.1:54504
+message_send: 1 lines:
+GRID 21 79
+message_send: TO 127.0.0.1:54504
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:54504
+message_send: 22 lines:
+DISPLAY
+                                                                               
+                                                                               
+                                                          +-------+            
+                                                          |.......|            
+                                                          #@......|            
+                                                          +---#---+            
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+                                                                               
+

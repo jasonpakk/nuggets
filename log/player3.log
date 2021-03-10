@@ -1,0 +1,10 @@
+START OF LOG
+player on port 54504
+interactive player mode; name 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwx'
+OK message received: OK A
+GRID message received: GRID 21 79
+displayStart: Success
+wRows = 24
+wCols = 80
+GOLD message received: GOLD 0 0 250
+DISPLAY message received
