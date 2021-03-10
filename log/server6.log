@@ -1,0 +1,51 @@
+START OF LOG
+START OF LOG
+message_init: ready at port '50147'
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:41255
+message_loop: 1 lines:
+SPECTATE
+message_send: TO 127.0.0.1:41255
+message_send: 1 lines:
+GRID 5 14
+message_send: TO 127.0.0.1:41255
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:41255
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*.*.**.***|
+  |.........*|
+  |*....*.*..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:49648
+message_loop: 1 lines:
+SPECTATE
+message_send: TO 127.0.0.1:41255
+message_send: 1 lines:
+QUIT You have been replaced by a new spectator.
+message_send: TO 127.0.0.1:49648
+message_send: 1 lines:
+GRID 5 14
+message_send: TO 127.0.0.1:49648
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:49648
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*.*.**.***|
+  |.........*|
+  |*....*.*..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:49648
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:49648
+message_send: 1 lines:
+QUIT Thanks for watching!

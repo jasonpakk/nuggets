@@ -1,0 +1,30 @@
+START OF LOG
+START OF LOG
+message_init: ready at port '52012'
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:57955
+message_loop: 1 lines:
+PLAY hi
+message_send: TO 127.0.0.1:57955
+message_send: 1 lines:
+OK A
+message_send: TO 127.0.0.1:57955
+message_send: 1 lines:
+GRID 3 12
+message_send: TO 127.0.0.1:57955
+message_send: 1 lines:
+GOLD 28 28 222
+message_send: TO 127.0.0.1:57955
+message_send: 4 lines:
+DISPLAY
++----------+
+|***@******|
++----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:57955
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:57955
+message_send: 1 lines:
+QUIT Thanks for playing!
