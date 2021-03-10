@@ -31,7 +31,7 @@ typedef struct point {
  typedef struct grid_struct {
    int nR; // number of rows
    int nC; // number of columns
-   int room_spot; // whether this is a room spot
+   int room_spot; // number of room spots
    point_t*** grid; // 2d array of pointers to points
  } grid_struct_t;
 

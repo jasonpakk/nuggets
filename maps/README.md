@@ -13,3 +13,4 @@ Feel free to add your own.
 * `main.txt`: an interesting map for playing and testing.
 * `narrow.txt`: a very narrow map that will fit in a very narrow window; what happens to the top line of your player's display?
 * `small.txt`: a simple, small map; also too-few empty spots.
+* `TEAM_JEN_MAP.txt`: a map contributed by our group; complex map with many passageways

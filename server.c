@@ -284,6 +284,7 @@ parse_message(const char *message, addr_t *address)
       // send appropriate message depending on if client is spectator or player
       if(game->spectator != NULL && message_eqAddr(server_player_getAddress(game->spectator), *address)) {
         message_send(*address, "QUIT Thanks for watching!");
+        server_spectator_delete(game->spectator);
       } else {
         message_send(*address, "QUIT Thanks for playing!");
 
@@ -568,12 +569,14 @@ point_status(position_t *prev_pos, position_t *next_pos)
   int next_y = pos_get_y(next_pos);
   char next_c = grid_get_point_c(game->main_grid, next_x, next_y);
 
-  // If the previous point was a . (or player themselves) and the next point is a #, then it's an entry
-  if ((prev_c == '.' || isalpha(prev_c)) & (next_c == '#')) {
+  // If the previous point was a . (or player themselves)
+  // and the next point is a #, then it's an entry
+  if ((prev_c == '.' || isalpha(prev_c)) && (next_c == '#')) {
     return 1;
   }
-  // If the previous point was a # (or player themselves) and the next point is a ., then it's an exit
-  else if ((prev_c == '#' || isalpha(prev_c)) & (next_c == '.')) {
+  // If the previous point was a # (or player themselves)
+  // and the next point is a room spot, then it's an exit
+  else if ((prev_c == '#' || isalpha(prev_c)) && (next_c == '.' || next_c == '*')) {
     return 2;
   }
   // Otherwise it's just normal movement
@@ -694,6 +697,12 @@ move(addr_t *address, int x, int y)
       // If the next point is a gold_pile, adjust the grid accordingly
       if (c == '*') {
         pickup_gold(curr, new, true);
+        // If the player is exiting a passage, set the previous position to '#' instead of '.'
+        if ((point_status(server_player_getPrevPos(curr), server_player_getPos(curr)) == 2)
+                && (server_player_getInPassage(curr))) {
+          grid_set_character(game->main_grid, '#', server_player_getPos(curr));
+          server_player_setInPassage(curr, false);
+        }
       }
 
       // free pointer stored in prev pos before updating
@@ -928,6 +937,9 @@ send_game_result_helper(void *arg, const char *key, void *item)
 game_t*
 game_new(char *map_filename)
 {
+  if(map_filename == NULL) {
+    return NULL;
+  }
   game_t* game = count_malloc_assert(sizeof(game_t), "game_t");
   game->playing_game = true;
   game->map_filename = map_filename;
