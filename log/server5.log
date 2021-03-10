@@ -1,0 +1,85 @@
+START OF LOG
+START OF LOG
+message_init: ready at port '34486'
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:54059
+message_loop: 1 lines:
+PLAY test1
+message_send: TO 127.0.0.1:54059
+message_send: 1 lines:
+OK A
+message_send: TO 127.0.0.1:54059
+message_send: 1 lines:
+GRID 5 14
+message_send: TO 127.0.0.1:54059
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:54059
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*.*.**.***|
+  |.........*|
+  |*...@*.*..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:46694
+message_loop: 1 lines:
+PLAY test2
+message_send: TO 127.0.0.1:46694
+message_send: 1 lines:
+OK B
+message_send: TO 127.0.0.1:46694
+message_send: 1 lines:
+GRID 5 14
+message_send: TO 127.0.0.1:54059
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:54059
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*B*.**.***|
+  |.........*|
+  |*...@*.*..|
+  +----------+
+
+message_send: TO 127.0.0.1:46694
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:46694
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*@*.**.***|
+  |.........*|
+  |*...A*.*..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:54059
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:54059
+message_send: 1 lines:
+QUIT Thanks for playing!
+message_send: TO 127.0.0.1:46694
+message_send: 1 lines:
+GOLD 0 0 250
+message_send: TO 127.0.0.1:46694
+message_send: 6 lines:
+DISPLAY
+  +----------+
+  |*@*.**.***|
+  |.........*|
+  |*....*.*..|
+  +----------+
+
+message_loop: message ready on socket
+message_loop: FROM 127.0.0.1:46694
+message_loop: 1 lines:
+KEY Q
+message_send: TO 127.0.0.1:46694
+message_send: 1 lines:
+QUIT Thanks for playing!

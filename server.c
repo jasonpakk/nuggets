@@ -29,7 +29,8 @@ typedef struct game {
   char* map_filename; // name of file to read map from
   int gold_remaining;   // amount of gold left
   int gold_pile_number;  // amount of gold piles
-  int player_number;    // current number of players
+  int player_number;    // total number of players
+  int n_active_players;   // current number of active players
   char curr_symbol;     // current symbol to assign a player
   grid_struct_t *main_grid;   // game grid that sees all
   hashtable_t *players;   // stores all players; key is their address
@@ -114,7 +115,7 @@ main(const int argc, const char *argv[])
     // generate gold piles
     game->gold_pile_number = generate_gold(game->main_grid);
     if (game->gold_pile_number == 1) {
-      fprintf(stderr, "grid must have at least 10 avaiable room spots to place gold\n");
+      fprintf(stderr, "grid must have at least 10 available room spots to place gold\n");
       return 2;
     }
 
@@ -502,6 +503,9 @@ generate_gold(grid_struct_t *grid_struct)
 static void
 add_player(addr_t *address, char* player_name)
 {
+  if (grid_get_room_spot(game->main_grid) - game->player_number ) {
+
+  }
   // Find a position to put the player in and create a new player
   position_t *pos;
   if (grid_get_room_spot(game->main_grid) <= game->gold_pile_number) {
@@ -515,6 +519,7 @@ add_player(addr_t *address, char* player_name)
   char portnum[100];
   sprintf(portnum, "%d",ntohs((*address).sin_port));
   hashtable_insert(game->players, portnum, new_player);
+  game->n_active_players++;
 
   // add player to set (symbol->player)
   char player_symbol[3];
@@ -611,6 +616,10 @@ pickup_gold(server_player_t *curr, position_t *pos, bool overwrite)
   // update player's gold count
   server_player_setGoldNumber(curr, server_player_getGoldNumber(curr) + gold_picked_up);
   server_player_setGoldPickedUp(curr, gold_picked_up);
+
+  if (gold_picked_up > 0) {
+    game->gold_pile_number --;
+  }
 }
 
 /**************** move ****************/
@@ -946,6 +955,7 @@ game_new(char *map_filename)
   game->map_filename = map_filename;
   game->gold_remaining = GoldTotal;
   game->player_number = 0;
+  game->n_active_players = 0;
   game->curr_symbol = 'A';
   hashtable_t *ht = hashtable_new(MaxPlayers);
   game->symbol_to_player = set_new();
