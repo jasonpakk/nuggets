@@ -627,14 +627,8 @@ move(addr_t *address, int x, int y)
   int new_x = pos_get_x(server_player_getPos(curr)) + x;
   int new_y = pos_get_y(server_player_getPos(curr)) + y;
 
-  /*
-  // ensure we aren't moving out of bonds
-  if (new_x < 0 || new_x >= grid_get_nC(game->main_grid)
-          || new_y < 0 || new_y >= grid_get_nR(game->main_grid)) {
-    return false;
-  } */
-
   // Get the character at the next point
+  // (grid_get_point_c ensures we aren't out of bounds so we dont check here)
   char c = grid_get_point_c(game->main_grid, new_x, new_y);
 
   // If the move is valid
