@@ -627,11 +627,12 @@ move(addr_t *address, int x, int y)
   int new_x = pos_get_x(server_player_getPos(curr)) + x;
   int new_y = pos_get_y(server_player_getPos(curr)) + y;
 
+  /*
   // ensure we aren't moving out of bonds
   if (new_x < 0 || new_x >= grid_get_nC(game->main_grid)
           || new_y < 0 || new_y >= grid_get_nR(game->main_grid)) {
     return false;
-  }
+  } */
 
   // Get the character at the next point
   char c = grid_get_point_c(game->main_grid, new_x, new_y);
@@ -848,7 +849,7 @@ refresh_helper(void *arg, const char *key, void *item)
     // if player is active, send the player a display of the grid
     // since send_display also sends gold messages, active players
     // also recieve updates on the amount of gold they currently have
-    if(server_player_getActive(curr)) {
+    if(server_player_getActive(curr) == true) {
       send_display(curr);
     }
   }
