@@ -60,7 +60,6 @@ static int add_player(addr_t *address, char* player_name);
 static bool move(addr_t *address, int x, int y);
 static server_player_t *get_player(addr_t *address);
 static void pickup_gold(server_player_t *curr, position_t *pos, bool overwrite);
-static int point_status(position_t *prev_pos, position_t *next_pos);
 
 static void send_grid(addr_t address);
 static void send_gold(server_player_t* player);
@@ -272,7 +271,7 @@ parse_message(const char *message, addr_t *address)
     // initalize new spectator
     addr_t new = *address;
     server_player_t *new_spectator = server_player_new(new, spectate, '!', false, NULL);
-    server_player_setGrid(new_spectator, game->main_grid, false);
+    server_player_setGrid(new_spectator, game->main_grid);
 
     // if there is already a spectator, replace them
    if (game->spectator != NULL) {
@@ -552,7 +551,7 @@ add_player(addr_t *address, char* player_name)
   // initialize grid for player
   grid_struct_t *player_grid = grid_struct_new(game->map_filename);
   grid_load(player_grid, game->map_filename, false);
-  server_player_setGrid(new_player, player_grid, false);
+  server_player_setGrid(new_player, player_grid);
 
   // send the player the grid's information
   send_grid(*address);
@@ -562,44 +561,6 @@ add_player(addr_t *address, char* player_name)
   game->curr_symbol += 1;
   game->player_number += 1;
 
-  return 0;
-}
-
-/**************** point_status ****************/
-/* Determine if the player has entered or exited
- * a passage way.
- *
- * Caller provides:
-`*   valid position_t pointers, one representing the previous
-     position of the player, one representing the new position
- * We RETURN:
- *      1 - ENTRY into passage way
- *      2 - EXIT from passage way
- *      0 - None of the above; not in a passageway
- */
-static int
-point_status(position_t *prev_pos, position_t *next_pos)
-{
-  // obtain char at prev_pos
-  int prev_x = pos_get_x(prev_pos);
-  int prev_y = pos_get_y(prev_pos);
-  char prev_c = grid_get_point_c(game->main_grid, prev_x, prev_y);
-  // obtain char at next_pos
-  int next_x = pos_get_x(next_pos);
-  int next_y = pos_get_y(next_pos);
-  char next_c = grid_get_point_c(game->main_grid, next_x, next_y);
-
-  // If the previous point was a . (or player themselves)
-  // and the next point is a #, then it's an entry
-  if ((prev_c == '.' || isalpha(prev_c)) && (next_c == '#')) {
-    return 1;
-  }
-  // If the previous point was a # (or player themselves)
-  // and the next point is a room spot, then it's an exit
-  else if ((prev_c == '#' || isalpha(prev_c)) && (next_c == '.' || next_c == '*')) {
-    return 2;
-  }
-  // Otherwise it's just normal movement
   return 0;
 }
 
@@ -678,23 +639,11 @@ move(addr_t *address, int x, int y)
       server_player_setInPassage(curr, temp_passage);
 
       //reallocate positions for both players
-      position_t *prev_pos_p1 = position_new(pos_get_x(server_player_getPrevPos(curr)), pos_get_y(server_player_getPrevPos(curr)));
       position_t *curr_pos_p1 = position_new(pos_get_x(server_player_getPos(curr)), pos_get_y(server_player_getPos(curr)));
-      position_t *prev_pos_p2 = position_new(pos_get_x(server_player_getPrevPos(player2)), pos_get_y(server_player_getPrevPos(player2)));
-
-      // free pointer stored in prev pos before updating
-      if(server_player_getPrevPos(player2) != server_player_getPos(player2)) {
-        position_delete(server_player_getPrevPos(player2));
-      }
-      if(server_player_getPrevPos(curr) != server_player_getPos(curr)) {
-        position_delete(server_player_getPrevPos(curr));
-      }
       position_delete(server_player_getPos(player2));
       position_delete(server_player_getPos(curr));
 
       // update each player's positions appropriately
-      server_player_setPrevPos(player2, prev_pos_p1);
-      server_player_setPrevPos(curr, prev_pos_p2);
       server_player_setPos(player2, curr_pos_p1);
       server_player_setPos(curr, new);
 
@@ -702,8 +651,7 @@ move(addr_t *address, int x, int y)
       // If the next point is a passage, adjust the grid accordingly
       if (c == '#') {
         // If the player is entering the passage, set the previous position to '.', instead of '#'
-        if ((point_status(server_player_getPrevPos(curr), server_player_getPos(curr)) == 1)
-                  && !(server_player_getInPassage(curr))) {
+        if(!server_player_getInPassage(curr)) {
           grid_set_character(game->main_grid, '.', server_player_getPos(curr));
           server_player_setInPassage(curr, true);
         }
@@ -711,8 +659,7 @@ move(addr_t *address, int x, int y)
 
       if (c == '.' ) {
         // If the player is exiting a passage, set the previous position to '#' instead of '.'
-        if ((point_status(server_player_getPrevPos(curr), server_player_getPos(curr)) == 2)
-                && (server_player_getInPassage(curr))) {
+        if(server_player_getInPassage(curr)) {
           grid_set_character(game->main_grid, '#', server_player_getPos(curr));
           server_player_setInPassage(curr, false);
         }
@@ -722,24 +669,15 @@ move(addr_t *address, int x, int y)
       if (c == '*') {
         pickup_gold(curr, new, true);
         // If the player is exiting a passage, set the previous position to '#' instead of '.'
-        if ((point_status(server_player_getPrevPos(curr), server_player_getPos(curr)) == 2)
-                && (server_player_getInPassage(curr))) {
+        if(server_player_getInPassage(curr)) {
           grid_set_character(game->main_grid, '#', server_player_getPos(curr));
           server_player_setInPassage(curr, false);
         }
       }
 
-      // free pointer stored in prev pos before updating
-      if(server_player_getPrevPos(curr) != server_player_getPos(curr)) {
-        position_delete(server_player_getPrevPos(curr));
-      }
-      // Update the player's position variables to reflect the grid.
-      position_t *curr_pos = server_player_getPos(curr);
-      position_t *new_prev = position_new(pos_get_x(curr_pos), pos_get_y(curr_pos));
-      server_player_setPrevPos(curr, new_prev);
-
       // free pointer stored in curr pos before updating
-      position_delete(curr_pos);
+      position_delete(server_player_getPos(curr));
+      // Update the player's position variables to reflect the grid.
       server_player_setPos(curr, new);
     }
 

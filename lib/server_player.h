@@ -25,7 +25,6 @@ int server_player_getGoldNumber(const server_player_t *player);
 int server_player_getGoldPickedUp(const server_player_t *player);
 bool server_player_getActive(const server_player_t *player);
 position_t* server_player_getPos(const server_player_t *player);
-position_t* server_player_getPrevPos(const server_player_t *player);
 grid_struct_t* server_player_getGrid(const server_player_t *player);
 bool server_player_getInPassage(const server_player_t *player);
 
@@ -37,8 +36,7 @@ void server_player_setGoldNumber(server_player_t *player, int num);
 void server_player_setGoldPickedUp(server_player_t *player, int num);
 void server_player_setActive(server_player_t *player, bool b);
 void server_player_setPos(server_player_t *player, position_t* pos);
-void server_player_setPrevPos(server_player_t *player, position_t* pos);
-void server_player_setGrid(server_player_t *player, grid_struct_t* grid, bool b);
+void server_player_setGrid(server_player_t *player, grid_struct_t* grid);
 void server_player_setInPassage(server_player_t *player, bool b);
 
 /**************** server_player_new ****************/

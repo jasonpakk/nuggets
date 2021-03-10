@@ -174,33 +174,35 @@ The server for the Nuggets game initializes a server using the ***message*** mod
 
 4. If this char is another player (alphabet):
 
-  4.1. Obtain the second player that we are swapping places with
+    4.1. Obtain the second player that we are swapping places with
 
-  4.2. Update the current player's variables regarding its location with the variables of the second player
+    4.2. Update the current player's variables regarding its location with the variables of the second player
 
-  4.3. Update the second player's variables regarding its location with the variables of the current player
+    4.3. Update the second player's variables regarding its location with the variables of the current player
 
-  4.4. Swap the two symbols in the grid map
+    4.4. Swap the two symbols in the grid map
 
 5. If this char is a passage (#):
 
-  5.1. Determine whether the player is entering a new passage as a result of this movement
+    5.1. Determine whether the player is entering a new passage as a result of this movement
 
-  5.2. If so, update the boolean that tracks whether the player is currently in a passage as true
+    5.2. If so, update the boolean that tracks whether the player is currently in a passage as true
 
-  5.3. Otherwise, just swap the player symbol with the char at the new location in the grid map
+    5.3. Otherwise, just swap the player symbol with the char at the new location in the grid map
 
 6. If this char is a room spot (.):
 
-  6.1. Determine whether the player is exiting a passage as a result of this movement
+    6.1. Determine whether the player is exiting a passage as a result of this movement
 
-  6.2. If so, update the boolean that tracks whether the player is currently in a passage as false
+    6.2. If so, update the boolean that tracks whether the player is currently in a passage as false
 
-  6.3. Otherwise, just swap the player symbol with the char at the new location in the grid map
+    6.3. Otherwise, just swap the player symbol with the char at the new location in the grid map
 
 7. If this char is a pile of gold (*):
 
-  7.1 Call *pickup_gold* to appropriately handle picking up a new gold pile
+    7.1 Determine whether the player is exiting a passage as a result of this movement
+
+    7.2 Call *pickup_gold* to appropriately handle picking up a new gold pile
 
 8. Update the player's previous position with the current position
 
