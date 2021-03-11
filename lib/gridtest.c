@@ -51,7 +51,6 @@ int main()
   grid_struct_t *test_grid = grid_struct_new("../maps/small.txt");
   grid_load(test_grid, "../maps/small.txt", true);
 
-
   // compare the values returned by getter functions with expected values
   EXPECT(test_grid != NULL);
   EXPECT(grid_get_room_spot(test_grid) == 30);
