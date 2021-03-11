@@ -40,15 +40,15 @@ typedef struct server_player {
 /* not visible outside this file */
 
 /* *********************************************************************** */
-/* getter methods */
+/* getter methods - see server_player.h for more information */
 char* server_player_getName(const server_player_t *player) {
-  return player ? player->name : 0;
+  return player ? player->name : NULL;
 }
 char server_player_getSymbol(const server_player_t *player) {
   return player ? player->symbol : '\0';
 }
 addr_t server_player_getAddress(const server_player_t *player) {
-  return player->address;
+  return player ? player->address : message_noAddr();
 }
 int server_player_getGoldNumber(const server_player_t *player) {
   return player ? player->gold_number : 0;
@@ -57,7 +57,7 @@ int server_player_getGoldPickedUp(const server_player_t *player) {
   return player ? player->gold_picked_up : 0;
 }
 bool server_player_getActive(const server_player_t *player) {
-  return player->active;
+  return player ? player->active : false;
 }
 position_t* server_player_getPos(const server_player_t *player) {
   return player ? player->pos : NULL;
@@ -66,37 +66,73 @@ grid_struct_t* server_player_getGrid(const server_player_t *player) {
   return player ? player->grid : NULL;
 }
 bool server_player_getInPassage(const server_player_t *player) {
-  return player->in_passage;
+  return player ? player->in_passage : false;
 }
 
 /* *********************************************************************** */
-/* setter methods */
-void server_player_setName(server_player_t *player, char* string) {
-  player->name = string;
+/* setter methods - see server_player.h for more information */
+bool server_player_setName(server_player_t *player, char* string) {
+  if(player != NULL) {
+    player->name = string;
+    return true;
+  }
+  return false;
 }
-void server_player_setSymbol(server_player_t *player, char c) {
-  player->symbol = c;
+bool server_player_setSymbol(server_player_t *player, char c) {
+  if(player != NULL) {
+    player->symbol = c;
+    return true;
+  }
+  return false;
 }
-void server_player_setAddress(server_player_t *player, addr_t addr) {
-  player->address = addr;
+bool server_player_setAddress(server_player_t *player, addr_t addr) {
+  if(player != NULL) {
+    player->address = addr;
+    return true;
+  }
+  return false;
 }
-void server_player_setGoldNumber(server_player_t *player, int num) {
-  player->gold_number = num;
+bool server_player_setGoldNumber(server_player_t *player, int num) {
+  if(player != NULL) {
+    player->gold_number = num;
+    return true;
+  }
+  return false;
 }
-void server_player_setGoldPickedUp(server_player_t *player, int num) {
-  player->gold_picked_up = num;
+bool server_player_setGoldPickedUp(server_player_t *player, int num) {
+  if(player != NULL) {
+    player->gold_picked_up = num;
+    return true;
+  }
+  return false;
 }
-void server_player_setActive(server_player_t *player, bool b) {
-  player->active = b;
+bool server_player_setActive(server_player_t *player, bool b) {
+  if(player != NULL) {
+    player->active = b;
+    return true;
+  }
+  return false;
 }
-void server_player_setPos(server_player_t *player, position_t* pos) {
-  player->pos = pos;
+bool server_player_setPos(server_player_t *player, position_t* pos) {
+  if(player != NULL) {
+    player->pos = pos;
+    return true;
+  }
+  return false;
 }
-void server_player_setGrid(server_player_t *player, grid_struct_t* grid) {
-  player->grid = grid;
+bool server_player_setGrid(server_player_t *player, grid_struct_t* grid) {
+  if(player != NULL) {
+    player->grid = grid;
+    return true;
+  }
+  return false;
 }
-void server_player_setInPassage(server_player_t *player, bool b) {
-  player->in_passage = b;
+bool server_player_setInPassage(server_player_t *player, bool b) {
+  if(player != NULL) {
+    player->in_passage = b;
+    return true;
+  }
+  return false;
 }
 
 /**************** server_player_new ****************/

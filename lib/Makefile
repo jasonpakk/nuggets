@@ -5,7 +5,7 @@
 
 # object files, and the target library
 
-OBJS = hashtable.o memory.o set.o jhash.o file.o grid.o server_player.o $L/message.h
+OBJS = hashtable.o memory.o set.o jhash.o file.o grid.o server_player.o server_playertest.o $L/message.h
 LIB = lib.a
 L = ../support
 
@@ -23,6 +23,14 @@ MAKE = make
 $(LIB): $(OBJS)
 	ar cr $(LIB) $(OBJS)
 
+# to test the server_player
+server_playertest: $(OBJS) $L/support.a
+	$(CC) $(CFLAGS) $^ -lm $L/support.a -o $@
+	./server_playertest
+
+$L/support.a:
+	make -C $(L) support.a
+
 # Dependencies: object files depend on header files
 hashtable.o: hashtable.h set.h jhash.h
 jhash.o: jhash.h
@@ -31,6 +39,7 @@ set.o: set.h
 file.o: file.h
 grid.o: grid.h
 server_player.o: server_player.h $L/message.h
+server_playertest.o: server_player.h grid.h $L/message.h
 
 .PHONY: clean sourcelist
 
@@ -45,3 +54,4 @@ clean:
 	rm -f core
 	rm -rf *~ *.o *.gch *.dSYM
 	rm -f *.log
+	rm -f server_playertest
