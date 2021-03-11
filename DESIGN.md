@@ -25,14 +25,14 @@ $ player hostname port [playername]
 ### Inputs and outputs
 
 ##### Server
-*Input:* the inputs are command-line parameters and the contents of the server specified by the first command-line parameter. See the User Interface above. The server then accepts messages from the clients.
+*Input:* the inputs are command-line parameters and the contents of the map.txt specified by the first command-line parameter. See the User Interface above. Following this, the server then accepts messages from the clients, using this as input to update the game play appropriately.
 
-*Output:* Server will show a grid with points consisting of boundaries and passages on to an ASCII screen. The server sends output messages to the clients on any updates to the grid or overall gameplay.
+*Output:* The server sends output messages to the clients on any updates to the grid or the overall gameplay. The server is responsible for sending the proper game map display message to the client based on the visibility of each grid point.
 
 ##### Client
-*Input:* Keyboard presses that correspond to movements of the player.
+*Input:* the initial inputs are command-line parameters used to connect the client with the server; afterwards, the  keyboard presses that correspond to movements of the player are possible inputs.
 
-*Output:* Client will show the room in the grid that the player is in, with points consisting of boundaries and passages; on to an ASCII screen that updates every time the client sends a message. The room’s visibility depends on the position of the player, and parts of the room may be hidden at the start.
+*Output:* Client will show the room in the grid that the player is in, with points consisting of boundaries and passages, on to an ASCII screen that updates based on the message sent by the server. The room’s visibility depends on the position of the player, and parts of the room may be hidden at the start.
 
 ### Functional Decomposition into Modules
 
@@ -42,80 +42,156 @@ We anticipate the following modules or functions:
  2. *maploader*, which loads the map file
  3. *mapinitializer*, which drops the gold piles on random spots of the rooms depending on the seed
  4. *networkinitializer*, which initializes the network and announces the port
- 5. *refresh*, which updates the game state and sends it back to the clients
+ 5. *handleMessage*, which reads the message from the client and handles it appropriately
  6. *accept*, which lets players or spectators into the game
+ 7. *refresh*, which sends the new GOLD count and the proper DISPLAY message to each player
 
 And some helper modules that provide data structures:
 
   1. ***player*** to store data about each player
+  2. ***position*** to store X and Y coordinates
+  3. ***hashtable*** to store a set of players
+  4. ***set*** is indirectly used by ***hashtable***
+  5. ***point*** to store data about each point in the grid
+  6. ***message*** to handle client-server communication
+  7. ***log*** to form logfiles
+  8. ***grid*** to represent the map
 
-  	1.1. Name (string)
-  	1.2. Gold (int)
-  	1.3. Position (Position)
-  	1.4. Active (bool)
-  2. ***position*** to store X and Y coordinates.
-  3. ***hashtable*** of names to player module
-  4. ***goldpile*** to store data about each gold pile
-  5. ***message*** to handle client-server communication
-  6. ***grid*** to represent the map
 
 ### Pseudo Code for logic/algorithmic flow
 
 The server will run as follows:
 
 1. Start from a command line as shown in the User Interface
+
 2. Parse the command line, validate parameters, initialize other modules
-3. Load the map at `map.txt` and if it fails , take an appropriate action
-4. Initialize the map by dropping the gold piles at random spots using the seed
-5. Initialize the server and announce the port, storing the port in a server file
-6. Refresh the server state, waiting for new players or messages,
 
+3. Load the map at `map.txt` by calling *maploader* and if it fails , take an appropriate action
 
-	6.1. If the maxPlayers or maxSpectators is full, do nothing or tell current spectator to leave respectively. Otherwise, accept the players into the server.
-	6.2. If a new player has successfully joined, truncate their name and assign them a letter
+4. Call *mapinitializer* to initialize the map by dropping the gold piles at random spots using the seed
 
-		6.2.1. Send OK message to client with their assigned letter
-	6.3. Send GRID, GOLD, and DISPLAY messages to client
-	6.4. listen to the player and spectator messages and respond
+5. Call *networkinitializer* to initialize the server and announce the port, storing the port in a server file
 
+6. When a message comes in from the client, call *handleMessage* to parse the message
 
-		6.4.1. When the client sends a quit message, let the client out and remove their symbol.
-		6.4.2. When the player sends a move message
-			6.4.2.1. Check if the move is possible and
-				6.4.2.1.1. If the character isn’t capitalized, move the player by 1 in the direction of the character.
-				6.4.2.1.2. If the character is capitalized, move the player as far as possible in the direction of the character.
-			6.4.2.2 Check for gold that was picked up as a result of the move
-			6.4.2.3 Update grid to new positions of players and new amount of gold
-				6.4.2.3.1 Send GOLD and DISPLAY messages to all clients
-		6.4.3 When there are no more gold piles
-			6.4.3.1 Quit the game for each client.
-			6.4.3.2 Send the clients the summary of the game
-7. Close Server
+7. If the message is from a new player trying to join the game:
+
+    7.1. If we have reached the maximum number of players, send an error message and do not add this player
+
+    7.2. Otherwise, call *accept* to initialize a new ***player*** structure and add them to the ***hashtable*** of players
+
+    7.3. Send an OK message back to the player with their symbol on the game board
+
+    7.4. Send GRID, GOLD, and DISPLAY messages to the new player
+
+    7.5. Call *refresh* to send GOLD and DISPLAY messages to all other active players/spectator
+
+8. If the message is from a new spectator trying to watch the game:
+
+    8.1. If we have reached the maximum number of spectators, replace the current spectator with the new spectator
+
+    8.2. Call *accept* to initialize a new ***player*** structure for the spectator
+
+    8.3. Send GRID, GOLD, and DISPLAY messages to the new spectator
+
+    8.4. Call *refresh* to send GOLD and DISPLAY messages to all other active players  
+
+9. If the message is a quit message from the client:
+
+    9.1. If the client is a player, remove their symbol from the board and then from playing the game.
+
+    9.2. If the client is a spectator, remove them from watching the game.
+
+    9.3. Call *refesh* to send GOLD and DISPLAY messages to all other active players
+
+10. If the message is a move message from the client:
+
+    10.1. Check if the move is possible, if not, don't move in any direction
+
+    10.2. Update the grid to move the player to their new position
+
+    10.3. Check for gold that was picked up as a result of the move; if gold was picked up, add it to the players purse and decrement the total gold available in the game
+
+    10.4. Call *refresh* to send GOLD and DISPLAY messages to all active players/spectator
+
+11. If there are no more gold piles left to be collected, quit the game for each client by sending them the summary of the game
+
+12. Close the server and delete all modules used for the gameplay
 
 
 ### Dataflow through modules
 
- 1. *main* parses parameters and passes them to the maploader, and then loops over refresh after networkinitializer is done.
- 2. *maploader* assumes the map is valid, then stores the NR and NC of the map, and after getting the values of NR and NC, passes the values to mapinitializer.
- 3. *mapinitializer* randomly swaps `.` values with gold piles on the map, and calls networkinitializer.
- 4. *networkinitializer* hosts the server and announces the port.
- 5. *refresh* updates the game status and reads messages sent to the server. It handles the messages appropriately using helper functions:
-5a. Tries to accept player or spectator trying to join
-5b. Keystroke input from player (movement or quit)
+1. *main* parses the parameters and passes the map file to the *maploader*
+2. *maploader* initializes the ***grid*** by reading the map file, and passes this ***grid*** to the *mapinitalizer*
+3. *mapinitializer* randomly swaps `.` values in the ***grid*** with gold piles, and then calls *networkinitializer* to start server to client communication
+4. *networkinitializer* hosts the server and announces the port, and whenever it receives a message from the client, it passes the message to *handleMessage*
+5. *handleMessage* parses the message to determine the action to take:
+    * It calls *accept* to initialize a new ***player*** and add them to the ***hashtable*** of players
+    * It calls *refresh* to send GOLD and DISPLAY messages to all active players/spectator
+6. *refresh* goes through the ***hashtable*** of players and sends the game state to all active ***players***:
+    * It sends a GOLD message by accessing how much gold the ***player*** has collected
+    * It sends a DISPLAY message by using the ***player***'s ***grid*** to determine visibility
 
 ### Major Data Structures
 
-***player*** to store data about player clients.
-***hashtable*** of players' names with their player object
-***message*** to handle client-server communication  
-***grid*** to represent the map
-NR X NC matrix array representing each coordinate
-***goldpile[]*** array of gold piles  
-***goldpile***
-***position*** to represent X and Y coordinates
-Amount of gold
+ 1. ***player*** to store data about each player client
+     * player's name
+     * player's symbol on the map
+     * amount of gold they have collected
+     * player's current ***position***
+     * a ***grid*** representing what the player can see
+     * whether the player is currently active/playing the game
+ 2. ***position*** to store X and Y coordinates
+ 3. ***hashtable*** to store a set of players
+ 4. ***set*** is indirectly used by hashtable
+ 5. ***point*** to store data about each point in the grid
+     * the character at this grid point
+     * amount of gold in the pile (0 if not a gold spot)
+     * whether this point is visible from the player's current location
+     * whether the player has ever visited this point before
+ 6. ***message*** to handle client-server communication
+ 7. ***log*** to form logfiles
+ 8. ***grid*** to represent the map
+     * number of rows
+     * number of columns
+     * 2D array of ***point*** to represent the game map
 
 ### Testing Plan
-- *Unit Testing*: small test program to test each module to make sure it does what it’s supposed to do. Additionally, a test program included will ensuring grid functionality and test individual modules and functions used for server.
+- *Unit Testing*: small test program to test each module to make sure it does what it’s supposed to do.
 
-- *Integration Testing*: assemble server and test it as a whole. Ensure that the visibility and movement is functioning correctly. Print "progress" indicators as the game proceeds (e.g. print when gold is collected, when a player connects/disconnects).
+  We will need to test the modules that we have created:
+
+    * Unit Test for ***player*** functionality
+    * Unit Test for ***grid*** functionality
+    * Unit Test for ***point*** functionality
+    * Unit Test for ***position*** functionality
+
+  Each unit test will ensure the module functions as intended, as well as check boundary and error cases to ensure the module can recover from such errors gracefully. The unit tests will purposely pass invalid arguments to the module's methods to ensure no errors occur.
+
+  Since the modules ***hashtable*** and ***set*** were provided by the CS 50 Library in the past, and testing was conducted on these data structures in previous labs, we do not run unit tests for these modules in the Nuggets Project.
+
+  Since the modules ***message*** and ***log*** were provided in the starter kit for the Nuggets Project, we do not run our own unit tests for these modules in the Nuggets Project. An example unit test is already provided in the ***message*** module.  
+
+- *Integration Testing*: assemble server and test it as a whole
+
+  We will test the server program as a whole, using the provided player program on plank.
+
+  We will run manual tests for each of the test cases that we wish to test, and save the log file outputted by the server in each test case to store the testing results.
+
+  Test Cases we plan to test:
+
+    * Invalid number of command line arguments
+    * Invalid command line arguments (invalid file)
+    * Adding more than max number of players
+    * Running the game with small maps to check gold allocation
+    * Players quitting and removing their symbol from the board
+    * Spectators quitting
+    * Spectators being replaced
+    * Players moving on top of one another (swap)
+    * Entering and exiting passage ways
+    * Visibility of gold piles changes if player leaves them behind
+    * Ending the game when all gold is picked up
+    * Other possible sources of error
+    * Valgrind to check memory leaks
+
+  Specific test procedures will be described in a separate document titled TESTING.md. Please refer to this document for more information on how the Nuggets Project will be tested.
