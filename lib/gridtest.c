@@ -71,8 +71,6 @@ int main()
   grid_set_gold(test_grid, 100, newGoldPos);
   EXPECT(grid_get_point_gold(test_grid, 7, 3) == 100);
 
-
-
   // testing error cases with getter functions
   EXPECT(grid_get_room_spot(NULL) == -1);
   EXPECT(grid_get_nR(NULL) == -1);
@@ -84,9 +82,10 @@ int main()
   EXPECT(grid_set_character(NULL, '^', newCharPos) == '\0');
   EXPECT(grid_set_gold(NULL, 0, newGoldPos) == -1);
 
-
   // test grid_delete
   grid_delete(test_grid);
+  position_delete(newGoldPos);
+  position_delete(newCharPos);
 
   printf("unit test complete\n");
 

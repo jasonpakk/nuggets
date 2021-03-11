@@ -74,6 +74,25 @@ This approach allows the main program to be built (or cleaned) while automatical
 
 ## testing
 
+### grid
+The 'grid' module has a test program called `gridtest`, enabling it to be compiled stand-alone for testing.
+
+See the `Makefile` for the compilation.
+
+To compile,
+
+	make gridtest
+
+Compiling the test program will also immediately run the program following compilation. However, if you would like to run the test again after compilation, call the following in the command line:
+
+```bash
+./gridtest
+```
+
+The test program will run a test case, and print to stdout if the test case passed successfully.
+On any error, we print a failure message to stdout as well.
+Upon the conclusion of running all test cases, the program will also print to stdout the number of failed cases.
+
 ### server_player
 The 'server_player' module has a test program called `server_playertest`, enabling it to be compiled stand-alone for testing.
 
