@@ -5,7 +5,7 @@
 
 # object files, and the target library
 
-OBJS = hashtable.o memory.o set.o jhash.o file.o grid.o server_player.o server_playertest.o $L/message.h
+OBJS = hashtable.o memory.o set.o jhash.o file.o grid.o server_player.o $L/message.h
 LIB = lib.a
 L = ../support
 
@@ -24,9 +24,14 @@ $(LIB): $(OBJS)
 	ar cr $(LIB) $(OBJS)
 
 # to test the server_player
-server_playertest: $(OBJS) $L/support.a
+server_playertest: $(OBJS) server_playertest.o $L/support.a
 	$(CC) $(CFLAGS) $^ -lm $L/support.a -o $@
 	./server_playertest
+
+# to test the grid
+gridtest: $(OBJS) gridtest.o $L/support.a
+	$(CC) $(CFLAGS) $^ -lm $L/support.a -o $@
+	./gridtest
 
 $L/support.a:
 	make -C $(L) support.a
@@ -40,6 +45,7 @@ file.o: file.h
 grid.o: grid.h
 server_player.o: server_player.h $L/message.h
 server_playertest.o: server_player.h grid.h $L/message.h
+gridtest.o: grid.h
 
 .PHONY: clean sourcelist
 
@@ -55,3 +61,4 @@ clean:
 	rm -rf *~ *.o *.gch *.dSYM
 	rm -f *.log
 	rm -f server_playertest
+	rm -f gridtest
