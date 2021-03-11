@@ -39,6 +39,8 @@ The [support](support/README.md) subdirectory is a library that contains the pro
 
 The [maps](maps/README.md) subdirectory contains available for testing. We contributed a new map for testing, and the map is titled `TEAM_JEN_MAP.txt`
 
+The [log](log/README.md) subdirectory contains output logfiles for the test cases that we ran for the Nuggets Project.
+
 The [images](images/README.md) subdirectory contains images and files used for the documentation of the Nuggets Project.
 
 ## Testing

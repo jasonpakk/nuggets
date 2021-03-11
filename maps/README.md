@@ -14,3 +14,5 @@ Feel free to add your own.
 * `narrow.txt`: a very narrow map that will fit in a very narrow window; what happens to the top line of your player's display?
 * `small.txt`: a simple, small map; also too-few empty spots.
 * `TEAM_JEN_MAP.txt`: a map contributed by our group; complex map with many passageways
+* `toosmall.txt`: a testing map created by our group; not enough spaces to allocate min number of gold piles
+* `kindasmall.txt`: a testing map created by our group; not enough spaces to allocate max number of gold piles
