@@ -28,16 +28,17 @@ position_t* server_player_getPos(const server_player_t *player);
 grid_struct_t* server_player_getGrid(const server_player_t *player);
 bool server_player_getInPassage(const server_player_t *player);
 
-// setter functions - change variables of player struct; memory freed if necessary
-void server_player_setName(server_player_t *player, char* string);
-void server_player_setSymbol(server_player_t *player, char c);
-void server_player_setAddress(server_player_t *player, addr_t addr);
-void server_player_setGoldNumber(server_player_t *player, int num);
-void server_player_setGoldPickedUp(server_player_t *player, int num);
-void server_player_setActive(server_player_t *player, bool b);
-void server_player_setPos(server_player_t *player, position_t* pos);
-void server_player_setGrid(server_player_t *player, grid_struct_t* grid);
-void server_player_setInPassage(server_player_t *player, bool b);
+// setter functions - change variables of player struct
+// returns true on success, returns false on any error
+bool server_player_setName(server_player_t *player, char* string);
+bool server_player_setSymbol(server_player_t *player, char c);
+bool server_player_setAddress(server_player_t *player, addr_t addr);
+bool server_player_setGoldNumber(server_player_t *player, int num);
+bool server_player_setGoldPickedUp(server_player_t *player, int num);
+bool server_player_setActive(server_player_t *player, bool b);
+bool server_player_setPos(server_player_t *player, position_t* pos);
+bool server_player_setGrid(server_player_t *player, grid_struct_t* grid);
+bool server_player_setInPassage(server_player_t *player, bool b);
 
 /**************** server_player_new ****************/
 /* Initalizes a new player_t structure.

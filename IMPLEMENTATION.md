@@ -21,6 +21,8 @@ This Implementation Spec contains the following:
       * ***send_game_result***
   3. Function Prototypes and their Parameters
   4. Data Structures
+      * Parameters
+      * Pseudocode for Major Components
   5. Resource Management
   6. Security and Privacy Properties
   7. Error Handling and Recovery
@@ -264,7 +266,6 @@ static void add_player(addr_t *address, char* player_name);
 static bool move(addr_t *address, int x, int y);
 static server_player_t *get_player(addr_t *address);
 static void pickup_gold(server_player_t *curr, position_t *pos, bool overwrite);
-static int point_status(position_t *prev_pos, position_t *next_pos);
 
 static void send_grid(addr_t address);
 static void send_gold(server_player_t* player);
@@ -285,6 +286,8 @@ static void game_delete_helper(void *item);
 ### Data Structures
 
 ### game
+***game_t*** is a data structure we created to store data regarding the Nuggets gameplay. It was the global variable we used for our implementation.
+
 ```c
 typedef struct game {
   bool playing_game;  // whether the game is still in session
@@ -301,6 +304,8 @@ typedef struct game {
 ```
 
 ### hashtable
+***hashtable_t*** is a data structure provided by previous labs in CS50.
+
 ```c
 typedef struct hashtable {
   int num_slots;          // number of slots in the table
@@ -309,6 +314,8 @@ typedef struct hashtable {
 ```
 
 ### set
+***set_t*** is a data structure provided by previous labs in CS50.
+
 ```c
 typedef struct set {
   struct setnode *head;   // head of the set
@@ -316,6 +323,8 @@ typedef struct set {
 ```
 
 ### grid_struct
+***grid_struct_t*** is a module we created to store the game map for the Nuggets gameplay. It stores the game map as a 2D Array of ***point_t*** pointers. The ***grid_struct_t*** is also used to track the visibility of each grid point in the game map for each player. As a result, the pseudocode for these major components of the ***grid_struct_t*** module are provided below.
+
 ```c
 typedef struct grid_struct {
   int nR; // number of rows
@@ -324,8 +333,66 @@ typedef struct grid_struct {
   point_t*** grid; // 2d array of pointers to points
 } grid_struct_t;
 ```
+**Psuedocode for Major Components**
+
+##### ***grid_swap***
+1. Check parameters before proceeding, return on error
+
+2. Obtain the symbol at the new position we are trying to swap at
+
+3. If it is a symbol that can be swapped (not a wall), update the symbol at the current position with the new symbol
+
+4. Update the symbol at the new position with the old symbol
+
+##### ***grid_visibility***
+1. Check parameters before proceeding, return on error
+
+2. Create a line segment between the point we are currently located at to a point in the grid we want to determine the visibility of
+
+3. For each column (x) value in the line segment:
+
+    3.1. Obtain its respective y value to get the (x,y) coordinate
+
+    3.2. If this (x,y) coordinate intersects a grid point exactly, check if this grid point is a room spot
+
+    3.3. If this (x,y) coordinate passes between a pair of grid points, check both grid points on whether it is a room spot
+
+    3.4. If not a room spot(s), return false since our vision is blocked
+
+4. For each row (y) value in the line segment:
+
+    4.1 Obtain its respective x value to get the (x,y) coordinate
+
+    4.2. If this (x,y) coordinate intersects a grid point exactly, check if this grid point is a room spot
+
+    4.3. If this (x,y) coordinate passes between a pair of grid points, check both grid points on whether it is a room spot
+
+    4.4. If not a room spot(s), return false since our vision is blocked
+
+5. Only if it passes all these tests, we can set the visibility of the point in the grid to true
+
+6. Repeat steps 2-4 with every other point in the grid
+
+##### ***grid_string_player***
+1. Allocate memory for the map string to send to a player
+
+2. For each point in the grid:
+
+    2.1. If this point is the current location of the player, print an '@' as defined in the specs
+
+    2.2. Otherwise, check the visibility of the point from the current location of the player
+
+    2.3. If the player has never seen this point before, print an empty space
+
+    2.4. If the player has seen this point before, do one of two things:  
+
+      * 2.4.1. If the point is a pile of gold, only print the gold if the player can see it from its current location. Otherwise, print a normal room space.
+
+      * 2.4.2. For all other points, as long as the player has seen this point before, print its respective character
 
 ### position
+***position_t*** is a data structure provided with the ***grid_struct_t*** module that keeps track of the x and y coordinates. This data structure contains basic setter and getter methods to update and access the coordinates.
+
 ```c
 typedef struct position {
   int x;   // x coord
@@ -334,6 +401,8 @@ typedef struct position {
 ```
 
 ### point
+***point_t*** is a data structure used by the ***grid_struct_t*** module in its 2D Array. A single ***point_t*** structure represents a single point on the game grid.
+
 ```c
 typedef struct point {
   char c;     // char at the point
@@ -344,6 +413,8 @@ typedef struct point {
 ```
 
 ### server_player
+***server_player_t*** is a data structure we created to store the data of each player playing the Nuggets Game.  map for the Nuggets gameplay. This data structure contains basic setter and getter methods to update and access the data of the server_player.
+
 ```c
 typedef struct server_player {
   char *name;   // player name
@@ -353,7 +424,6 @@ typedef struct server_player {
   int gold_picked_up; // amt of gold just picked up by player
   bool active;    // whether the player is currently playing
   position_t *pos;    // current player position
-  position_t *prev_pos;   // last position the player was in
   grid_struct_t *grid;    // player grid that tracks visibility
   bool in_passage;    // whether the player is currently in a passage way
 } server_player_t;
