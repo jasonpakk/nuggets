@@ -242,7 +242,7 @@ char
 grid_get_point_c(grid_struct_t *grid_struct, int x, int y)
 {
   // check parameters
-  if (x < 0 || x >= grid_struct->nC || y < 0 || y >= grid_struct->nR) {
+  if (grid_struct == NULL || x < 0 || x >= grid_struct->nC || y < 0 || y >= grid_struct->nR) {
     return '\0';
   }
   return grid_struct->grid[y][x]->c;
